@@ -10,10 +10,11 @@ import sr.will.jarvis.command.CommandHandler;
 import sr.will.jarvis.command.CommandMute;
 import sr.will.jarvis.command.CommandRestart;
 import sr.will.jarvis.config.Config;
-import sr.will.jarvis.config.ControlGroups;
-import sr.will.jarvis.config.Mutes;
+import sr.will.jarvis.entity.Mute;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
+import sr.will.jarvis.manager.MuteManager;
+import sr.will.jarvis.sql.Database;
 
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
@@ -24,11 +25,10 @@ public class Jarvis {
     private JSONConfigManager configManager;
     public Config config;
 
+    public Database database;
     public CommandHandler commandHandler;
+    public MuteManager muteManager;
     private JDA jda;
-
-    private ArrayList<ControlGroups.ControlGroup> controlGroups = new ArrayList<>();
-    private ArrayList<Mutes.Mute> mutes = new ArrayList<>();
 
     public Jarvis() {
         instance = this;
@@ -38,6 +38,10 @@ public class Jarvis {
         commandHandler = new CommandHandler();
         commandHandler.registerCommand("mute", new CommandMute(this));
         commandHandler.registerCommand("restart", new CommandRestart(this));
+
+        muteManager = new MuteManager(this);
+
+        database = new Database(this);
 
         reload();
 
@@ -52,13 +56,19 @@ public class Jarvis {
     }
 
     public void stop() {
+        System.out.println("Stopping!");
+
         jda.shutdown();
+        database.disconnect();
+
         System.exit(0);
     }
 
     public void reload() {
         configManager.reloadConfig();
         config = (Config) configManager.getConfig();
+
+        database.reconnect();
     }
 
     public static Jarvis getInstance() {

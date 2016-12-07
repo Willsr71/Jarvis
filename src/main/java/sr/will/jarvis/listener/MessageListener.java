@@ -22,12 +22,6 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        System.out.println(event.getAuthor().getId());
-
-        System.out.printf("[%s][%s] %s: %s\n", event.getGuild().getName(),
-                event.getTextChannel().getName(), event.getAuthor().getName(),
-                event.getMessage().getContent());
-
         jarvis.commandHandler.executeCommand(event.getMessage());
     }
 }
