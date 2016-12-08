@@ -26,6 +26,11 @@ public class CommandMute extends Command {
 
         User user = message.getMentionedUsers().get(0);
 
+        if (user.getId().equals("182630837412560896")) {
+            message.getChannel().sendMessage("You cannot mute the all powerful JARVIS.").queue();
+            return;
+        }
+
         if (jarvis.muteManager.isMuted(user.getId(), message.getGuild().getId())) {
             message.getChannel().sendMessage("User is already muted.").queue();
             return;

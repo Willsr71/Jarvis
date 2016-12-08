@@ -18,6 +18,10 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
+        if (event.getAuthor().getId().equals("182630837412560896")) {
+            return;
+        }
+
         if (jarvis.muteManager.isMuted(event.getAuthor().getId(), event.getGuild().getId())) {
             event.getMessage().deleteMessage().queue();
             return;
