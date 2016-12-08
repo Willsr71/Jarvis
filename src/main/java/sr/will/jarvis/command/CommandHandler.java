@@ -13,6 +13,10 @@ public class CommandHandler {
         commands.put(command, commandClass);
     }
 
+    public void unregisterCommand(String command) {
+        commands.remove(command);
+    }
+
     public void executeCommand(Message message) {
         String string = message.getContent().substring(1);
 
