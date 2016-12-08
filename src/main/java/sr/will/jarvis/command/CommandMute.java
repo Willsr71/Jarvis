@@ -1,10 +1,8 @@
 package sr.will.jarvis.command;
 
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
+import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 
 public class CommandMute extends Command {
@@ -21,18 +19,32 @@ public class CommandMute extends Command {
             return;
         }
 
-        for (User user : message.getMentionedUsers()) {
-            mute(user, message.getAuthor(), message.getGuild(), message.getChannel());
-        }
-    }
-
-    public void mute(User user, User invoker, Guild guild, MessageChannel channel) {
-        if (jarvis.muteManager.isMuted(user.getId(), guild.getId())) {
-            channel.sendMessage("User is already muted.").queue();
+        if (message.getMentionedUsers().size() == 0) {
+            message.getChannel().sendMessage("No user tagged.");
             return;
         }
 
-        jarvis.muteManager.mute(user.getId(), invoker.getId(), guild.getId());
-        channel.sendMessage(user.getAsMention() + " has been muted.").queue();
+        User user = message.getMentionedUsers().get(0);
+
+        if (jarvis.muteManager.isMuted(user.getId(), message.getGuild().getId())) {
+            message.getChannel().sendMessage("User is already muted.").queue();
+            return;
+        }
+
+        if (args.length == 1) {
+            jarvis.muteManager.mute(user.getId(), message.getAuthor().getId(), message.getGuild().getId());
+            message.getChannel().sendMessage(user.getAsMention() + " has been muted.").queue();
+            return;
+        }
+
+        try {
+            long duration = DateUtils.parseDateDiff(args[1], true);
+
+            jarvis.muteManager.mute(user.getId(), message.getAuthor().getId(), message.getGuild().getId(), duration);
+            message.getChannel().sendMessage(user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration) + ".").queue();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

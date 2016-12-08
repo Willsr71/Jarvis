@@ -18,12 +18,14 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getContent().startsWith("!")) {
-            jarvis.commandHandler.executeCommand(event.getMessage());
-        }
-
         if (jarvis.muteManager.isMuted(event.getAuthor().getId(), event.getGuild().getId())) {
             event.getMessage().deleteMessage().queue();
+            return;
+        }
+
+        if (event.getMessage().getContent().startsWith("!")) {
+            jarvis.commandHandler.executeCommand(event.getMessage());
+            return;
         }
     }
 }

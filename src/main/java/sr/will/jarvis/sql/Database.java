@@ -133,8 +133,9 @@ public class Database {
         execute("CREATE TABLE IF NOT EXISTS mutes(" +
                 "id int NOT NULL AUTO_INCREMENT," +
                 "user char(64) NOT NULL," +
-                "invoker char(64) NOT NULL," +
+                "invoker char(64)," +
                 "guild char(64) NOT NULL," +
+                "duration bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
 
         System.out.println("Done.");
