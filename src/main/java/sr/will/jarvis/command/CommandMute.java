@@ -1,5 +1,6 @@
 package sr.will.jarvis.command;
 
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -15,6 +16,11 @@ public class CommandMute extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.VOICE_MUTE_OTHERS)) {
+            message.getChannel().sendMessage("You don't have permission for that.").queue();
+            return;
+        }
+
         for (User user : message.getMentionedUsers()) {
             mute(user, message.getAuthor(), message.getGuild(), message.getChannel());
         }
