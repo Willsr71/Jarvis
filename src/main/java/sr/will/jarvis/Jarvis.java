@@ -9,15 +9,14 @@ import net.noxal.common.util.config.JSONConfigManager;
 import sr.will.jarvis.command.CommandHandler;
 import sr.will.jarvis.command.CommandMute;
 import sr.will.jarvis.command.CommandRestart;
+import sr.will.jarvis.command.CommandUnmute;
 import sr.will.jarvis.config.Config;
-import sr.will.jarvis.entity.Mute;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
 import sr.will.jarvis.manager.MuteManager;
 import sr.will.jarvis.sql.Database;
 
 import javax.security.auth.login.LoginException;
-import java.util.ArrayList;
 
 public class Jarvis {
     private static Jarvis instance;
@@ -38,6 +37,7 @@ public class Jarvis {
         commandHandler = new CommandHandler();
         commandHandler.registerCommand("mute", new CommandMute(this));
         commandHandler.registerCommand("restart", new CommandRestart(this));
+        commandHandler.registerCommand("unmute", new CommandUnmute(this));
 
         muteManager = new MuteManager(this);
 

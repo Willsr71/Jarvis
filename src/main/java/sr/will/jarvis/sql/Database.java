@@ -65,7 +65,7 @@ public class Database {
             } else if (params[x] instanceof Boolean) {
                 statement.setBoolean(x + 1, (Boolean) params[x]);
             } else {
-                throw new SQLException("Unknown paramater packetType at position " + (x + 1) + ": " + params[x].toString());
+                throw new SQLException("Unknown paramater type at position " + (x + 1) + ": " + params[x].toString());
             }
         }
 
@@ -132,9 +132,9 @@ public class Database {
         // Create various tables if they do not exist
         execute("CREATE TABLE IF NOT EXISTS mutes(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "user int(64) NOT NULL," +
-                "invoker int(64) NOT NULL," +
-                "guild int(64) NOT NULL," +
+                "user char(64) NOT NULL," +
+                "invoker char(64) NOT NULL," +
+                "guild char(64) NOT NULL," +
                 "PRIMARY KEY (id));");
 
         System.out.println("Done.");

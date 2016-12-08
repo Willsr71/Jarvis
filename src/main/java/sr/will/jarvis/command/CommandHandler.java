@@ -36,7 +36,5 @@ public class CommandHandler {
             commands.get(command).execute(message, args);
             return;
         }
-
-        message.getChannel().sendMessage("Command does not exist.").queue();
     }
 }
