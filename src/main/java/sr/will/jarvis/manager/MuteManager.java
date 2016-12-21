@@ -15,7 +15,7 @@ public class MuteManager {
 
     public boolean isMuted(String userId, String guildId) {
         try {
-            ResultSet result = jarvis.database.executeQuery("SELECT duration FROM mutes WHERE (user = ? AND guild = ?) ORDER BY id DESC LIMIT 1;", userId, guildId);
+            ResultSet result = jarvis.database.executeQuery("SELECT duration FROM mutes WHERE (guild = ? AND user = ?) ORDER BY id DESC LIMIT 1;", guildId, userId);
             if (result.first()) {
                 return timestampApplies(result.getLong("duration"));
             }
@@ -31,11 +31,11 @@ public class MuteManager {
     }
 
     public void mute(String userId, String invokerId, String guildId, long duration) {
-        jarvis.database.execute("INSERT INTO mutes (user, invoker, guild, duration) VALUES (?, ?, ?, ?)", userId, invokerId, guildId, duration);
+        jarvis.database.execute("INSERT INTO mutes (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
     }
 
     public void unmute(String userId, String guildId) {
-        jarvis.database.execute("INSERT INTO mutes (user, invoker, guild, duration) VALUES (?, ?, ?, ?)", userId, null, guildId, 0);
+        jarvis.database.execute("INSERT INTO mutes (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, null, 0);
     }
 
     private boolean timestampApplies(long timestamp) {

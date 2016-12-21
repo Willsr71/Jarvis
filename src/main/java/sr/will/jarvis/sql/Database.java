@@ -132,10 +132,16 @@ public class Database {
         // Create various tables if they do not exist
         execute("CREATE TABLE IF NOT EXISTS mutes(" +
                 "id int NOT NULL AUTO_INCREMENT," +
+                "guild char(64) NOT NULL," +
                 "user char(64) NOT NULL," +
                 "invoker char(64)," +
-                "guild char(64) NOT NULL," +
                 "duration bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+        execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild char(64) NOT NULL," +
+                "command varchar(255) NOT NULL," +
+                "response text NOT NULL," +
                 "PRIMARY KEY (id));");
 
         System.out.println("Done.");

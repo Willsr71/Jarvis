@@ -10,6 +10,7 @@ import sr.will.jarvis.command.*;
 import sr.will.jarvis.config.Config;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
+import sr.will.jarvis.manager.CommandManager;
 import sr.will.jarvis.manager.MuteManager;
 import sr.will.jarvis.sql.Database;
 
@@ -22,7 +23,7 @@ public class Jarvis {
     public Config config;
 
     public Database database;
-    public CommandHandler commandHandler;
+    public CommandManager commandManager;
     public MuteManager muteManager;
     private JDA jda;
 
@@ -31,10 +32,12 @@ public class Jarvis {
 
         configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
 
-        commandHandler = new CommandHandler();
-        commandHandler.registerCommand("mute", new CommandMute(this));
-        commandHandler.registerCommand("restart", new CommandRestart(this));
-        commandHandler.registerCommand("unmute", new CommandUnmute(this));
+        commandManager = new CommandManager(this);
+        commandManager.registerCommand("addcommand", new CommandAddCommand(this));
+        commandManager.registerCommand("mute", new CommandMute(this));
+        commandManager.registerCommand("removecommand", new CommandRemoveCommand(this));
+        commandManager.registerCommand("restart", new CommandRestart(this));
+        commandManager.registerCommand("unmute", new CommandUnmute(this));
 
         muteManager = new MuteManager(this);
 

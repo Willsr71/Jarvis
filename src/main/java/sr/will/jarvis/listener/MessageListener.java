@@ -28,7 +28,7 @@ public class MessageListener extends ListenerAdapter {
         }
 
         if (event.getMessage().getContent().startsWith("!")) {
-            jarvis.commandHandler.executeCommand(event.getMessage());
+            jarvis.commandManager.executeCommand(event.getMessage());
             return;
         }
     }
