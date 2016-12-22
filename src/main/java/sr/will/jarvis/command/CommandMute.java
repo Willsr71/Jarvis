@@ -42,14 +42,18 @@ public class CommandMute extends Command {
             return;
         }
 
-        try {
-            long duration = DateUtils.parseDateDiff(args[1], true);
+        long duration = 0;
 
-            jarvis.muteManager.mute(user.getId(), message.getAuthor().getId(), message.getGuild().getId(), duration);
-            message.getChannel().sendMessage(user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration) + ".").queue();
-            return;
+        try {
+            duration = DateUtils.parseDateDiff(args[1], true);
         } catch (Exception e) {
             e.printStackTrace();
+
+            message.getChannel().sendMessage("Error parsing time").queue();
+            return;
         }
+
+        message.getChannel().sendMessage(user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration) + ".").queue();
+        jarvis.muteManager.mute(user.getId(), message.getAuthor().getId(), message.getGuild().getId(), duration);
     }
 }

@@ -39,7 +39,7 @@ public class CommandAddCommand extends Command {
         }
         response = response.trim();
 
-        jarvis.commandManager.addCustomCommand(message.getGuild().getId(), args[0], response);
         message.getChannel().sendMessage("Command `!" + args[0] + "`has been added with response\n" + response).queue();
+        jarvis.commandManager.addCustomCommand(message.getGuild().getId(), args[0], response);
     }
 }
