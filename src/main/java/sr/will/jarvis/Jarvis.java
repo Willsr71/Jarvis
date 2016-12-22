@@ -34,6 +34,7 @@ public class Jarvis {
 
         commandManager = new CommandManager(this);
         commandManager.registerCommand("addcommand", new CommandAddCommand(this));
+        commandManager.registerCommand("list", new CommandList(this));
         commandManager.registerCommand("mute", new CommandMute(this));
         commandManager.registerCommand("removecommand", new CommandRemoveCommand(this));
         commandManager.registerCommand("restart", new CommandRestart(this));

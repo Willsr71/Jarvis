@@ -6,6 +6,7 @@ import sr.will.jarvis.command.Command;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,10 @@ public class CommandManager {
 
     public void registerCommand(String command, Command commandClass) {
         commands.put(command, commandClass);
+    }
+
+    public ArrayList<String> getCommands() {
+        return new ArrayList<>(commands.keySet());
     }
 
     public void addCustomCommand(String guildId, String command, String response) {
@@ -44,6 +49,21 @@ public class CommandManager {
         return null;
     }
 
+    public ArrayList<String> getCustomCommandsByGuild(String guildId) {
+        ArrayList<String> commandList = new ArrayList<>();
+
+        try {
+            ResultSet result = jarvis.database.executeQuery("SELECT command FROM custom_commands WHERE (guild = ?);", guildId);
+            while (result.next()) {
+                commandList.add(result.getString("command"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return commandList;
+    }
+
     public void executeCommand(Message message) {
         String string = message.getContent().substring(1);
 
@@ -51,12 +71,11 @@ public class CommandManager {
             return;
         }
 
-        string = string.toLowerCase();
         List<String> parts = Arrays.asList(string.split(" "));
 
         System.out.println(parts);
 
-        String command = parts.get(0);
+        String command = parts.get(0).toLowerCase();
         String[] args = parts.subList(1, parts.size()).toArray(new String[parts.size() - 1]);
 
         executeCommand(command, message, args);
