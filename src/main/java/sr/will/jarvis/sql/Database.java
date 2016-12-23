@@ -143,6 +143,10 @@ public class Database {
                 "command varchar(255) NOT NULL," +
                 "response text NOT NULL," +
                 "PRIMARY KEY (id));");
+        execute("CREATE TABLE IF NOT EXISTS chatterbot_channels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "channel char(64) NOT NULL," +
+                "PRIMARY KEY (id));");
 
         System.out.println("Done.");
     }

@@ -47,8 +47,6 @@ public class CommandMute extends Command {
         try {
             duration = DateUtils.parseDateDiff(args[1], true);
         } catch (Exception e) {
-            e.printStackTrace();
-
             message.getChannel().sendMessage("Error parsing time").queue();
             return;
         }

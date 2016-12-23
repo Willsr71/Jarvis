@@ -31,5 +31,14 @@ public class MessageListener extends ListenerAdapter {
             jarvis.commandManager.executeCommand(event.getMessage());
             return;
         }
+
+        if (jarvis.chatterBotManager.isBotChannel(event.getChannel().getId())) {
+            if (event.getMessage().getContent().startsWith("<")) {
+                return;
+            }
+
+            jarvis.chatterBotManager.sendResponse(event.getMessage());
+            return;
+        }
     }
 }

@@ -4,10 +4,10 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
 
-public class CommandAddCommand extends Command {
+public class CommandCommandAdd extends Command {
     private Jarvis jarvis;
 
-    public CommandAddCommand(Jarvis jarvis) {
+    public CommandCommandAdd(Jarvis jarvis) {
         this.jarvis = jarvis;
     }
 
