@@ -17,7 +17,7 @@ public class CommandUnmute extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.VOICE_MUTE_OTHERS)) {
-            message.getChannel().sendMessage("You don't have permission for that.").queue();
+            message.getChannel().sendMessage("`You don't have permission for that`").queue();
             return;
         }
 
@@ -28,11 +28,11 @@ public class CommandUnmute extends Command {
 
     public void unmute(User user, Guild guild, MessageChannel channel) {
         if (!jarvis.muteManager.isMuted(user.getId(), guild.getId())) {
-            channel.sendMessage("User is not muted.").queue();
+            channel.sendMessage("`User is not muted`").queue();
             return;
         }
 
         jarvis.muteManager.unmute(user.getId(), guild.getId());
-        channel.sendMessage(user.getAsMention() + " has been unmuted.").queue();
+        channel.sendMessage("`" + user.getAsMention() + " has been unmuted`").queue();
     }
 }

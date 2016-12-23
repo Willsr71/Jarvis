@@ -14,22 +14,22 @@ public class CommandCommandAdd extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.MESSAGE_MANAGE)) {
-            message.getChannel().sendMessage("You don't have permission for that.").queue();
+            message.getChannel().sendMessage("`You don't have permission for that`").queue();
             return;
         }
 
         if (args.length < 2) {
-            message.getChannel().sendMessage("Usage: !addcommand <command> <response>").queue();
+            message.getChannel().sendMessage("`Usage: !addcommand <command> <response>`").queue();
             return;
         }
 
         if (args[0].length() > 255) {
-            message.getChannel().sendMessage("Command \"" + args[0] + "\" is too long").queue();
+            message.getChannel().sendMessage("`Command \"" + args[0] + "\" is too long`").queue();
             return;
         }
 
         if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getId(), args[0]) != null) {
-            message.getChannel().sendMessage("Command already exists").queue();
+            message.getChannel().sendMessage("`Command already exists`").queue();
             return;
         }
 
@@ -39,7 +39,7 @@ public class CommandCommandAdd extends Command {
         }
         response = response.trim();
 
-        message.getChannel().sendMessage("Command `!" + args[0] + "`has been added with response\n" + response).queue();
+        message.getChannel().sendMessage("`Command !" + args[0] + " has been added`").queue();
         jarvis.commandManager.addCustomCommand(message.getGuild().getId(), args[0], response);
     }
 }

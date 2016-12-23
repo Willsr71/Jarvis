@@ -13,11 +13,11 @@ public class CommandRestart extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (!message.getAuthor().getId().equals("112587845968912384")) { // Willsr71
-            message.getChannel().sendMessage("No permission").queue();
+            message.getChannel().sendMessage("`No permission`").queue();
             return;
         }
 
-        message.getChannel().sendMessage("Restarting...").queue();
+        message.getChannel().sendMessage("`Restarting...`").queue();
         jarvis.stop();
     }
 }

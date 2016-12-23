@@ -15,7 +15,7 @@ public class CommandMuteTime extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (message.getMentionedUsers().size() == 0) {
-            message.getChannel().sendMessage("No user tagged.");
+            message.getChannel().sendMessage("`No user tagged`");
             return;
         }
 
@@ -23,10 +23,10 @@ public class CommandMuteTime extends Command {
         long duration = jarvis.muteManager.getMuteDuration(message.getGuild().getId(), user.getId());
 
         if (!DateUtils.timestampApplies(duration)) {
-            message.getChannel().sendMessage("User not muted.").queue();
+            message.getChannel().sendMessage("`User not muted`").queue();
             return;
         }
 
-        message.getChannel().sendMessage("User is muted for " + DateUtils.formatDateDiff(duration)).queue();
+        message.getChannel().sendMessage("`User is muted for " + DateUtils.formatDateDiff(duration) + "`").queue();
     }
 }
