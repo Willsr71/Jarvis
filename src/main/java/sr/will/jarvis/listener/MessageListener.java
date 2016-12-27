@@ -18,6 +18,8 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
+        jarvis.messagesReceived += 1;
+
         if (event.getAuthor().getId().equals("182630837412560896")) {
             return;
         }

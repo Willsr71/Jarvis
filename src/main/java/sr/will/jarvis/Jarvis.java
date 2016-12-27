@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.noxal.common.util.config.JSONConfigManager;
-import sr.will.jarvis.command.*;
 import sr.will.jarvis.config.Config;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
@@ -16,6 +15,7 @@ import sr.will.jarvis.manager.MuteManager;
 import sr.will.jarvis.sql.Database;
 
 import javax.security.auth.login.LoginException;
+import java.util.Date;
 
 public class Jarvis {
     private static Jarvis instance;
@@ -29,21 +29,16 @@ public class Jarvis {
     public ChatterBotManager chatterBotManager;
     private JDA jda;
 
+    public final long startTime = new Date().getTime();
+    public int messagesReceived = 0;
+
     public Jarvis() {
         instance = this;
 
         configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
 
         commandManager = new CommandManager(this);
-        commandManager.registerCommand("botadd", new CommandBotAdd(this));
-        commandManager.registerCommand("botremove", new CommandBotRemove(this));
-        commandManager.registerCommand("commandadd", new CommandCommandAdd(this));
-        commandManager.registerCommand("commandremove", new CommandCommandRemove(this));
-        commandManager.registerCommand("list", new CommandList(this));
-        commandManager.registerCommand("mute", new CommandMute(this));
-        commandManager.registerCommand("mutetime", new CommandMuteTime(this));
-        commandManager.registerCommand("restart", new CommandRestart(this));
-        commandManager.registerCommand("unmute", new CommandUnmute(this));
+        commandManager.registerCommands();
 
         muteManager = new MuteManager(this);
         chatterBotManager = new ChatterBotManager(this);

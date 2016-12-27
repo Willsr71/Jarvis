@@ -65,6 +65,7 @@ public class ChatterBotManager {
         try {
             message.getChannel().sendMessage(chatterBots.get(message.getChannel().getId()).think(message.getContent())).queue();
         } catch (Exception e) {
+            message.getChannel().sendMessage("Error: " + e.getMessage()).queue();
             e.printStackTrace();
         }
     }

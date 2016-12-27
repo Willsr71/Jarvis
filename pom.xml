@@ -54,7 +54,7 @@
         <dependency>
             <groupId>ca.pjer</groupId>
             <artifactId>chatter-bot-api</artifactId>
-            <version>1.4.3</version>
+            <version>LATEST</version>
         </dependency>
     </dependencies>
 

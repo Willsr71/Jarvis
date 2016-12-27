@@ -5,7 +5,6 @@ import sr.will.jarvis.Jarvis;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 public class MuteManager {
     private Jarvis jarvis;

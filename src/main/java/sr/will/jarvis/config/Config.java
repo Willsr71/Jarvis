@@ -7,6 +7,7 @@ public class Config {
     public class Discord {
         public String token;
         public String game;
+        public String owner;
     }
 
     public class Sql {

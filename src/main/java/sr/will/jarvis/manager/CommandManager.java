@@ -2,7 +2,7 @@ package sr.will.jarvis.manager;
 
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.command.Command;
+import sr.will.jarvis.command.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +26,19 @@ public class CommandManager {
 
     public ArrayList<String> getCommands() {
         return new ArrayList<>(commands.keySet());
+    }
+
+    public void registerCommands() {
+        registerCommand("botadd", new CommandBotAdd(jarvis));
+        registerCommand("botremove", new CommandBotRemove(jarvis));
+        registerCommand("commandadd", new CommandCommandAdd(jarvis));
+        registerCommand("commandremove", new CommandCommandRemove(jarvis));
+        registerCommand("list", new CommandList(jarvis));
+        registerCommand("mute", new CommandMute(jarvis));
+        registerCommand("mutetime", new CommandMuteTime(jarvis));
+        registerCommand("restart", new CommandRestart(jarvis));
+        registerCommand("stats", new CommandStats(jarvis));
+        registerCommand("unmute", new CommandUnmute(jarvis));
     }
 
     public void addCustomCommand(String guildId, String command, String response) {
