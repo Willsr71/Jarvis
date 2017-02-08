@@ -5,10 +5,10 @@ import sr.will.jarvis.Jarvis;
 
 import java.util.ArrayList;
 
-public class CommandList extends Command {
+public class CommandHelp extends Command {
     private Jarvis jarvis;
 
-    public CommandList(Jarvis jarvis) {
+    public CommandHelp(Jarvis jarvis) {
         this.jarvis = jarvis;
     }
 

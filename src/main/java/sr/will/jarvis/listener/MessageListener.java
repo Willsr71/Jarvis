@@ -20,7 +20,7 @@ public class MessageListener extends ListenerAdapter {
 
         jarvis.messagesReceived += 1;
 
-        if (event.getAuthor().getId().equals("182630837412560896")) {
+        if (event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId())) {
             return;
         }
 
@@ -31,6 +31,11 @@ public class MessageListener extends ListenerAdapter {
 
         if (event.getMessage().getContent().startsWith("!")) {
             jarvis.commandManager.executeCommand(event.getMessage());
+            return;
+        }
+
+        if (event.getMessage().getRawContent().startsWith("<@" + event.getJDA().getSelfUser().getId() + ">")) {
+            event.getChannel().sendMessage("I'm sorry " + event.getGuild().getMember(event.getAuthor()).getEffectiveName() + ", I can't let you do that.").queue();
             return;
         }
 

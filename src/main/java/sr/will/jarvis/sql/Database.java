@@ -137,6 +137,13 @@ public class Database {
                 "invoker char(64)," +
                 "duration bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
+        execute("CREATE TABLE IF NOT EXISTS bans(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild char(64) NOT NULL," +
+                "user char(64) NOT NULL," +
+                "invoker char(64)," +
+                "duration bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
                 "id int NOT NULL AUTO_INCREMENT," +
                 "guild char(64) NOT NULL," +

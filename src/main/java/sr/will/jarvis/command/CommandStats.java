@@ -13,13 +13,13 @@ public class CommandStats extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        String stats = "```";
+        String stats = "```yaml";
         stats += "\nUptime: " + DateUtils.formatDateDiff(jarvis.startTime);
-        stats += "\nBot owner: " + jarvis.config.discord.owner;
         stats += "\nGuilds: " + message.getJDA().getGuilds().size();
-        stats += "\nText channels: " + message.getJDA().getTextChannels().size();
-        stats += "\nVoice channels: " + message.getJDA().getVoiceChannels().size();
-        stats += "\nMessages received: " + jarvis.messagesReceived;
+        stats += "\nText_channels: " + message.getJDA().getTextChannels().size();
+        stats += "\nVoice_channels: " + message.getJDA().getVoiceChannels().size();
+        stats += "\nUsers: " + message.getJDA().getUsers().size();
+        stats += "\nMessages_sent: " + jarvis.messagesReceived;
         stats += "```";
 
         message.getChannel().sendMessage(stats).queue();

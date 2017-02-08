@@ -48,13 +48,15 @@ public class Jarvis {
         reload();
 
         try {
-            jda = new JDABuilder(AccountType.BOT).setToken(config.discord.token).addListener(new ReadyListener()).buildAsync();
+            jda = new JDABuilder(AccountType.BOT).setToken(config.discord.token).addListener(new ReadyListener()).buildBlocking();
             jda.setAutoReconnect(true);
             jda.addEventListener(new MessageListener(this));
             jda.getPresence().setGame(Game.of(config.discord.game));
-        } catch (LoginException | RateLimitedException e) {
+        } catch (LoginException | RateLimitedException | InterruptedException e) {
             e.printStackTrace();
         }
+
+        muteManager.setMuteRoles();
     }
 
     public void stop() {
@@ -75,5 +77,9 @@ public class Jarvis {
 
     public static Jarvis getInstance() {
         return instance;
+    }
+
+    public JDA getJda() {
+        return jda;
     }
 }

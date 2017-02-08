@@ -33,8 +33,9 @@ public class CommandManager {
         registerCommand("botremove", new CommandBotRemove(jarvis));
         registerCommand("commandadd", new CommandCommandAdd(jarvis));
         registerCommand("commandremove", new CommandCommandRemove(jarvis));
-        registerCommand("list", new CommandList(jarvis));
+        registerCommand("help", new CommandHelp(jarvis));
         registerCommand("mute", new CommandMute(jarvis));
+        registerCommand("mutelist", new CommandMuteList(jarvis));
         registerCommand("mutetime", new CommandMuteTime(jarvis));
         registerCommand("restart", new CommandRestart(jarvis));
         registerCommand("stats", new CommandStats(jarvis));
@@ -78,7 +79,7 @@ public class CommandManager {
     }
 
     public void executeCommand(Message message) {
-        String string = message.getContent().substring(1);
+        String string = message.getRawContent().substring(1);
 
         if (string.equals("")) {
             return;

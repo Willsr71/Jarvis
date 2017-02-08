@@ -3,19 +3,18 @@ package sr.will.jarvis.command;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 
-public class CommandMute extends Command {
+public class CommandBan extends Command {
     private Jarvis jarvis;
 
-    public CommandMute(Jarvis jarvis) {
+    public CommandBan(Jarvis jarvis) {
         this.jarvis = jarvis;
     }
 
     @Override
     public void execute(Message message, String... args) {
-        if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.VOICE_MUTE_OTHERS)) {
+        if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.BAN_MEMBERS)) {
             message.getChannel().sendMessage("`You don't have permission for that`").queue();
             return;
         }
@@ -36,23 +35,5 @@ public class CommandMute extends Command {
             message.getChannel().sendMessage("`User is already muted`").queue();
             return;
         }
-
-        if (args.length == 1) {
-            message.getChannel().sendMessage(user.getAsMention() + "` has been muted`").queue();
-            jarvis.muteManager.mute(user.getId(), message.getAuthor().getId(), message.getGuild().getId());
-            return;
-        }
-
-        long duration = 0;
-
-        try {
-            duration = DateUtils.parseDateDiff(args[1], true);
-        } catch (Exception e) {
-            message.getChannel().sendMessage("`Error parsing time`").queue();
-            return;
-        }
-
-        message.getChannel().sendMessage(user.getAsMention() + "` has been muted for " + DateUtils.formatDateDiff(duration) + "`").queue();
-        jarvis.muteManager.mute(user.getId(), message.getAuthor().getId(), message.getGuild().getId(), duration);
     }
 }

@@ -33,6 +33,6 @@ public class CommandUnmute extends Command {
         }
 
         jarvis.muteManager.unmute(user.getId(), guild.getId());
-        channel.sendMessage("`" + user.getAsMention() + " has been unmuted`").queue();
+        channel.sendMessage(user.getAsMention() + "` has been unmuted`").queue();
     }
 }
