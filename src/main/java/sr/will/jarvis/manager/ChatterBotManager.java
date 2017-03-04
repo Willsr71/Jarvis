@@ -34,7 +34,7 @@ public class ChatterBotManager {
 
     public void createBot(String channelId) {
         try {
-            chatterBots.put(channelId, botFactory.create(ChatterBotType.CLEVERBOT).createSession());
+            chatterBots.put(channelId, botFactory.create(ChatterBotType.PANDORABOTS).createSession());
         } catch (Exception e) {
             e.printStackTrace();
         }
