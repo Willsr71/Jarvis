@@ -1,10 +1,12 @@
 package sr.will.jarvis.command;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 
+import java.awt.*;
 import java.util.HashMap;
 
 public class CommandMuteList extends Command {
@@ -16,12 +18,12 @@ public class CommandMuteList extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        String string = "Mutes:```";
-
         HashMap<String, Long> mutes = jarvis.muteManager.getMutes(message.getGuild().getId());
 
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Active mutes").setColor(Color.GREEN);
+
         if (mutes.size() == 0) {
-            string += "None";
+            embed.setDescription("None");
         } else {
             for (String userId : mutes.keySet()) {
                 Member member = message.getGuild().getMemberById(userId);
@@ -30,12 +32,10 @@ public class CommandMuteList extends Command {
                     memberName = member.getEffectiveName();
                 }
 
-                string += "\n" + memberName + ": " + DateUtils.formatDateDiff(mutes.get(userId));
+                embed.addField(memberName, DateUtils.formatDateDiff(mutes.get(userId)), false);
             }
         }
 
-        string += "```";
-
-        message.getChannel().sendMessage(string).queue();
+        message.getChannel().sendMessage(embed.build()).queue();
     }
 }

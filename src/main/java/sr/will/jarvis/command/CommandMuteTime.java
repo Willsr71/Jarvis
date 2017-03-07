@@ -1,9 +1,12 @@
 package sr.will.jarvis.command;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
+
+import java.awt.*;
 
 public class CommandMuteTime extends Command {
     private Jarvis jarvis;
@@ -15,7 +18,7 @@ public class CommandMuteTime extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (message.getMentionedUsers().size() == 0) {
-            message.getChannel().sendMessage("`No user tagged`");
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("No user tagged").build()).queue();
             return;
         }
 
@@ -23,10 +26,10 @@ public class CommandMuteTime extends Command {
         long duration = jarvis.muteManager.getMuteDuration(message.getGuild().getId(), user.getId());
 
         if (!DateUtils.timestampApplies(duration)) {
-            message.getChannel().sendMessage("`User not muted`").queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("User not muted").build()).queue();
             return;
         }
 
-        message.getChannel().sendMessage("`User is muted for " + DateUtils.formatDateDiff(duration) + "`").queue();
+        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success").setColor(Color.GREEN).setDescription("User is muted for " + DateUtils.formatDateDiff(duration)).build()).queue();
     }
 }

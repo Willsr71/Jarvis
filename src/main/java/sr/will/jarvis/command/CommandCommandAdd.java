@@ -1,8 +1,11 @@
 package sr.will.jarvis.command;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
+
+import java.awt.*;
 
 public class CommandCommandAdd extends Command {
     private Jarvis jarvis;
@@ -14,22 +17,22 @@ public class CommandCommandAdd extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.MESSAGE_MANAGE)) {
-            message.getChannel().sendMessage("`You don't have permission for that`").queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("You don't have permission for that").build()).queue();
             return;
         }
 
         if (args.length < 2) {
-            message.getChannel().sendMessage("`Usage: !addcommand <command> <response>`").queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("Usage: !commandadd <command> <response>").build()).queue();
             return;
         }
 
         if (args[0].length() > 255) {
-            message.getChannel().sendMessage("`Command \"" + args[0] + "\" is too long`").queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("Command \"" + args[0] + "\" is too long").build()).queue();
             return;
         }
 
         if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getId(), args[0]) != null) {
-            message.getChannel().sendMessage("`Command already exists`").queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("Command already exists").build()).queue();
             return;
         }
 
@@ -39,7 +42,7 @@ public class CommandCommandAdd extends Command {
         }
         response = response.trim();
 
-        message.getChannel().sendMessage("`Command !" + args[0] + " has been added`").queue();
+        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success").setColor(Color.GREEN).setDescription("Command !" + args[0] + " has been added").build()).queue();
         jarvis.commandManager.addCustomCommand(message.getGuild().getId(), args[0], response);
     }
 }

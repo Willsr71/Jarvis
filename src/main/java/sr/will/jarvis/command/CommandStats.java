@@ -1,8 +1,11 @@
 package sr.will.jarvis.command;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
+
+import java.awt.*;
 
 public class CommandStats extends Command {
     private Jarvis jarvis;
@@ -13,15 +16,15 @@ public class CommandStats extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        String stats = "```yaml";
-        stats += "\nUptime: " + DateUtils.formatDateDiff(jarvis.startTime);
-        stats += "\nGuilds: " + message.getJDA().getGuilds().size();
-        stats += "\nText_channels: " + message.getJDA().getTextChannels().size();
-        stats += "\nVoice_channels: " + message.getJDA().getVoiceChannels().size();
-        stats += "\nUsers: " + message.getJDA().getUsers().size();
-        stats += "\nMessages_sent: " + jarvis.messagesReceived;
-        stats += "```";
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Stats").setColor(Color.GREEN);
 
-        message.getChannel().sendMessage(stats).queue();
+        embed.addField("Uptime", DateUtils.formatDateDiff(jarvis.startTime), true);
+        embed.addField("Guilds", message.getJDA().getGuilds().size() + "", true);
+        embed.addField("Text channels", message.getJDA().getTextChannels().size() + "", true);
+        embed.addField("Voice channels", message.getJDA().getVoiceChannels().size() + "", true);
+        embed.addField("Users", message.getJDA().getUsers().size() + "", true);
+        embed.addField("Messages sent", jarvis.messagesReceived + "", true);
+
+        message.getChannel().sendMessage(embed.build()).queue();
     }
 }
