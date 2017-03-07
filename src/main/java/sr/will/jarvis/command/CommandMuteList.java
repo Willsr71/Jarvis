@@ -20,14 +20,18 @@ public class CommandMuteList extends Command {
 
         HashMap<String, Long> mutes = jarvis.muteManager.getMutes(message.getGuild().getId());
 
-        for (String userId : mutes.keySet()) {
-            Member member = message.getGuild().getMemberById(userId);
-            String memberName = userId;
-            if (member != null) {
-                memberName = member.getEffectiveName();
-            }
+        if (mutes.size() == 0) {
+            string += "None";
+        } else {
+            for (String userId : mutes.keySet()) {
+                Member member = message.getGuild().getMemberById(userId);
+                String memberName = userId;
+                if (member != null) {
+                    memberName = member.getEffectiveName();
+                }
 
-            string += "\n" + memberName + ": " + DateUtils.formatDateDiff(mutes.get(userId));
+                string += "\n" + memberName + ": " + DateUtils.formatDateDiff(mutes.get(userId));
+            }
         }
 
         string += "```";

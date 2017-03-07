@@ -24,8 +24,9 @@ public class MuteManager {
 
     public HashMap<String, Long> getMutes(String guildId) {
         HashMap<String, Long> mutes = new HashMap<>();
+        long time = Math.floorDiv(System.currentTimeMillis(), 1000);
         try {
-            ResultSet result = jarvis.database.executeQuery("SELECT user, duration FROM mutes WHERE (guild = ?);", guildId);
+            ResultSet result = jarvis.database.executeQuery("SELECT user, duration FROM mutes WHERE (guild = ? AND (duration = -1 OR duration >= ?) AND id = (SELECT max(id) FROM mutes));", guildId, time);
             while (result.next()) {
                 mutes.put(result.getString("user"), result.getLong("duration"));
             }
@@ -69,6 +70,7 @@ public class MuteManager {
         for (Guild guild : jarvis.getJda().getGuilds()) {
             try {
                 deleteOldRoles(guild);
+                createMuteRole(guild);
             } catch (PermissionException e) {
                 e.printStackTrace();
             }
@@ -82,7 +84,6 @@ public class MuteManager {
         for (Role role : roles) {
             role.delete().queue(aVoid -> {
                 System.out.println("Deleted role " + role.getName() + " from guild " + role.getGuild().getName());
-                createMuteRole(guild);
             });
         }
     }
