@@ -103,17 +103,17 @@ public class BanManager {
     }
 
     public void processBannedMembers(Guild guild) {
-        HashMap<String, Long> mutes = jarvis.muteManager.getMutes(guild.getId());
+        HashMap<String, Long> bans = jarvis.muteManager.getMutes(guild.getId());
 
-        System.out.println("Processing " + mutes.size() + " banned members for " + guild.getName());
+        System.out.println("Processing " + bans.size() + " banned members for " + guild.getName());
 
-        for (String userId : mutes.keySet()) {
-            if (!DateUtils.timestampApplies(mutes.get(userId))) {
+        for (String userId : bans.keySet()) {
+            if (!DateUtils.timestampApplies(bans.get(userId))) {
                 unban(guild.getId(), userId);
                 continue;
             }
 
-            startUnbanThread(guild.getId(), userId, mutes.get(userId));
+            startUnbanThread(guild.getId(), userId, bans.get(userId));
         }
     }
 

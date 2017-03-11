@@ -134,10 +134,10 @@ public class MuteManager {
         guild.getController().createRole().queue((role) -> {
             role.getManager().setName("Jarvis_Mute").queue(aVoid -> {
                 role.getManager().setPermissions().queue(aVoid1 -> {
-                    role.getManager().setColor(Color.black).queue(aVoid2 -> {
+                    role.getManager().setColor(Color.BLACK).queue(aVoid2 -> {
                         role.getManager().setMentionable(false).queue(aVoid3 -> {
                             addMuteRoleToChannels(guild, role);
-                            System.out.println("Created ban role in guild " + guild.getName());
+                            System.out.println("Created mute role in guild " + guild.getName());
                             processMutedMembers(guild, role);
                         });
                     });
