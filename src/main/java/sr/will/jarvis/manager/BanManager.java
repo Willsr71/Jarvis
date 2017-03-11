@@ -50,11 +50,7 @@ public class BanManager {
     }
 
     public boolean isBanned(String guildId, String userId) {
-        boolean banned = DateUtils.timestampApplies(getBanDuration(guildId, userId));
-        System.out.println("guild:  " + guildId);
-        System.out.println("user:   " + userId);
-        System.out.println("banned: " + banned);
-        return banned;
+        return DateUtils.timestampApplies(getBanDuration(guildId, userId));
     }
 
     public void ban(String guildId, String userId, String invokerId) {
@@ -127,9 +123,9 @@ public class BanManager {
 
     public void setBanned(Guild guild, String userId, boolean banned) {
         if (banned) {
-            guild.getController().ban(userId, 0);
+            guild.getController().ban(userId, 0).queue();
         } else {
-            guild.getController().unban(userId);
+            guild.getController().unban(userId).queue();
         }
     }
 

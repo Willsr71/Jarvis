@@ -67,6 +67,7 @@ public class Jarvis {
         System.out.println("Stopping!");
 
         muteManager.stop();
+        banManager.stop();
         jda.shutdown();
         database.disconnect();
 
