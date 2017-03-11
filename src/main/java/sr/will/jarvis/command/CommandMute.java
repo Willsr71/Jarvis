@@ -35,14 +35,14 @@ public class CommandMute extends Command {
             return;
         }
 
-        if (jarvis.muteManager.isMuted(user.getId(), message.getGuild().getId())) {
+        if (jarvis.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
             message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User already muted").build()).queue();
             return;
         }
 
         if (args.length == 1) {
             message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been muted").build()).queue();
-            jarvis.muteManager.mute(user.getId(), message.getAuthor().getId(), message.getGuild().getId());
+            jarvis.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
             return;
         }
 
@@ -56,6 +56,6 @@ public class CommandMute extends Command {
         }
 
         message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration)).build()).queue();
-        jarvis.muteManager.mute(user.getId(), message.getAuthor().getId(), message.getGuild().getId(), duration);
+        jarvis.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
     }
 }

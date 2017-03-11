@@ -31,12 +31,12 @@ public class CommandUnmute extends Command {
     }
 
     public void unmute(User user, Guild guild, MessageChannel channel) {
-        if (!jarvis.muteManager.isMuted(user.getId(), guild.getId())) {
+        if (!jarvis.muteManager.isMuted(guild.getId(), user.getId())) {
             channel.sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User is not muted").build()).queue();
             return;
         }
 
-        jarvis.muteManager.unmute(user.getId(), guild.getId());
+        jarvis.muteManager.unmute(guild.getId(), user.getId());
         channel.sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been unmuted").build()).queue();
     }
 }

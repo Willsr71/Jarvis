@@ -34,7 +34,7 @@ public class CommandBan extends Command {
             return;
         }
 
-        if (jarvis.muteManager.isMuted(user.getId(), message.getGuild().getId())) {
+        if (jarvis.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
             message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User is already banned").build()).queue();
             return;
         }

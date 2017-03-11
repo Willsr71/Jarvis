@@ -16,6 +16,8 @@ public class CommandStats extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        Runtime runtime = Runtime.getRuntime();
+
         EmbedBuilder embed = new EmbedBuilder().setTitle("Stats", "https://jarvis.will.sr").setColor(Color.GREEN);
 
         embed.addField("Uptime", DateUtils.formatDateDiff(jarvis.startTime), true);
@@ -24,6 +26,8 @@ public class CommandStats extends Command {
         embed.addField("Voice channels", message.getJDA().getVoiceChannels().size() + "", true);
         embed.addField("Users", message.getJDA().getUsers().size() + "", true);
         embed.addField("Messages sent", jarvis.messagesReceived + "", true);
+        embed.addField("Threads", Thread.activeCount() + "", true);
+        embed.addField("Memory", ((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)) + "MB / " + (runtime.maxMemory() / (1024 * 1024)) + "MB", true);
 
         message.getChannel().sendMessage(embed.build()).queue();
     }

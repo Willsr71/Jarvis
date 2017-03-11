@@ -56,12 +56,13 @@ public class Jarvis {
             e.printStackTrace();
         }
 
-        muteManager.setMuteRoles();
+        muteManager.setup();
     }
 
     public void stop() {
         System.out.println("Stopping!");
 
+        muteManager.stop();
         jda.shutdown();
         database.disconnect();
 
