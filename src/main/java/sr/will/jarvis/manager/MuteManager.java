@@ -56,7 +56,11 @@ public class MuteManager {
     }
 
     public boolean isMuted(String guildId, String userId) {
-        return DateUtils.timestampApplies(getMuteDuration(guildId, userId));
+        boolean muted = DateUtils.timestampApplies(getMuteDuration(guildId, userId));
+        System.out.println("guild: " + guildId);
+        System.out.println("user:  " + userId);
+        System.out.println("muted: " + muted);
+        return muted;
     }
 
     public void mute(String guildId, String userId, String invokerId) {
@@ -133,7 +137,7 @@ public class MuteManager {
                     role.getManager().setColor(Color.black).queue(aVoid2 -> {
                         role.getManager().setMentionable(false).queue(aVoid3 -> {
                             addMuteRoleToChannels(guild, role);
-                            System.out.println("Created mute role in guild " + guild.getName());
+                            System.out.println("Created ban role in guild " + guild.getName());
                             processMutedMembers(guild, role);
                         });
                     });

@@ -8,10 +8,10 @@ import sr.will.jarvis.Jarvis;
 
 import java.awt.*;
 
-public class CommandMuteTime extends Command {
+public class CommandBanTime extends Command {
     private Jarvis jarvis;
 
-    public CommandMuteTime(Jarvis jarvis) {
+    public CommandBanTime(Jarvis jarvis) {
         this.jarvis = jarvis;
     }
 
@@ -23,13 +23,13 @@ public class CommandMuteTime extends Command {
         }
 
         User user = message.getMentionedUsers().get(0);
-        long duration = jarvis.muteManager.getMuteDuration(message.getGuild().getId(), user.getId());
+        long duration = jarvis.banManager.getBanDuration(message.getGuild().getId(), user.getId());
 
         if (!DateUtils.timestampApplies(duration)) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("User not muted").build()).queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("User not banned").build()).queue();
             return;
         }
 
-        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("User is muted for " + DateUtils.formatDateDiff(duration)).build()).queue();
+        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("User is banned for " + DateUtils.formatDateDiff(duration)).build()).queue();
     }
 }

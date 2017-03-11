@@ -29,6 +29,9 @@ public class CommandManager {
     }
 
     public void registerCommands() {
+        registerCommand("ban", new CommandBan(jarvis));
+        registerCommand("banlist", new CommandBanList(jarvis));
+        registerCommand("bantime", new CommandBanTime(jarvis));
         registerCommand("botadd", new CommandBotAdd(jarvis));
         registerCommand("botremove", new CommandBotRemove(jarvis));
         registerCommand("commandadd", new CommandCommandAdd(jarvis));
@@ -40,6 +43,7 @@ public class CommandManager {
         registerCommand("restart", new CommandRestart(jarvis));
         registerCommand("stats", new CommandStats(jarvis));
         registerCommand("unmute", new CommandUnmute(jarvis));
+        registerCommand("unban", new CommandUnban(jarvis));
     }
 
     public void addCustomCommand(String guildId, String command, String response) {

@@ -9,6 +9,7 @@ import net.noxal.common.util.config.JSONConfigManager;
 import sr.will.jarvis.config.Config;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
+import sr.will.jarvis.manager.BanManager;
 import sr.will.jarvis.manager.ChatterBotManager;
 import sr.will.jarvis.manager.CommandManager;
 import sr.will.jarvis.manager.MuteManager;
@@ -26,6 +27,7 @@ public class Jarvis {
     public Database database;
     public CommandManager commandManager;
     public MuteManager muteManager;
+    public BanManager banManager;
     public ChatterBotManager chatterBotManager;
     private JDA jda;
 
@@ -41,6 +43,7 @@ public class Jarvis {
         commandManager.registerCommands();
 
         muteManager = new MuteManager(this);
+        banManager = new BanManager(this);
         chatterBotManager = new ChatterBotManager(this);
 
         database = new Database(this);
@@ -57,6 +60,7 @@ public class Jarvis {
         }
 
         muteManager.setup();
+        banManager.setup();
     }
 
     public void stop() {
