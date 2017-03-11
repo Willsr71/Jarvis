@@ -20,7 +20,7 @@ public class CommandMuteList extends Command {
     public void execute(Message message, String... args) {
         HashMap<String, Long> mutes = jarvis.muteManager.getMutes(message.getGuild().getId());
 
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Active mutes").setColor(Color.GREEN);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Active mutes", "https://jarvis.will.sr").setColor(Color.GREEN);
 
         if (mutes.size() == 0) {
             embed.setDescription("None");

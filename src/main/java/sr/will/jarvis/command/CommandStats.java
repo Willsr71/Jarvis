@@ -16,7 +16,7 @@ public class CommandStats extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Stats").setColor(Color.GREEN);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Stats", "https://jarvis.will.sr").setColor(Color.GREEN);
 
         embed.addField("Uptime", DateUtils.formatDateDiff(jarvis.startTime), true);
         embed.addField("Guilds", message.getJDA().getGuilds().size() + "", true);

@@ -21,7 +21,7 @@ public class CommandUnmute extends Command {
     public void execute(Message message, String... args) {
         if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.VOICE_MUTE_OTHERS)) {
             message.getChannel().sendMessage("`You don't have permission for that`").queue();
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("You don't have permission for that").build()).queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("You don't have permission for that").build()).queue();
             return;
         }
 
@@ -32,11 +32,11 @@ public class CommandUnmute extends Command {
 
     public void unmute(User user, Guild guild, MessageChannel channel) {
         if (!jarvis.muteManager.isMuted(user.getId(), guild.getId())) {
-            channel.sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("User is not muted").build()).queue();
+            channel.sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User is not muted").build()).queue();
             return;
         }
 
         jarvis.muteManager.unmute(user.getId(), guild.getId());
-        channel.sendMessage(new EmbedBuilder().setTitle("Success").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been unmuted").build()).queue();
+        channel.sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been unmuted").build()).queue();
     }
 }

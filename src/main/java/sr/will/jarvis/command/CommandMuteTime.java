@@ -18,7 +18,7 @@ public class CommandMuteTime extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (message.getMentionedUsers().size() == 0) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("No user tagged").build()).queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("No user tagged").build()).queue();
             return;
         }
 
@@ -26,10 +26,10 @@ public class CommandMuteTime extends Command {
         long duration = jarvis.muteManager.getMuteDuration(message.getGuild().getId(), user.getId());
 
         if (!DateUtils.timestampApplies(duration)) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error").setColor(Color.RED).setDescription("User not muted").build()).queue();
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User not muted").build()).queue();
             return;
         }
 
-        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success").setColor(Color.GREEN).setDescription("User is muted for " + DateUtils.formatDateDiff(duration)).build()).queue();
+        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("User is muted for " + DateUtils.formatDateDiff(duration)).build()).queue();
     }
 }

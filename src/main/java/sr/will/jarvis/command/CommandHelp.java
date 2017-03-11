@@ -16,7 +16,7 @@ public class CommandHelp extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Commands").setColor(Color.GREEN);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Commands", "https://jarvis.will.sr").setColor(Color.GREEN);
 
         String string = "";
         ArrayList<String> commands = jarvis.commandManager.getCommands();

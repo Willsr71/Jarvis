@@ -34,11 +34,6 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getRawContent().startsWith("<@" + event.getJDA().getSelfUser().getId() + ">")) {
-            event.getChannel().sendMessage("I'm sorry " + event.getGuild().getMember(event.getAuthor()).getEffectiveName() + ", I can't let you do that.").queue();
-            return;
-        }
-
         if (jarvis.chatterBotManager.isBotChannel(event.getChannel().getId())) {
             if (event.getMessage().getContent().startsWith("<")) {
                 return;
