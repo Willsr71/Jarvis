@@ -56,7 +56,7 @@ public class MuteManager {
     }
 
     public boolean isMuted(String guildId, String userId) {
-        return DateUtils.timestampApplies(getMuteDuration(userId, guildId));
+        return DateUtils.timestampApplies(getMuteDuration(guildId, userId));
     }
 
     public void mute(String guildId, String userId, String invokerId) {
