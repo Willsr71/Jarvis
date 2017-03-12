@@ -2,11 +2,10 @@ package sr.will.jarvis.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.util.CommandUtils;
 
 import java.awt.*;
 
@@ -24,18 +23,18 @@ public class CommandUnban extends Command {
             return;
         }
 
-        for (User user : message.getMentionedUsers()) {
-            unmute(user, message.getGuild(), message.getChannel());
-        }
-    }
-
-    public void unmute(User user, Guild guild, MessageChannel channel) {
-        if (!jarvis.banManager.isBanned(guild.getId(), user.getId())) {
-            channel.sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User is not banned").build()).queue();
+        User user = CommandUtils.getMentionedUser(message, args);
+        if (user == null) {
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("No user tagged").build()).queue();
             return;
         }
 
-        jarvis.banManager.unban(guild.getId(), user.getId());
-        channel.sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been unbanned").build()).queue();
+        if (!jarvis.banManager.isBanned(message.getGuild().getId(), user.getId())) {
+            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User is not banned").build()).queue();
+            return;
+        }
+
+        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been unbanned").build()).queue();
+        jarvis.banManager.unban(message.getGuild().getId(), user.getId());
     }
 }

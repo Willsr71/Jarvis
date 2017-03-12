@@ -3,6 +3,7 @@ package sr.will.jarvis.command;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 
@@ -26,13 +27,19 @@ public class CommandMuteList extends Command {
             embed.setDescription("None");
         } else {
             for (String userId : mutes.keySet()) {
-                Member member = message.getGuild().getMemberById(userId);
-                String memberName = userId;
-                if (member != null) {
-                    memberName = member.getEffectiveName();
+                String userName = userId;
+
+                User user = message.getJDA().getUserById(userId);
+                if (user != null) {
+                    userName = user.getName();
+
+                    Member member = message.getGuild().getMember(user);
+                    if (member != null) {
+                        userName = member.getEffectiveName();
+                    }
                 }
 
-                embed.addField(memberName, DateUtils.formatDateDiff(mutes.get(userId)), false);
+                embed.addField(userName, DateUtils.formatDateDiff(mutes.get(userId)), false);
             }
         }
 

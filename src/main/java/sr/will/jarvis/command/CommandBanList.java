@@ -1,8 +1,8 @@
 package sr.will.jarvis.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 
@@ -26,13 +26,14 @@ public class CommandBanList extends Command {
             embed.setDescription("None");
         } else {
             for (String userId : bans.keySet()) {
-                Member member = message.getGuild().getMemberById(userId);
-                String memberName = userId;
-                if (member != null) {
-                    memberName = member.getEffectiveName();
+                String userName = userId;
+
+                User user = message.getJDA().getUserById(userId);
+                if (user != null) {
+                    userName = user.getName();
                 }
 
-                embed.addField(memberName, DateUtils.formatDateDiff(bans.get(userId)), true);
+                embed.addField(userName, DateUtils.formatDateDiff(bans.get(userId)), true);
             }
         }
 

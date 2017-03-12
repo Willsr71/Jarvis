@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.util.CommandUtils;
 
 import java.awt.*;
 
@@ -23,12 +24,11 @@ public class CommandMute extends Command {
             return;
         }
 
-        if (message.getMentionedUsers().size() == 0) {
+        User user = CommandUtils.getMentionedUser(message, args);
+        if (user == null) {
             message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("No user tagged").build()).queue();
             return;
         }
-
-        User user = message.getMentionedUsers().get(0);
 
         if (user.getId().equals(message.getJDA().getSelfUser().getId())) {
             message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("You cannot mute the all powerful " + message.getGuild().getMemberById(message.getJDA().getSelfUser().getId()).getEffectiveName()).build()).queue();

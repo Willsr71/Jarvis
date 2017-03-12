@@ -3,7 +3,6 @@ package sr.will.jarvis;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.noxal.common.util.config.JSONConfigManager;
 import sr.will.jarvis.config.Config;

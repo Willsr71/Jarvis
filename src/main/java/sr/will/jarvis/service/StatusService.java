@@ -19,9 +19,7 @@ public class StatusService extends Thread {
         while (true) {
             try {
                 int rand = ThreadLocalRandom.current().nextInt(0, statusMessages.size());
-                String game = statusMessages.get(rand);
-                System.out.println(rand + " = " + game);
-                Jarvis.getInstance().getJda().getPresence().setGame(Game.of(game));
+                Jarvis.getInstance().getJda().getPresence().setGame(Game.of(statusMessages.get(rand)));
 
                 long sleepTime = timeInterval - (System.currentTimeMillis() % timeInterval);
                 Thread.sleep(sleepTime);
