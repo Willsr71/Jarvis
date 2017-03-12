@@ -15,7 +15,6 @@ import static java.lang.Thread.sleep;
 
 public class BanManager {
     private Jarvis jarvis;
-    private boolean running = true;
     private ArrayList<Thread> unbanThreads = new ArrayList<>();
 
     public BanManager(Jarvis jarvis) {
@@ -96,7 +95,6 @@ public class BanManager {
     }
 
     public void stop() {
-        running = false;
         for (Thread thread : unbanThreads) {
             thread.interrupt();
         }
@@ -137,7 +135,7 @@ public class BanManager {
                 sleep(sleepTime);
                 Jarvis.getInstance().banManager.unban(guildId, userId);
             } catch (InterruptedException e) {
-                if (running) {
+                if (Jarvis.getInstance().running) {
                     e.printStackTrace();
                     startUnbanThread(guildId, userId, duration);
                 }

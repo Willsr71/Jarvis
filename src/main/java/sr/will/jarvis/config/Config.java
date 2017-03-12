@@ -1,13 +1,16 @@
 package sr.will.jarvis.config;
 
+import java.util.ArrayList;
+
 public class Config {
     public Discord discord = new Discord();
     public Sql sql = new Sql();
 
     public class Discord {
         public String token;
-        public String game;
         public String owner;
+        public long statusMessageInterval;
+        public ArrayList<String> statusMessages;
     }
 
     public class Sql {

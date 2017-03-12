@@ -21,7 +21,6 @@ import static java.lang.Thread.sleep;
 
 public class MuteManager {
     private Jarvis jarvis;
-    private boolean running = true;
     private ArrayList<Thread> unmuteThreads = new ArrayList<>();
 
     public MuteManager(Jarvis jarvis) {
@@ -113,7 +112,6 @@ public class MuteManager {
     }
 
     public void stop() {
-        running = false;
         for (Thread thread : unmuteThreads) {
             thread.interrupt();
         }
@@ -194,7 +192,7 @@ public class MuteManager {
                 sleep(sleepTime);
                 Jarvis.getInstance().muteManager.unmute(guildId, userId);
             } catch (InterruptedException e) {
-                if (running) {
+                if (Jarvis.getInstance().running) {
                     e.printStackTrace();
                     startUnmuteThread(guildId, userId, duration);
                 }

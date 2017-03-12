@@ -13,6 +13,7 @@ import sr.will.jarvis.manager.BanManager;
 import sr.will.jarvis.manager.ChatterBotManager;
 import sr.will.jarvis.manager.CommandManager;
 import sr.will.jarvis.manager.MuteManager;
+import sr.will.jarvis.service.StatusService;
 import sr.will.jarvis.sql.Database;
 
 import javax.security.auth.login.LoginException;
@@ -29,9 +30,11 @@ public class Jarvis {
     public MuteManager muteManager;
     public BanManager banManager;
     public ChatterBotManager chatterBotManager;
+    public StatusService statusService;
     private JDA jda;
 
     public final long startTime = new Date().getTime();
+    public boolean running = true;
     public int messagesReceived = 0;
 
     public Jarvis() {
@@ -54,10 +57,12 @@ public class Jarvis {
             jda = new JDABuilder(AccountType.BOT).setToken(config.discord.token).addListener(new ReadyListener()).buildBlocking();
             jda.setAutoReconnect(true);
             jda.addEventListener(new MessageListener(this));
-            jda.getPresence().setGame(Game.of(config.discord.game));
         } catch (LoginException | RateLimitedException | InterruptedException e) {
             e.printStackTrace();
         }
+
+        statusService = new StatusService(config.discord.statusMessageInterval * 1000, config.discord.statusMessages);
+        statusService.run();
 
         muteManager.setup();
         banManager.setup();
@@ -66,8 +71,11 @@ public class Jarvis {
     public void stop() {
         System.out.println("Stopping!");
 
+        running = false;
+
         muteManager.stop();
         banManager.stop();
+        statusService.interrupt();
         jda.shutdown();
         database.disconnect();
 
