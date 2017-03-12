@@ -101,7 +101,7 @@ public class BanManager {
     }
 
     public void processBannedMembers(Guild guild) {
-        HashMap<String, Long> bans = jarvis.muteManager.getMutes(guild.getId());
+        HashMap<String, Long> bans = jarvis.banManager.getBans(guild.getId());
 
         System.out.println("Processing " + bans.size() + " banned members for " + guild.getName());
 
