@@ -55,11 +55,7 @@ public class MuteManager {
     }
 
     public boolean isMuted(String guildId, String userId) {
-        boolean muted = DateUtils.timestampApplies(getMuteDuration(guildId, userId));
-        System.out.println("guild: " + guildId);
-        System.out.println("user:  " + userId);
-        System.out.println("muted: " + muted);
-        return muted;
+        return DateUtils.timestampApplies(getMuteDuration(guildId, userId));
     }
 
     public void mute(String guildId, String userId, String invokerId) {
@@ -99,15 +95,20 @@ public class MuteManager {
         }));
     }
 
-    public void setup() {
+    public void setupAll() {
+        System.out.println("setting up guilds for muting");
         for (Guild guild : jarvis.getJda().getGuilds()) {
-            System.out.println("Setting up guild " + guild.getName());
-            try {
-                deleteOldRoles(guild);
-                createMuteRole(guild);
-            } catch (PermissionException e) {
-                e.printStackTrace();
-            }
+            setup(guild);
+        }
+    }
+
+    public void setup(Guild guild) {
+        System.out.println("Setting up guild " + guild.getName());
+        try {
+            deleteOldRoles(guild);
+            createMuteRole(guild);
+        } catch (PermissionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -203,7 +204,7 @@ public class MuteManager {
 
     public void startThread(Runnable runnable) {
         Thread thread = new Thread(runnable);
-        thread.run();
+        thread.start();
         unmuteThreads.add(thread);
     }
 }

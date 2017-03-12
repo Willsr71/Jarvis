@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.noxal.common.util.config.JSONConfigManager;
 import sr.will.jarvis.config.Config;
+import sr.will.jarvis.listener.GuildAvailableListener;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
 import sr.will.jarvis.manager.BanManager;
@@ -53,17 +54,23 @@ public class Jarvis {
         reload();
 
         try {
-            jda = new JDABuilder(AccountType.BOT).setToken(config.discord.token).addListener(new ReadyListener()).buildBlocking();
-            jda.setAutoReconnect(true);
-            jda.addEventListener(new MessageListener(this));
-        } catch (LoginException | RateLimitedException | InterruptedException e) {
+            jda = new JDABuilder(AccountType.BOT)
+                    .setToken(config.discord.token)
+                    .setAutoReconnect(true)
+                    .addListener(new GuildAvailableListener(this))
+                    .addListener(new MessageListener(this))
+                    .addListener(new ReadyListener())
+                    .buildAsync();
+        } catch (LoginException | RateLimitedException e) {
             e.printStackTrace();
         }
+    }
 
+    public void finishStartup() {
         statusService = new StatusService(config.discord.statusMessageInterval * 1000, config.discord.statusMessages);
-        statusService.run();
+        statusService.start();
 
-        muteManager.setup();
+        muteManager.setupAll();
         banManager.setup();
     }
 

@@ -146,7 +146,7 @@ public class BanManager {
 
     public void startThread(Runnable runnable) {
         Thread thread = new Thread(runnable);
-        thread.run();
+        thread.start();
         unbanThreads.add(thread);
     }
 }
