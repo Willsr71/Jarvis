@@ -18,11 +18,6 @@ public class CommandBanTime extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        if (message.getMentionedUsers().size() == 0) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("No user tagged").build()).queue();
-            return;
-        }
-
         User user = CommandUtils.getMentionedUser(message, args);
         if (user == null) {
             message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("No user tagged").build()).queue();
