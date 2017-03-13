@@ -31,6 +31,6 @@ public class CommandMuteTime extends Command {
             return;
         }
 
-        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("User is muted for " + DateUtils.formatDateDiff(duration)).build()).queue();
+        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).addField(user.getName(), DateUtils.formatDateDiff(duration), true).build()).queue();
     }
 }
