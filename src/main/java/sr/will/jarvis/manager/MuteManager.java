@@ -189,6 +189,11 @@ public class MuteManager {
         startThread(() -> {
             try {
                 long sleepTime = duration - System.currentTimeMillis();
+                if (sleepTime <= 0) {
+                    Jarvis.getInstance().muteManager.unmute(guildId, userId);
+                    return;
+                }
+
                 System.out.println("Sleeping for " + sleepTime);
                 sleep(sleepTime);
                 Jarvis.getInstance().muteManager.unmute(guildId, userId);

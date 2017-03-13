@@ -131,6 +131,11 @@ public class BanManager {
         startThread(() -> {
             try {
                 long sleepTime = duration - System.currentTimeMillis();
+                if (sleepTime <= 0) {
+                    Jarvis.getInstance().banManager.unban(guildId, userId);
+                    return;
+                }
+
                 System.out.println("Sleeping for " + sleepTime);
                 sleep(sleepTime);
                 Jarvis.getInstance().banManager.unban(guildId, userId);
