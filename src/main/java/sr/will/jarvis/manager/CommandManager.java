@@ -28,14 +28,20 @@ public class CommandManager {
         return new ArrayList<>(commands.keySet());
     }
 
+    public Command getCommand(String name) {
+        return commands.get(name);
+    }
+
     public void registerCommands() {
         registerCommand("ban", new CommandBan(jarvis));
         registerCommand("banlist", new CommandBanList(jarvis));
         registerCommand("bantime", new CommandBanTime(jarvis));
         registerCommand("botadd", new CommandBotAdd(jarvis));
         registerCommand("botremove", new CommandBotRemove(jarvis));
+        registerCommand("clear", new CommandClear(jarvis));
         registerCommand("commandadd", new CommandCommandAdd(jarvis));
         registerCommand("commandremove", new CommandCommandRemove(jarvis));
+        registerCommand("google", new CommandGoogle(jarvis));
         registerCommand("help", new CommandHelp(jarvis));
         registerCommand("mute", new CommandMute(jarvis));
         registerCommand("mutelist", new CommandMuteList(jarvis));

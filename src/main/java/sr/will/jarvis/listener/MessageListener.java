@@ -27,6 +27,7 @@ public class MessageListener extends ListenerAdapter {
         if (jarvis.muteManager.isMuted(event.getGuild().getId(), event.getAuthor().getId())) {
             event.getMessage().delete().queue();
             System.out.println("deleting message");
+            jarvis.muteManager.setup(event.getGuild());
             return;
         }
 
