@@ -1,5 +1,6 @@
 package sr.will.jarvis.listener;
 
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -20,13 +21,18 @@ public class MessageListener extends ListenerAdapter {
 
         jarvis.messagesReceived += 1;
 
-        if (event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId())) {
+        if (event.getAuthor().isBot()) {
             return;
         }
 
         if (jarvis.muteManager.isMuted(event.getGuild().getId(), event.getAuthor().getId())) {
             event.getMessage().delete().queue();
             System.out.println("deleting message");
+
+            if (event.getGuild().getMember(event.getAuthor()).hasPermission(Permission.ADMINISTRATOR)) {
+                return;
+            }
+
             jarvis.muteManager.setup(event.getGuild());
             return;
         }
@@ -44,5 +50,7 @@ public class MessageListener extends ListenerAdapter {
             jarvis.chatterBotManager.sendResponse(event.getMessage());
             return;
         }
+
+        jarvis.levelManager.increaseUserExperience(event.getGuild().getId(), event.getAuthor().getId());
     }
 }

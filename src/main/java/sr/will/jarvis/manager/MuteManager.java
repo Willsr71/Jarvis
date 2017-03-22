@@ -96,14 +96,12 @@ public class MuteManager {
     }
 
     public void setupAll() {
-        System.out.println("setting up guilds for muting");
         for (Guild guild : jarvis.getJda().getGuilds()) {
             setup(guild);
         }
     }
 
     public void setup(Guild guild) {
-        System.out.println("Setting up guild " + guild.getName());
         try {
             deleteOldRoles(guild);
             createMuteRole(guild);
@@ -123,21 +121,14 @@ public class MuteManager {
         roles.addAll(guild.getRolesByName("Jarvis_Mute", true));
         roles.addAll(guild.getRolesByName("new role", true));
         for (Role role : roles) {
-            role.delete().queue(aVoid -> {
-                System.out.println("Deleted role " + role.getName() + " from guild " + role.getGuild().getName());
-            });
+            role.delete().queue();
         }
     }
 
     public void createMuteRole(Guild guild) {
-        guild.getController().createRole().queue((role) -> {
-            role.getManager().setName("Jarvis_Mute").queue(aVoid -> {
-                role.getManager().setPermissions().queue(aVoid1 -> {
-                    addMuteRoleToChannels(guild, role);
-                    System.out.println("Created mute role in guild " + guild.getName());
-                    processMutedMembers(guild, role);
-                });
-            });
+        guild.getController().createRole().setName("Jarvis_Mute").setColor(0x000001).setPermissions(Permission.MESSAGE_READ).queue(role -> {
+            addMuteRoleToChannels(guild, role);
+            processMutedMembers(guild, role);
         });
     }
 
@@ -145,9 +136,7 @@ public class MuteManager {
         List<TextChannel> channels = guild.getTextChannels();
 
         for (TextChannel channel : channels) {
-            channel.createPermissionOverride(role).queue(aVoid -> {
-                channel.getPermissionOverride(role).getManager().deny(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION).queue();
-            });
+            channel.createPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION).queue();
         }
     }
 

@@ -83,6 +83,8 @@ public class Database {
             PreparedStatement statement = connection.prepareStatement(query);
             statement = replaceParams(statement, params);
 
+            System.out.println(statement.toString());
+
             // Run the query
             return statement.execute();
         } catch (SQLException e) {
@@ -143,6 +145,12 @@ public class Database {
                 "user char(64) NOT NULL," +
                 "invoker char(64)," +
                 "duration bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+        execute("CREATE TABLE IF NOT EXISTS levels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild char(64) NOT NULL," +
+                "user char(64) NOT NULL," +
+                "xp bigint(20) NOT NULL DEFAULT 0," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
                 "id int NOT NULL AUTO_INCREMENT," +

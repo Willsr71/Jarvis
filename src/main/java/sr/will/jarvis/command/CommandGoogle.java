@@ -15,7 +15,7 @@ public class CommandGoogle extends Command {
         for (String arg : args) {
             url += arg + "+";
         }
-        url = url.substring(0, url.length());
+        url = url.substring(0, url.length() - 1);
 
         message.getChannel().sendMessage(url).queue();
     }

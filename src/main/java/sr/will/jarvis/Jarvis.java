@@ -9,10 +9,7 @@ import sr.will.jarvis.config.Config;
 import sr.will.jarvis.listener.GuildAvailableListener;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
-import sr.will.jarvis.manager.BanManager;
-import sr.will.jarvis.manager.ChatterBotManager;
-import sr.will.jarvis.manager.CommandManager;
-import sr.will.jarvis.manager.MuteManager;
+import sr.will.jarvis.manager.*;
 import sr.will.jarvis.service.StatusService;
 import sr.will.jarvis.sql.Database;
 
@@ -26,10 +23,11 @@ public class Jarvis {
     public Config config;
 
     public Database database;
-    public CommandManager commandManager;
-    public MuteManager muteManager;
     public BanManager banManager;
     public ChatterBotManager chatterBotManager;
+    public CommandManager commandManager;
+    public LevelManager levelManager;
+    public MuteManager muteManager;
     public StatusService statusService;
     private JDA jda;
 
@@ -42,12 +40,12 @@ public class Jarvis {
 
         configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
 
-        commandManager = new CommandManager(this);
-        commandManager.registerCommands();
-
-        muteManager = new MuteManager(this);
         banManager = new BanManager(this);
         chatterBotManager = new ChatterBotManager(this);
+        commandManager = new CommandManager(this);
+        commandManager.registerCommands();
+        levelManager = new LevelManager(this);
+        muteManager = new MuteManager(this);
 
         database = new Database(this);
 
