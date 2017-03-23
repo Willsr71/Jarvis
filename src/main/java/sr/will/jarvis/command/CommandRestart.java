@@ -17,7 +17,7 @@ public class CommandRestart extends Command {
     @Override
     public void execute(Message message, String... args) {
         // Only allow the bot owner to restart the bot
-        if (!message.getAuthor().getId().equals(jarvis.config.discord.owner)) {
+        if (!jarvis.config.discord.owners.contains(message.getAuthor().getId())) {
             message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("You don't have permission for that").build()).queue();
             return;
         }

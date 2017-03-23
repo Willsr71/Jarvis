@@ -4,6 +4,7 @@ import sr.will.jarvis.Jarvis;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LevelManager {
     private Jarvis jarvis;
@@ -33,12 +34,24 @@ public class LevelManager {
         return 0;
     }
 
-    public void increaseUserExperience(String guildId, String userId) {
-        jarvis.database.execute("IF EXISTS (SELECT * FROM levels WHERE (guild = ? AND user = ?)) " +
-                "UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?) " +
-                "ELSE " +
-                "INSERT INTO levels (guild, user) VALUES (?, ?);", guildId, userId, 1, guildId, userId, guildId, userId);
+    public boolean userExists(String guildId, String userId) {
+        try {
+            ResultSet result = jarvis.database.executeQuery("SELECT 1 FROM levels WHERE (guild = ? AND user = ?);", guildId, userId);
+            return result.first();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        //jarvis.database.execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", 1, guildId, userId);
+        return false;
+    }
+
+    public void increaseUserExperience(String guildId, String userId) {
+        if (!userExists(guildId, userId)) {
+            addUser(guildId, userId);
+        }
+
+        int rand = ThreadLocalRandom.current().nextInt(15, 25);
+
+        jarvis.database.execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", rand, guildId, userId);
     }
 }

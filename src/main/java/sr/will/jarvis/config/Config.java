@@ -8,7 +8,7 @@ public class Config {
 
     public class Discord {
         public String token;
-        public String owner;
+        public ArrayList<String> owners;
         public long statusMessageInterval;
         public ArrayList<String> statusMessages;
     }

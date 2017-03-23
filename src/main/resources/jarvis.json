@@ -1,7 +1,9 @@
 {
   "discord": {
     "token": "MTgyNjMwODM3NDEyNTYwODk2.Ch6HuQ._acJHfDYNNjEup49kksEjO7ckLY",
-    "owner": "112587845968912384",
+    "owners": [
+      "112587845968912384"
+    ],
     "statusMessageInterval": 60,
     "statusMessages": [
       "SyntaxError",
