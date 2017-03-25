@@ -83,8 +83,6 @@ public class Database {
             PreparedStatement statement = connection.prepareStatement(query);
             statement = replaceParams(statement, params);
 
-            System.out.println(statement.toString());
-
             // Run the query
             return statement.execute();
         } catch (SQLException e) {

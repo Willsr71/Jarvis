@@ -89,7 +89,6 @@ public class BanManager {
 
     public void setup() {
         for (Guild guild : jarvis.getJda().getGuilds()) {
-            System.out.println("Setting up guild " + guild.getName());
             processBannedMembers(guild);
         }
     }

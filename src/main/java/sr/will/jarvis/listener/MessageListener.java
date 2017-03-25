@@ -15,7 +15,7 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getChannelType() == ChannelType.PRIVATE) {
+        if (event.getChannel().getType() != ChannelType.TEXT) {
             return;
         }
 
