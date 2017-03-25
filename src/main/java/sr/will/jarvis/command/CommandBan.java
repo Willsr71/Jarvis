@@ -26,22 +26,22 @@ public class CommandBan extends Command {
 
         User user = CommandUtils.getMentionedUser(message, args);
         if (user == null) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("No user tagged").build()).queue();
+            CommandUtils.sendFailureMessage(message, "No user tagged");
             return;
         }
 
         if (user.getId().equals(message.getJDA().getSelfUser().getId())) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("You cannot ban the all powerful " + message.getGuild().getMemberById(message.getJDA().getSelfUser().getId()).getEffectiveName()).build()).queue();
+            CommandUtils.sendFailureMessage(message, "You cannot ban the all powerful " + message.getGuild().getMember(message.getJDA().getSelfUser()).getEffectiveName());
             return;
         }
 
         if (jarvis.banManager.isBanned(message.getGuild().getId(), user.getId())) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User already banned").build()).queue();
+            CommandUtils.sendFailureMessage(message, "User already banned");
             return;
         }
 
         if (args.length == 1) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been banned").build()).queue();
+            CommandUtils.sendSuccessEmote(message);
             jarvis.banManager.ban(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
             return;
         }
@@ -51,11 +51,11 @@ public class CommandBan extends Command {
         try {
             duration = DateUtils.parseDateDiff(args[1], true);
         } catch (Exception e) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("Invalid time").build()).queue();
+            CommandUtils.sendFailureMessage(message, "Invalid time");
             return;
         }
 
-        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been banned for " + DateUtils.formatDateDiff(duration)).build()).queue();
+        CommandUtils.sendSuccessMessage(message, user.getAsMention() + " has been banned for " + DateUtils.formatDateDiff(duration));
         jarvis.banManager.ban(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
     }
 }

@@ -1,12 +1,10 @@
 package sr.will.jarvis.command;
 
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
-
-import java.awt.*;
+import sr.will.jarvis.util.CommandUtils;
 
 public class CommandMuteMe extends Command {
     private Jarvis jarvis;
@@ -20,7 +18,7 @@ public class CommandMuteMe extends Command {
         User user = message.getAuthor();
 
         if (args.length == 0) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been muted").build()).queue();
+            CommandUtils.sendSuccessEmote(message);
             jarvis.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
             return;
         }
@@ -30,11 +28,11 @@ public class CommandMuteMe extends Command {
         try {
             duration = DateUtils.parseDateDiff(args[0], true);
         } catch (Exception e) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("Invalid time").build()).queue();
+            CommandUtils.sendFailureMessage(message, "Invalid time");
             return;
         }
 
-        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration)).build()).queue();
+        CommandUtils.sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
         jarvis.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
     }
 }

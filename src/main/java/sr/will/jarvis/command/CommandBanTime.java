@@ -20,14 +20,14 @@ public class CommandBanTime extends Command {
     public void execute(Message message, String... args) {
         User user = CommandUtils.getMentionedUser(message, args);
         if (user == null) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("No user tagged").build()).queue();
+            CommandUtils.sendFailureMessage(message, "No user tagged");
             return;
         }
 
         long duration = jarvis.banManager.getBanDuration(message.getGuild().getId(), user.getId());
 
         if (!DateUtils.timestampApplies(duration)) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("User not banned").build()).queue();
+            CommandUtils.sendSuccessMessage(message, "User not banned", false);
             return;
         }
 

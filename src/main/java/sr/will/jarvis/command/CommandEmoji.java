@@ -13,6 +13,6 @@ public class CommandEmoji extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        message.getChannel().sendMessage(CommandUtils.encodeString(message.getRawContent())).queue();
+        CommandUtils.sendSuccessMessage(message, CommandUtils.encodeString(message.getRawContent()), false);
     }
 }

@@ -1,11 +1,9 @@
 package sr.will.jarvis.command;
 
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
-
-import java.awt.*;
+import sr.will.jarvis.util.CommandUtils;
 
 public class CommandCommandRemove extends Command {
     private Jarvis jarvis;
@@ -17,21 +15,21 @@ public class CommandCommandRemove extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.MESSAGE_MANAGE)) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("You don't have permission for that").build()).queue();
+            CommandUtils.sendFailureMessage(message, "You don't have permission for that");
             return;
         }
 
         if (args.length != 1) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("Usage: !commandremove <command>").build()).queue();
+            CommandUtils.sendFailureMessage(message, "Usage: !commandremove <command>");
             return;
         }
 
         if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getId(), args[0]) == null) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("Command does not exist").build()).queue();
+            CommandUtils.sendFailureMessage(message, "Command does not exist");
             return;
         }
 
+        CommandUtils.sendSuccessEmote(message);
         jarvis.commandManager.removeCustomCommand(message.getGuild().getId(), args[0]);
-        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("Command !" + args[0] + " has been removed").build()).queue();
     }
 }

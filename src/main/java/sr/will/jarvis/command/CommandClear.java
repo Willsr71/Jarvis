@@ -1,12 +1,11 @@
 package sr.will.jarvis.command;
 
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.util.CommandUtils;
 
-import java.awt.*;
 import java.util.HashMap;
 
 public class CommandClear extends Command {
@@ -20,7 +19,7 @@ public class CommandClear extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.MESSAGE_MANAGE)) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("You don't have permission for that").build()).queue();
+            CommandUtils.sendFailureMessage(message, "You don't have permission for that");
             return;
         }
 
@@ -38,7 +37,7 @@ public class CommandClear extends Command {
 
     public void deleteFromChannel(TextChannel channel, int total, int current) {
         if (current <= 0) {
-            channel.sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription("The last " + total + " messages have been cleared").build()).queue();
+            CommandUtils.sendSuccessMessage(channel, "The last " + total + " messages have been deleted");
             messagesDeleted.remove(channel.getId());
             return;
         }

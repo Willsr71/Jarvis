@@ -1,14 +1,11 @@
 package sr.will.jarvis.command;
 
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.util.CommandUtils;
-
-import java.awt.*;
 
 public class CommandMute extends Command {
     private Jarvis jarvis;
@@ -20,28 +17,28 @@ public class CommandMute extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.VOICE_MUTE_OTHERS)) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("You don't have permission for that").build()).queue();
+            CommandUtils.sendFailureMessage(message, "You don't have permission for that");
             return;
         }
 
         User user = CommandUtils.getMentionedUser(message, args);
         if (user == null) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("No user tagged").build()).queue();
+            CommandUtils.sendFailureMessage(message, "No user tagged");
             return;
         }
 
         if (user.getId().equals(message.getJDA().getSelfUser().getId())) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("You cannot mute the all powerful " + message.getGuild().getMemberById(message.getJDA().getSelfUser().getId()).getEffectiveName()).build()).queue();
+            CommandUtils.sendFailureMessage(message, "You cannot mute the all powerful " + message.getGuild().getMember(message.getJDA().getSelfUser()).getEffectiveName());
             return;
         }
 
         if (jarvis.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("User already muted").build()).queue();
+            CommandUtils.sendFailureMessage(message, "User already muted");
             return;
         }
 
         if (args.length == 1) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been muted").build()).queue();
+            CommandUtils.sendSuccessEmote(message);
             jarvis.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
             return;
         }
@@ -51,11 +48,11 @@ public class CommandMute extends Command {
         try {
             duration = DateUtils.parseDateDiff(args[1], true);
         } catch (Exception e) {
-            message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error", "https://jarvis.will.sr").setColor(Color.RED).setDescription("Invalid time").build()).queue();
+            CommandUtils.sendFailureMessage(message, "Invalid time");
             return;
         }
 
-        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).setDescription(user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration)).build()).queue();
+        CommandUtils.sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
         jarvis.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
     }
 }
