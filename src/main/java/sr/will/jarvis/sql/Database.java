@@ -144,6 +144,12 @@ public class Database {
                 "invoker char(64)," +
                 "duration bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
+        execute("CREATE TABLE IF NOT EXISTS scheduled_messages(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild char(64) NOT NULL," +
+                "channel char(64) NOT NULL," +
+                "message text NOT NULL," +
+                "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS levels(" +
                 "id int NOT NULL AUTO_INCREMENT," +
                 "guild char(64) NOT NULL," +

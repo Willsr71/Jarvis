@@ -51,6 +51,6 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        jarvis.levelManager.increaseUserExperience(event.getGuild().getId(), event.getAuthor().getId());
+        jarvis.levelManager.increase(event.getGuild().getId(), event.getAuthor().getId(), event.getChannel());
     }
 }
