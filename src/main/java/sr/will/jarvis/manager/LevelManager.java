@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -58,6 +59,39 @@ public class LevelManager {
         }
 
         return false;
+    }
+
+    public HashMap<Long, ArrayList<String>> getLeaderboard(String guildId) {
+        HashMap<Long, ArrayList<String>> leaderboard = new HashMap<>();
+        try {
+            ResultSet result = jarvis.database.executeQuery("SELECT user, xp FROM levels WHERE (guild = ?) ORDER BY xp DESC;", guildId);
+            while (result.next()) {
+                System.out.println(result.getString("user") + " = " + result.getLong("xp"));
+                if (!leaderboard.containsKey(result.getLong("xp"))) {
+                    leaderboard.put(result.getLong("xp"), new ArrayList<>(Collections.singletonList(result.getString("user"))));
+                } else {
+                    leaderboard.get(result.getLong("xp")).add(result.getString("user"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return leaderboard;
+    }
+
+    public int getLeaderboardPosition(String guildId, String userId) {
+        HashMap<Long, ArrayList<String>> leaderboard = getLeaderboard(guildId);
+
+        int pos = 1;
+        for (long xp : leaderboard.keySet()) {
+            if (leaderboard.get(xp).contains(userId)) {
+                return pos;
+            }
+        }
+
+        return 0;
     }
 
     public void increase(String guildId, String userId, MessageChannel channel) {
@@ -117,9 +151,9 @@ public class LevelManager {
 
         for (int x = start; x <= end; x += 1) {
             //long xp = (x * 100) + levels.get(x - 1);
-            //long xp = ((5 * (x ^ 2)) + (50 * x) + 35) + levels.get(x - 1);
-            double level = (double) x;
-            long xp = Math.round((5.0 / 6.0) * level * (2.0 * level * level + (27.0 * level) + 91.0));
+            long xp = ((5 * (x ^ 2)) + (50 * x) + 35) + levels.get(x - 1);
+            //double level = (double) x;
+            //long xp = Math.round((5.0 / 6.0) * level * (2.0 * level * level + (27.0 * level) + 91.0));
             levels.put(x, xp);
             System.out.println(x + " = " + levels.get(x));
         }
@@ -139,7 +173,6 @@ public class LevelManager {
             level += 1;
         }
 
-        System.out.println(level);
         return level;
     }
 

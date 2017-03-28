@@ -46,6 +46,7 @@ public class CommandManager {
         registerCommand("emote", new CommandEmote(jarvis));
         registerCommand("google", new CommandGoogle(jarvis));
         registerCommand("help", new CommandHelp(jarvis));
+        registerCommand("leaderboard", new CommandLeaderboard(jarvis));
         registerCommand("mute", new CommandMute(jarvis));
         registerCommand("mutelist", new CommandMuteList(jarvis));
         registerCommand("muteme", new CommandMuteMe(jarvis));
