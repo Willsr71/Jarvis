@@ -130,6 +130,11 @@ public class Database {
         System.out.println("Deploying database....");
 
         // Create various tables if they do not exist
+        execute("CREATE TABLE IF NOT EXISTS modules(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild char(64) NOT NULL," +
+                "module varchar(64) NOT NULL," +
+                "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS mutes(" +
                 "id int NOT NULL AUTO_INCREMENT," +
                 "guild char(64) NOT NULL," +

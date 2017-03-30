@@ -1,17 +1,18 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.admin.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.util.CommandUtils;
 
 public class CommandMute extends Command {
-    private Jarvis jarvis;
+    private ModuleAdmin module;
 
-    public CommandMute(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandMute(ModuleAdmin module) {
+        this.module = module;
     }
 
     @Override
@@ -32,14 +33,14 @@ public class CommandMute extends Command {
             return;
         }
 
-        if (jarvis.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
+        if (module.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
             CommandUtils.sendFailureMessage(message, "User already muted");
             return;
         }
 
         if (args.length == 1) {
             CommandUtils.sendSuccessEmote(message);
-            jarvis.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
+            module.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
             return;
         }
 
@@ -53,6 +54,6 @@ public class CommandMute extends Command {
         }
 
         CommandUtils.sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
-        jarvis.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
+        module.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
     }
 }

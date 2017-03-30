@@ -1,25 +1,26 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.admin.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 
 import java.awt.*;
 import java.util.HashMap;
 
 public class CommandMuteList extends Command {
-    private Jarvis jarvis;
+    private ModuleAdmin module;
 
-    public CommandMuteList(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandMuteList(ModuleAdmin module) {
+        this.module = module;
     }
 
     @Override
     public void execute(Message message, String... args) {
-        HashMap<String, Long> mutes = jarvis.muteManager.getMutes(message.getGuild().getId());
+        HashMap<String, Long> mutes = module.muteManager.getMutes(message.getGuild().getId());
 
         EmbedBuilder embed = new EmbedBuilder().setTitle("Active mutes", "https://jarvis.will.sr").setColor(Color.GREEN);
 

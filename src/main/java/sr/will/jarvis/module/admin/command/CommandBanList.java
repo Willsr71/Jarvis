@@ -1,24 +1,25 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.admin.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 
 import java.awt.*;
 import java.util.HashMap;
 
 public class CommandBanList extends Command {
-    private Jarvis jarvis;
+    private ModuleAdmin module;
 
-    public CommandBanList(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandBanList(ModuleAdmin module) {
+        this.module = module;
     }
 
     @Override
     public void execute(Message message, String... args) {
-        HashMap<String, Long> bans = jarvis.banManager.getBans(message.getGuild().getId());
+        HashMap<String, Long> bans = module.banManager.getBans(message.getGuild().getId());
 
         EmbedBuilder embed = new EmbedBuilder().setTitle("Active bans", "https://jarvis.will.sr").setColor(Color.GREEN);
 

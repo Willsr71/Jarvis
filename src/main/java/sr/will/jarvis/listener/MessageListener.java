@@ -5,12 +5,15 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 
 public class MessageListener extends ListenerAdapter {
     private Jarvis jarvis;
+    private ModuleAdmin moduleAdmin;
 
     public MessageListener(Jarvis jarvis) {
         this.jarvis = jarvis;
+        this.moduleAdmin = (ModuleAdmin) jarvis.moduleManager.getModule("admin");
     }
 
     @Override
@@ -25,7 +28,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (jarvis.muteManager.isMuted(event.getGuild().getId(), event.getAuthor().getId())) {
+        if (moduleAdmin.muteManager.isMuted(event.getGuild().getId(), event.getAuthor().getId())) {
             event.getMessage().delete().queue();
             System.out.println("deleting message");
 
@@ -33,7 +36,7 @@ public class MessageListener extends ListenerAdapter {
                 return;
             }
 
-            jarvis.muteManager.setup(event.getGuild());
+            moduleAdmin.muteManager.setup(event.getGuild());
             return;
         }
 

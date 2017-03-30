@@ -1,16 +1,17 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.admin.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.util.CommandUtils;
 
 public class CommandUnmute extends Command {
-    private Jarvis jarvis;
+    private ModuleAdmin module;
 
-    public CommandUnmute(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandUnmute(ModuleAdmin module) {
+        this.module = module;
     }
 
     @Override
@@ -26,12 +27,12 @@ public class CommandUnmute extends Command {
             return;
         }
 
-        if (!jarvis.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
+        if (!module.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
             CommandUtils.sendFailureMessage(message, "User is not muted");
             return;
         }
 
         CommandUtils.sendSuccessMessage(message, user.getAsMention() + " has been unmuted");
-        jarvis.muteManager.unmute(message.getGuild().getId(), user.getId());
+        module.muteManager.unmute(message.getGuild().getId(), user.getId());
     }
 }

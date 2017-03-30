@@ -1,19 +1,20 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.admin.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.util.CommandUtils;
 
 import java.awt.*;
 
-public class CommandBanTime extends Command {
-    private Jarvis jarvis;
+public class CommandMuteTime extends Command {
+    private ModuleAdmin module;
 
-    public CommandBanTime(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandMuteTime(ModuleAdmin module) {
+        this.module = module;
     }
 
     @Override
@@ -24,10 +25,10 @@ public class CommandBanTime extends Command {
             return;
         }
 
-        long duration = jarvis.banManager.getBanDuration(message.getGuild().getId(), user.getId());
+        long duration = module.muteManager.getMuteDuration(message.getGuild().getId(), user.getId());
 
         if (!DateUtils.timestampApplies(duration)) {
-            CommandUtils.sendSuccessMessage(message, "User not banned", false);
+            CommandUtils.sendSuccessMessage(message, "User not muted", false);
             return;
         }
 

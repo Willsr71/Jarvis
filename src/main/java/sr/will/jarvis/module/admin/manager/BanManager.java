@@ -1,9 +1,10 @@
-package sr.will.jarvis.manager;
+package sr.will.jarvis.module.admin.manager;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 
 import java.awt.*;
 import java.sql.ResultSet;
@@ -14,17 +15,17 @@ import java.util.HashMap;
 import static java.lang.Thread.sleep;
 
 public class BanManager {
-    private Jarvis jarvis;
+    private ModuleAdmin module;
     private ArrayList<Thread> unbanThreads = new ArrayList<>();
 
-    public BanManager(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public BanManager(ModuleAdmin module) {
+        this.module = module;
     }
 
     public HashMap<String, Long> getBans(String guildId) {
         HashMap<String, Long> bans = new HashMap<>();
         try {
-            ResultSet result = jarvis.database.executeQuery("SELECT user, duration FROM bans WHERE (guild = ?);", guildId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, duration FROM bans WHERE (guild = ?);", guildId);
             while (result.next()) {
                 bans.put(result.getString("user"), result.getLong("duration"));
             }
@@ -37,7 +38,7 @@ public class BanManager {
 
     public long getBanDuration(String guildId, String userId) {
         try {
-            ResultSet result = jarvis.database.executeQuery("SELECT duration FROM bans WHERE (guild = ? AND user = ?) ORDER BY id DESC LIMIT 1;", guildId, userId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT duration FROM bans WHERE (guild = ? AND user = ?) ORDER BY id DESC LIMIT 1;", guildId, userId);
             if (result.first()) {
                 return result.getLong("duration");
             }
@@ -57,38 +58,41 @@ public class BanManager {
     }
 
     public void ban(String guildId, String userId, String invokerId, long duration) {
-        jarvis.database.execute("INSERT INTO bans (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
+        Jarvis.getDatabase().execute("INSERT INTO bans (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
         setBanned(guildId, userId, true);
-        startUnbanThread(guildId, userId, duration);
 
-        jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
+        if (duration != -1) {
+            startUnbanThread(guildId, userId, duration);
+        }
+
+        Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
                     new EmbedBuilder()
                             .setTitle("Banned", "https://jarvis.will.sr")
                             .setColor(Color.RED)
-                            .setDescription("You have been banned from " + jarvis.getJda().getGuildById(guildId).getName() + " for " + DateUtils.formatDateDiff(duration))
+                            .setDescription("You have been banned from " + Jarvis.getJda().getGuildById(guildId).getName() + " for " + DateUtils.formatDateDiff(duration))
                             .build())
                     .queue();
         }));
     }
 
     public void unban(String guildId, String userId) {
-        jarvis.database.execute("DELETE FROM bans WHERE (guild = ? AND user = ? );", guildId, userId);
+        Jarvis.getDatabase().execute("DELETE FROM bans WHERE (guild = ? AND user = ? );", guildId, userId);
         setBanned(guildId, userId, false);
 
-        jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
+        Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
                     new EmbedBuilder()
                             .setTitle("Unbanned", "https://jarvis.will.sr")
                             .setColor(Color.GREEN)
-                            .setDescription("You have been unbanned from " + jarvis.getJda().getGuildById(guildId).getName())
+                            .setDescription("You have been unbanned from " + Jarvis.getJda().getGuildById(guildId).getName())
                             .build())
                     .queue();
         }));
     }
 
     public void setup() {
-        for (Guild guild : jarvis.getJda().getGuilds()) {
+        for (Guild guild : Jarvis.getJda().getGuilds()) {
             processBannedMembers(guild);
         }
     }
@@ -100,7 +104,7 @@ public class BanManager {
     }
 
     public void processBannedMembers(Guild guild) {
-        HashMap<String, Long> bans = jarvis.banManager.getBans(guild.getId());
+        HashMap<String, Long> bans = getBans(guild.getId());
 
         System.out.println("Processing " + bans.size() + " banned members for " + guild.getName());
 
@@ -115,7 +119,7 @@ public class BanManager {
     }
 
     public void setBanned(String guildId, String userId, boolean banned) {
-        setBanned(jarvis.getJda().getGuildById(guildId), userId, banned);
+        setBanned(Jarvis.getJda().getGuildById(guildId), userId, banned);
     }
 
     public void setBanned(Guild guild, String userId, boolean banned) {
@@ -131,13 +135,13 @@ public class BanManager {
             try {
                 long sleepTime = duration - System.currentTimeMillis();
                 if (sleepTime <= 0) {
-                    Jarvis.getInstance().banManager.unban(guildId, userId);
+                    unban(guildId, userId);
                     return;
                 }
 
                 System.out.println("Sleeping for " + sleepTime);
                 sleep(sleepTime);
-                Jarvis.getInstance().banManager.unban(guildId, userId);
+                unban(guildId, userId);
             } catch (InterruptedException e) {
                 if (Jarvis.getInstance().running) {
                     e.printStackTrace();

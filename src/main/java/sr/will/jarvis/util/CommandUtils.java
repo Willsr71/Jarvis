@@ -66,7 +66,7 @@ public class CommandUtils {
             channel.sendMessage(embed.build()).queue(success -> {
                 new Thread(() -> {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(3 * 1000);
                     } catch (InterruptedException e) {
                     }
 

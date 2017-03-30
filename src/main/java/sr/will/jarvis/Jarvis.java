@@ -9,7 +9,10 @@ import sr.will.jarvis.config.Config;
 import sr.will.jarvis.listener.GuildAvailableListener;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
-import sr.will.jarvis.manager.*;
+import sr.will.jarvis.manager.ChatterBotManager;
+import sr.will.jarvis.manager.CommandManager;
+import sr.will.jarvis.manager.LevelManager;
+import sr.will.jarvis.manager.ModuleManager;
 import sr.will.jarvis.service.StatusService;
 import sr.will.jarvis.sql.Database;
 
@@ -23,11 +26,10 @@ public class Jarvis {
     public Config config;
 
     public Database database;
-    public BanManager banManager;
     public ChatterBotManager chatterBotManager;
     public CommandManager commandManager;
     public LevelManager levelManager;
-    public MuteManager muteManager;
+    public ModuleManager moduleManager;
     public StatusService statusService;
     private JDA jda;
 
@@ -40,12 +42,12 @@ public class Jarvis {
 
         configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
 
-        banManager = new BanManager(this);
         chatterBotManager = new ChatterBotManager(this);
         commandManager = new CommandManager(this);
         commandManager.registerCommands();
         levelManager = new LevelManager(this);
-        muteManager = new MuteManager(this);
+        moduleManager = new ModuleManager(this);
+        moduleManager.registerModules();
 
         database = new Database(this);
 
@@ -68,8 +70,9 @@ public class Jarvis {
         statusService = new StatusService(config.discord.statusMessageInterval * 1000, config.discord.statusMessages);
         statusService.start();
 
-        muteManager.setupAll();
-        banManager.setup();
+        moduleManager.getModules().forEach((s, module) -> {
+            module.finishStart();
+        });
     }
 
     public void stop() {
@@ -77,8 +80,10 @@ public class Jarvis {
 
         running = false;
 
-        muteManager.stop();
-        banManager.stop();
+        moduleManager.getModules().forEach((s, module) -> {
+            module.stop();
+        });
+
         statusService.interrupt();
         jda.shutdown();
         database.disconnect();
@@ -91,13 +96,21 @@ public class Jarvis {
         config = (Config) configManager.getConfig();
 
         database.reconnect();
+
+        moduleManager.getModules().forEach((s, module) -> {
+            module.reload();
+        });
     }
 
     public static Jarvis getInstance() {
         return instance;
     }
 
-    public JDA getJda() {
-        return jda;
+    public static Database getDatabase() {
+        return Jarvis.getInstance().database;
+    }
+
+    public static JDA getJda() {
+        return Jarvis.getInstance().jda;
     }
 }

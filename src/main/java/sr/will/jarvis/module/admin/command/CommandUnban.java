@@ -1,16 +1,17 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.admin.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.util.CommandUtils;
 
 public class CommandUnban extends Command {
-    private Jarvis jarvis;
+    private ModuleAdmin module;
 
-    public CommandUnban(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandUnban(ModuleAdmin module) {
+        this.module = module;
     }
 
     @Override
@@ -26,12 +27,12 @@ public class CommandUnban extends Command {
             return;
         }
 
-        if (!jarvis.banManager.isBanned(message.getGuild().getId(), user.getId())) {
+        if (!module.banManager.isBanned(message.getGuild().getId(), user.getId())) {
             CommandUtils.sendFailureMessage(message, "User is not banned");
             return;
         }
 
         CommandUtils.sendSuccessMessage(message, user.getAsMention() + " has been unbanned");
-        jarvis.banManager.unban(message.getGuild().getId(), user.getId());
+        module.banManager.unban(message.getGuild().getId(), user.getId());
     }
 }

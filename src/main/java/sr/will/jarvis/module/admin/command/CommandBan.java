@@ -1,20 +1,21 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.admin.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.util.CommandUtils;
 
 import java.awt.*;
 
 public class CommandBan extends Command {
-    private Jarvis jarvis;
+    private ModuleAdmin module;
 
-    public CommandBan(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandBan(ModuleAdmin module) {
+        this.module = module;
     }
 
     @Override
@@ -35,14 +36,14 @@ public class CommandBan extends Command {
             return;
         }
 
-        if (jarvis.banManager.isBanned(message.getGuild().getId(), user.getId())) {
+        if (module.banManager.isBanned(message.getGuild().getId(), user.getId())) {
             CommandUtils.sendFailureMessage(message, "User already banned");
             return;
         }
 
         if (args.length == 1) {
             CommandUtils.sendSuccessEmote(message);
-            jarvis.banManager.ban(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
+            module.banManager.ban(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
             return;
         }
 
@@ -56,6 +57,6 @@ public class CommandBan extends Command {
         }
 
         CommandUtils.sendSuccessMessage(message, user.getAsMention() + " has been banned for " + DateUtils.formatDateDiff(duration));
-        jarvis.banManager.ban(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
+        module.banManager.ban(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
     }
 }
