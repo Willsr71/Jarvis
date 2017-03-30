@@ -3,7 +3,6 @@ package sr.will.jarvis.manager;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.*;
-import sr.will.jarvis.util.CommandUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import static sr.will.jarvis.command.Command.encodeString;
 
 public class CommandManager {
     private Jarvis jarvis;
@@ -51,7 +52,7 @@ public class CommandManager {
     }
 
     public void addCustomCommand(String guildId, String command, String response) {
-        jarvis.database.execute("INSERT INTO custom_commands (guild, command, response) VALUES (?, ?, ?);", guildId, command, CommandUtils.encodeString(response));
+        jarvis.database.execute("INSERT INTO custom_commands (guild, command, response) VALUES (?, ?, ?);", guildId, command, encodeString(response));
     }
 
     public void removeCustomCommand(String guildId, String command) {
@@ -62,7 +63,7 @@ public class CommandManager {
         try {
             ResultSet result = jarvis.database.executeQuery("SELECT response FROM custom_commands WHERE (guild = ? AND command = ?) LIMIT 1;", guildId, command);
             if (result.first()) {
-                return CommandUtils.decodeString(result.getString("response"));
+                return Command.decodeString(result.getString("response"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.util.CommandUtils;
 
 import java.awt.*;
 
@@ -17,7 +16,7 @@ public class CommandRank extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        User user = CommandUtils.getMentionedUser(message, args);
+        User user = getMentionedUser(message, args);
         if (user == null) {
             user = message.getAuthor();
         }

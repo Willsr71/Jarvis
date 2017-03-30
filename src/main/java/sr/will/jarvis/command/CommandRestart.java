@@ -3,7 +3,6 @@ package sr.will.jarvis.command;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.util.CommandUtils;
 
 public class CommandRestart extends Command {
     private Jarvis jarvis;
@@ -16,13 +15,13 @@ public class CommandRestart extends Command {
     public void execute(Message message, String... args) {
         // Only allow the bot owner to restart the bot
         if (!jarvis.config.discord.owners.contains(message.getAuthor().getId())) {
-            CommandUtils.sendFailureMessage(message, "You don't have permission for that");
+            sendFailureMessage(message, "You don't have permission for that");
             return;
         }
 
         for (User user : message.getMentionedUsers()) {
             if (user.getId().equals(message.getJDA().getSelfUser().getId())) {
-                CommandUtils.sendSuccessEmote(message);
+                sendSuccessEmote(message);
                 jarvis.stop();
                 return;
             }

@@ -3,7 +3,6 @@ package sr.will.jarvis.command;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.util.CommandUtils;
 
 public class CommandCommandAdd extends Command {
     private Jarvis jarvis;
@@ -14,23 +13,20 @@ public class CommandCommandAdd extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.MESSAGE_MANAGE)) {
-            CommandUtils.sendFailureMessage(message, "You don't have permission for that");
-            return;
-        }
+        checkUserPermission(message, Permission.MESSAGE_MANAGE);
 
         if (args.length < 2) {
-            CommandUtils.sendFailureMessage(message, "Usage: !commandadd <command> <response>");
+            sendFailureMessage(message, "Usage: !commandadd <command> <response>");
             return;
         }
 
         if (args[0].length() > 255) {
-            CommandUtils.sendFailureMessage(message, "Command \"" + args[0] + "\" is too long");
+            sendFailureMessage(message, "Command \"" + args[0] + "\" is too long");
             return;
         }
 
         if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getId(), args[0]) != null) {
-            CommandUtils.sendFailureMessage(message, "Command already exists");
+            sendFailureMessage(message, "Command already exists");
             return;
         }
 
@@ -40,7 +36,7 @@ public class CommandCommandAdd extends Command {
         }
         response = response.trim();
 
-        CommandUtils.sendSuccessEmote(message);
+        sendSuccessEmote(message);
         jarvis.commandManager.addCustomCommand(message.getGuild().getId(), args[0], response);
     }
 }

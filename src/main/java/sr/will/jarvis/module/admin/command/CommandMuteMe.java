@@ -5,7 +5,6 @@ import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.admin.ModuleAdmin;
-import sr.will.jarvis.util.CommandUtils;
 
 public class CommandMuteMe extends Command {
     private ModuleAdmin module;
@@ -19,7 +18,7 @@ public class CommandMuteMe extends Command {
         User user = message.getAuthor();
 
         if (args.length == 0) {
-            CommandUtils.sendSuccessEmote(message);
+            sendSuccessEmote(message);
             module.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
             return;
         }
@@ -29,11 +28,11 @@ public class CommandMuteMe extends Command {
         try {
             duration = DateUtils.parseDateDiff(args[0], true);
         } catch (Exception e) {
-            CommandUtils.sendFailureMessage(message, "Invalid time");
+            sendFailureMessage(message, "Invalid time");
             return;
         }
 
-        CommandUtils.sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
+        sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
         module.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
     }
 }

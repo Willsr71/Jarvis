@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.util.CommandUtils;
 
 import java.awt.*;
 
@@ -18,7 +17,7 @@ public class CommandEmote extends Command {
     @Override
     public void execute(Message message, String... args) {
         if (message.getEmotes().size() == 0) {
-            CommandUtils.sendFailureMessage(message, "You must include an emote");
+            sendFailureMessage(message, "You must include an emote");
             return;
         }
 

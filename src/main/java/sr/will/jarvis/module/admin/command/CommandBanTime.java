@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.admin.ModuleAdmin;
-import sr.will.jarvis.util.CommandUtils;
 
 import java.awt.*;
 
@@ -19,16 +18,16 @@ public class CommandBanTime extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        User user = CommandUtils.getMentionedUser(message, args);
+        User user = getMentionedUser(message, args);
         if (user == null) {
-            CommandUtils.sendFailureMessage(message, "No user tagged");
+            sendFailureMessage(message, "No user tagged");
             return;
         }
 
         long duration = module.banManager.getBanDuration(message.getGuild().getId(), user.getId());
 
         if (!DateUtils.timestampApplies(duration)) {
-            CommandUtils.sendSuccessMessage(message, "User not banned", false);
+            sendSuccessMessage(message, "User not banned", false);
             return;
         }
 

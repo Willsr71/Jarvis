@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.util.CommandUtils;
 
 import java.util.HashMap;
 
@@ -18,10 +17,8 @@ public class CommandClear extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        if (!message.getGuild().getMemberById(message.getAuthor().getId()).hasPermission(Permission.MESSAGE_MANAGE)) {
-            CommandUtils.sendFailureMessage(message, "You don't have permission for that");
-            return;
-        }
+        checkBotPermission(message, Permission.MESSAGE_MANAGE);
+        checkUserPermission(message, Permission.MESSAGE_MANAGE);
 
         TextChannel channel = message.getTextChannel();
 
@@ -37,7 +34,7 @@ public class CommandClear extends Command {
 
     public void deleteFromChannel(TextChannel channel, int total, int current) {
         if (current <= 0) {
-            CommandUtils.sendSuccessMessage(channel, "The last " + total + " messages have been deleted");
+            sendSuccessMessage(channel, "The last " + total + " messages have been deleted");
             messagesDeleted.remove(channel.getId());
             return;
         }

@@ -2,7 +2,6 @@ package sr.will.jarvis.command;
 
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.util.CommandUtils;
 
 public class CommandGoogle extends Command {
     private Jarvis jarvis;
@@ -18,6 +17,6 @@ public class CommandGoogle extends Command {
         }
         url = url.substring(0, url.length() - 1);
 
-        CommandUtils.sendSuccessMessage(message, url, false);
+        sendSuccessMessage(message, url, false);
     }
 }
