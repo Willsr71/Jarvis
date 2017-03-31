@@ -15,6 +15,8 @@ public class CommandMuteMe extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
+
         User user = message.getAuthor();
 
         if (args.length == 0) {

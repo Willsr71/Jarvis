@@ -19,6 +19,8 @@ public class CommandBanList extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
+
         HashMap<String, Long> bans = module.banManager.getBans(message.getGuild().getId());
 
         EmbedBuilder embed = new EmbedBuilder().setTitle("Active bans", "https://jarvis.will.sr").setColor(Color.GREEN);

@@ -16,6 +16,7 @@ public class CommandMute extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
         checkBotPermission(message, Permission.MANAGE_ROLES);
         checkBotPermission(message, Permission.MANAGE_CHANNEL);
         checkBotPermission(message, Permission.MESSAGE_MANAGE);

@@ -20,6 +20,8 @@ public class CommandMuteList extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
+
         HashMap<String, Long> mutes = module.muteManager.getMutes(message.getGuild().getId());
 
         EmbedBuilder embed = new EmbedBuilder().setTitle("Active mutes", "https://jarvis.will.sr").setColor(Color.GREEN);

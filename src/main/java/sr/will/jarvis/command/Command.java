@@ -5,8 +5,11 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.exceptions.PermissionException;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.exception.BotPermissionException;
+import sr.will.jarvis.exception.ModuleNotEnabledException;
+import sr.will.jarvis.exception.UserPermissionException;
+import sr.will.jarvis.module.Module;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,14 +21,21 @@ public abstract class Command {
     protected void checkUserPermission(Message message, Permission permission) {
         if (!message.getGuild().getMember(message.getAuthor()).hasPermission(permission)) {
             sendFailureMessage(message, "You don't have permission for that (" + permission.getName() + ")");
-            throw new PermissionException(permission, "User does not have permission " + permission.name() + " in guild " + message.getGuild().getId());
+            throw new UserPermissionException(permission, message.getGuild());
         }
     }
 
     protected void checkBotPermission(Message message, Permission permission) {
         if (!message.getGuild().getMember(message.getJDA().getSelfUser()).hasPermission(permission)) {
             sendFailureMessage(message, "I do not have the required permission (" + permission.getName() + ") for that");
-            throw new PermissionException(permission, "Bot does not have permission " + permission.name() + " in guild " + message.getGuild().getId());
+            throw new BotPermissionException(permission, message.getGuild());
+        }
+    }
+
+    protected void checkModuleEnabled(Message message, Module module) {
+        if (!module.isEnabled(message.getGuild().getId())) {
+            sendFailureMessage(message, "Module " + module.getName() + " is not enabled on this server");
+            throw new ModuleNotEnabledException(module, message.getGuild());
         }
     }
 

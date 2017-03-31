@@ -3,6 +3,9 @@ package sr.will.jarvis.manager;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.*;
+import sr.will.jarvis.exception.BotPermissionException;
+import sr.will.jarvis.exception.ModuleNotEnabledException;
+import sr.will.jarvis.exception.UserPermissionException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +48,8 @@ public class CommandManager {
         registerCommand("google", new CommandGoogle(jarvis));
         registerCommand("help", new CommandHelp(jarvis));
         registerCommand("leaderboard", new CommandLeaderboard(jarvis));
+        registerCommand("moduledisable", new CommandModuleDisable(jarvis));
+        registerCommand("moduleenable", new CommandModuleEnable(jarvis));
         registerCommand("modules", new CommandModules(jarvis));
         registerCommand("rank", new CommandRank(jarvis));
         registerCommand("restart", new CommandRestart(jarvis));
@@ -106,7 +111,11 @@ public class CommandManager {
 
     public void executeCommand(String command, Message message, String... args) {
         if (commands.containsKey(command)) {
-            commands.get(command).execute(message, args);
+            try {
+                commands.get(command).execute(message, args);
+            } catch (BotPermissionException | UserPermissionException | ModuleNotEnabledException e) {
+                System.out.println(e.getMessage());
+            }
             return;
         }
 

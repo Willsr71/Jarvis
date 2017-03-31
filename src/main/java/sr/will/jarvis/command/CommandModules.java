@@ -16,11 +16,12 @@ public class CommandModules extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Modules", "https://jarvis.will.sr").setColor(Color.GREEN);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Modules", null).setColor(Color.GREEN);
 
         for (String name : jarvis.moduleManager.getModules().keySet()) {
             Module module = jarvis.moduleManager.getModule(name);
             embed.addField(module.getName(), module.getHelpText(), false);
+            embed.addField("Enabled", module.isEnabled(message.getGuild().getId()) ? "Yes" : "No", true);
         }
 
         embed.addField("Chatbot", "An interactive chatbot and commands", false);

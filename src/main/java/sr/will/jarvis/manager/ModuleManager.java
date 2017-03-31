@@ -33,16 +33,16 @@ public class ModuleManager {
     }
 
     public void enableModule(String guildId, String module) {
-        jarvis.database.execute("INSERT INTO modules (guild, module) VALUES (?, ?);", guildId, module);
+        jarvis.database.execute("INSERT INTO modules (guild, module) VALUES (?, ?);", guildId, module.toLowerCase());
     }
 
     public void disableModule(String guildId, String module) {
-        jarvis.database.execute("DELETE FROM modules WHERE (guild = ? AND module = ?);", guildId, module);
+        jarvis.database.execute("DELETE FROM modules WHERE (guild = ? AND module = ?);", guildId, module.toLowerCase());
     }
 
     public boolean isModuleEnabled(String guildId, String module) {
         try {
-            ResultSet result = jarvis.database.executeQuery("SELECT 1 FROM modules WHERE (guild = ? AND module = ?);", guildId, module);
+            ResultSet result = jarvis.database.executeQuery("SELECT 1 FROM modules WHERE (guild = ? AND module = ?);", guildId, module.toLowerCase());
             return (result.first());
         } catch (SQLException e) {
             e.printStackTrace();

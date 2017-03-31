@@ -15,6 +15,7 @@ public class CommandUnmute extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
         checkUserPermission(message, Permission.VOICE_MUTE_OTHERS);
 
         User user = getMentionedUser(message, args);

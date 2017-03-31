@@ -18,6 +18,8 @@ public class CommandMuteTime extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
+        
         User user = getMentionedUser(message, args);
         if (user == null) {
             sendFailureMessage(message, "No user tagged");

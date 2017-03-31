@@ -15,6 +15,7 @@ public class CommandUnban extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
         checkBotPermission(message, Permission.BAN_MEMBERS);
         checkUserPermission(message, Permission.BAN_MEMBERS);
 
