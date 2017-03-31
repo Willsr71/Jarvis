@@ -1,5 +1,6 @@
 package sr.will.jarvis.manager;
 
+import net.dv8tion.jda.core.Permission;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.admin.ModuleAdmin;
@@ -8,7 +9,9 @@ import sr.will.jarvis.module.levels.ModuleLevels;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ModuleManager {
     private Jarvis jarvis;
@@ -53,5 +56,18 @@ public class ModuleManager {
         }
 
         return false;
+    }
+
+    public ArrayList<Permission> getNeededPermissions() {
+        ArrayList<Permission> permissions = new ArrayList<>();
+
+        for (String name : modules.keySet()) {
+            List<Permission> modulePerms = modules.get(name).getNeededPermissions();
+
+            modulePerms.removeAll(permissions);
+            permissions.addAll(modulePerms);
+        }
+
+        return permissions;
     }
 }
