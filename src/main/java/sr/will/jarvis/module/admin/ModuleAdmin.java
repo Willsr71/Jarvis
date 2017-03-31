@@ -33,28 +33,34 @@ public class ModuleAdmin extends Module {
         jarvis.commandManager.registerCommand("unmute", new CommandUnmute(this));
     }
 
+    @Override
     public void finishStart() {
         muteManager.setupAll();
         banManager.setup();
     }
 
+    @Override
     public void stop() {
         banManager.stop();
         muteManager.stop();
     }
 
+    @Override
     public void reload() {
 
     }
 
+    @Override
     public String getName() {
         return "Admin";
     }
 
+    @Override
     public String getHelpText() {
         return "Administrative commands such as ban and mute";
     }
 
+    @Override
     public ArrayList<Permission> getNeededPermissions() {
         return new ArrayList<>(Arrays.asList(
                 Permission.MANAGE_ROLES,
@@ -68,6 +74,7 @@ public class ModuleAdmin extends Module {
         ));
     }
 
+    @Override
     public boolean isDefaultEnabled() {
         return false;
     }

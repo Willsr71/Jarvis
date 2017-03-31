@@ -6,14 +6,20 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.admin.ModuleAdmin;
+import sr.will.jarvis.module.chatbot.ModuleChatBot;
+import sr.will.jarvis.module.levels.ModuleLevels;
 
 public class MessageListener extends ListenerAdapter {
     private Jarvis jarvis;
     private ModuleAdmin moduleAdmin;
+    private ModuleChatBot moduleChatBot;
+    private ModuleLevels moduleLevels;
 
     public MessageListener(Jarvis jarvis) {
         this.jarvis = jarvis;
         this.moduleAdmin = (ModuleAdmin) jarvis.moduleManager.getModule("admin");
+        this.moduleChatBot = (ModuleChatBot) jarvis.moduleManager.getModule("chatbot");
+        this.moduleLevels = (ModuleLevels) jarvis.moduleManager.getModule("levels");
     }
 
     @Override
@@ -45,15 +51,15 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (jarvis.chatterBotManager.isBotChannel(event.getChannel().getId())) {
+        if (moduleChatBot.isBotChannel(event.getChannel().getId())) {
             if (event.getMessage().getContent().startsWith("<")) {
                 return;
             }
 
-            jarvis.chatterBotManager.sendResponse(event.getMessage());
+            moduleChatBot.sendResponse(event.getMessage());
             return;
         }
 
-        jarvis.levelManager.increase(event.getGuild().getId(), event.getAuthor().getId(), event.getChannel());
+        moduleLevels.increase(event.getGuild().getId(), event.getAuthor().getId(), event.getChannel());
     }
 }

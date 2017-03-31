@@ -38,8 +38,6 @@ public class CommandManager {
     }
 
     public void registerCommands() {
-        registerCommand("botadd", new CommandBotAdd(jarvis));
-        registerCommand("botremove", new CommandBotRemove(jarvis));
         registerCommand("clear", new CommandClear(jarvis));
         registerCommand("commandadd", new CommandCommandAdd(jarvis));
         registerCommand("commandremove", new CommandCommandRemove(jarvis));
@@ -47,11 +45,9 @@ public class CommandManager {
         registerCommand("emote", new CommandEmote(jarvis));
         registerCommand("google", new CommandGoogle(jarvis));
         registerCommand("help", new CommandHelp(jarvis));
-        registerCommand("leaderboard", new CommandLeaderboard(jarvis));
         registerCommand("moduledisable", new CommandModuleDisable(jarvis));
         registerCommand("moduleenable", new CommandModuleEnable(jarvis));
         registerCommand("modules", new CommandModules(jarvis));
-        registerCommand("rank", new CommandRank(jarvis));
         registerCommand("restart", new CommandRestart(jarvis));
         registerCommand("stats", new CommandStats(jarvis));
     }

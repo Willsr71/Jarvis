@@ -1,23 +1,27 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.levels.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.levels.ModuleLevels;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CommandLeaderboard extends Command {
-    private Jarvis jarvis;
+    private ModuleLevels module;
 
-    public CommandLeaderboard(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandLeaderboard(ModuleLevels module) {
+        this.module = module;
     }
 
     @Override
     public void execute(Message message, String... args) {
-        HashMap<Long, ArrayList<String>> leaderboard = jarvis.levelManager.getLeaderboard(message.getGuild().getId());
+        checkModuleEnabled(message, module);
+
+        HashMap<Long, ArrayList<String>> leaderboard = module.getLeaderboard(message.getGuild().getId());
 
         EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
 
@@ -25,7 +29,7 @@ public class CommandLeaderboard extends Command {
             System.out.println(xp);
 
             for (String user : leaderboard.get(xp)) {
-                embed.addField(jarvis.getJda().getUserById(user).getName(), "Level " + jarvis.levelManager.getLevelFromXp(xp) + " (" + xp + "xp)", false);
+                embed.addField(Jarvis.getJda().getUserById(user).getName(), "Level " + module.getLevelFromXp(xp) + " (" + xp + "xp)", false);
             }
         }
 

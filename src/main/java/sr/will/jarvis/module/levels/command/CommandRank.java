@@ -1,21 +1,24 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.levels.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.levels.ModuleLevels;
 
 import java.awt.*;
 
 public class CommandRank extends Command {
-    private Jarvis jarvis;
+    private ModuleLevels module;
 
-    public CommandRank(Jarvis jarvis) {
-        this.jarvis = jarvis;
+    public CommandRank(ModuleLevels module) {
+        this.module = module;
     }
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
+
         User user = getMentionedUser(message, args);
         if (user == null) {
             user = message.getAuthor();
@@ -24,12 +27,12 @@ public class CommandRank extends Command {
         EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
         embed.setAuthor(message.getGuild().getMember(user).getEffectiveName(), null, user.getEffectiveAvatarUrl());
 
-        long userXp = jarvis.levelManager.getUserXp(message.getGuild().getId(), user.getId());
-        int userLevel = jarvis.levelManager.getLevelFromXp(userXp);
-        long levelXp = jarvis.levelManager.getLevelXp(userLevel);
-        long nextLevelXp = jarvis.levelManager.getLevelXp(userLevel + 1);
+        long userXp = module.getUserXp(message.getGuild().getId(), user.getId());
+        int userLevel = module.getLevelFromXp(userXp);
+        long levelXp = module.getLevelXp(userLevel);
+        long nextLevelXp = module.getLevelXp(userLevel + 1);
         long userLevelXp = userXp - levelXp;
-        int userRank = jarvis.levelManager.getLeaderboardPosition(message.getGuild().getId(), user.getId());
+        int userRank = module.getLeaderboardPosition(message.getGuild().getId(), user.getId());
 
         embed.addField("Rank", userRank + "", true);
         embed.addField("Lvl", userLevel + "", true);

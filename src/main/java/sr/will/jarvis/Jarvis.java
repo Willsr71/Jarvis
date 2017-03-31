@@ -9,9 +9,7 @@ import sr.will.jarvis.config.Config;
 import sr.will.jarvis.listener.GuildAvailableListener;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
-import sr.will.jarvis.manager.ChatterBotManager;
 import sr.will.jarvis.manager.CommandManager;
-import sr.will.jarvis.manager.LevelManager;
 import sr.will.jarvis.manager.ModuleManager;
 import sr.will.jarvis.service.StatusService;
 import sr.will.jarvis.sql.Database;
@@ -26,9 +24,7 @@ public class Jarvis {
     public Config config;
 
     public Database database;
-    public ChatterBotManager chatterBotManager;
     public CommandManager commandManager;
-    public LevelManager levelManager;
     public ModuleManager moduleManager;
     public StatusService statusService;
     private JDA jda;
@@ -42,10 +38,8 @@ public class Jarvis {
 
         configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
 
-        chatterBotManager = new ChatterBotManager(this);
         commandManager = new CommandManager(this);
         commandManager.registerCommands();
-        levelManager = new LevelManager(this);
         moduleManager = new ModuleManager(this);
         moduleManager.registerModules();
 

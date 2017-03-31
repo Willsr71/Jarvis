@@ -1,33 +1,81 @@
-package sr.will.jarvis.manager;
+package sr.will.jarvis.module.chatbot;
 
 import com.google.code.chatterbotapi.ChatterBotFactory;
 import com.google.code.chatterbotapi.ChatterBotSession;
 import com.google.code.chatterbotapi.ChatterBotType;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.module.Module;
+import sr.will.jarvis.module.chatbot.command.CommandBotAdd;
+import sr.will.jarvis.module.chatbot.command.CommandBotRemove;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
-public class ChatterBotManager {
+public class ModuleChatBot extends Module {
     private Jarvis jarvis;
 
     private ChatterBotFactory botFactory = new ChatterBotFactory();
     private HashMap<String, ChatterBotSession> chatterBots = new HashMap<>();
 
-    public ChatterBotManager(Jarvis jarvis) {
+    public ModuleChatBot(Jarvis jarvis) {
         this.jarvis = jarvis;
+
+        jarvis.commandManager.registerCommand("botadd", new CommandBotAdd(this));
+        jarvis.commandManager.registerCommand("botremove", new CommandBotRemove(this));
     }
 
+    @Override
+    public void finishStart() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public void reload() {
+
+    }
+
+    @Override
+    public String getName() {
+        return "ChatBot";
+    }
+
+    @Override
+    public String getHelpText() {
+        return "An interactive chatbot and commands";
+    }
+
+    @Override
+    public ArrayList<Permission> getNeededPermissions() {
+        return new ArrayList<>(Arrays.asList(
+                Permission.MESSAGE_READ,
+                Permission.MESSAGE_WRITE
+        ));
+    }
+
+    @Override
+    public boolean isDefaultEnabled() {
+        return false;
+    }
+
+
     public void addBot(String channelId) {
-        jarvis.database.execute("INSERT INTO chatterbot_channels (channel) VALUES (?);", channelId);
+        Jarvis.getDatabase().execute("INSERT INTO chatterbot_channels (channel) VALUES (?);", channelId);
 
         createBot(channelId);
     }
 
     public void removeBot(String channelId) {
-        jarvis.database.execute("DELETE FROM chatterbot_channels WHERE (channel = ?);", channelId);
+        Jarvis.getDatabase().execute("DELETE FROM chatterbot_channels WHERE (channel = ?);", channelId);
 
         chatterBots.remove(channelId);
     }
@@ -46,7 +94,7 @@ public class ChatterBotManager {
         }
 
         try {
-            ResultSet result = jarvis.database.executeQuery("SELECT 1 FROM chatterbot_channels WHERE (channel = ?) LIMIT 1;", channelId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM chatterbot_channels WHERE (channel = ?) LIMIT 1;", channelId);
             if (result.first()) {
                 return true;
             }

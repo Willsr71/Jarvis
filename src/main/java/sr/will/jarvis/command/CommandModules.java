@@ -20,12 +20,10 @@ public class CommandModules extends Command {
 
         for (String name : jarvis.moduleManager.getModules().keySet()) {
             Module module = jarvis.moduleManager.getModule(name);
-            embed.addField(module.getName(), module.getHelpText(), false);
+            embed.addField(module.getName(), module.getHelpText(), true);
             embed.addField("Enabled", module.isEnabled(message.getGuild().getId()) ? "Yes" : "No", true);
         }
 
-        embed.addField("Chatbot", "An interactive chatbot and commands", false);
-        embed.addField("Levels", "Levels plugin and commands", false);
         embed.addField("Dev", "A few useful development commands", false);
 
         message.getChannel().sendMessage(embed.build()).queue();
