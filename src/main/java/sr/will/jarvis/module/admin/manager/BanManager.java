@@ -60,10 +60,7 @@ public class BanManager {
     public void ban(String guildId, String userId, String invokerId, long duration) {
         Jarvis.getDatabase().execute("INSERT INTO bans (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
         setBanned(guildId, userId, true);
-
-        if (duration != -1) {
-            startUnbanThread(guildId, userId, duration);
-        }
+        startUnbanThread(guildId, userId, duration);
 
         Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
@@ -131,6 +128,10 @@ public class BanManager {
     }
 
     public void startUnbanThread(final String guildId, final String userId, final long duration) {
+        if (duration == -1) {
+            return;
+        }
+
         startThread(() -> {
             try {
                 long sleepTime = duration - System.currentTimeMillis();

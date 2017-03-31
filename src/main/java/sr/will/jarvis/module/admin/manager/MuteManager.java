@@ -66,10 +66,7 @@ public class MuteManager {
     public void mute(String guildId, String userId, String invokerId, long duration) {
         Jarvis.getDatabase().execute("INSERT INTO mutes (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
         setMuted(guildId, userId, true);
-
-        if (duration != -1) {
-            startUnmuteThread(guildId, userId, duration);
-        }
+        startUnmuteThread(guildId, userId, duration);
 
         /*
         jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
@@ -175,6 +172,10 @@ public class MuteManager {
     }
 
     public void startUnmuteThread(final String guildId, final String userId, final long duration) {
+        if (duration == -1) {
+            return;
+        }
+
         startThread(() -> {
             try {
                 long sleepTime = duration - System.currentTimeMillis();
