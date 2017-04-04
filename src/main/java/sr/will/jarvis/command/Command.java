@@ -51,6 +51,18 @@ public abstract class Command {
         }
     }
 
+    protected String condenseArgs(String... args)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String arg : args) {
+            stringBuilder.append(arg).append(" ");
+        }
+
+        stringBuilder.trimToSize();
+        return stringBuilder.toString();
+    }
+
     protected void sendSuccessEmote(Message message) {
         message.addReaction("\uD83D\uDC4C").queue();
     }
