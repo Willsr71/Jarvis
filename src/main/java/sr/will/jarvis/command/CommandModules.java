@@ -16,16 +16,21 @@ public class CommandModules extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Modules", null).setColor(Color.GREEN);
-
         for (String name : jarvis.moduleManager.getModules().keySet()) {
+            EmbedBuilder embed = new EmbedBuilder();
             Module module = jarvis.moduleManager.getModule(name);
-            embed.addField(module.getName(), module.getHelpText(), true);
-            embed.addField("Enabled", module.isEnabled(message.getGuild().getId()) ? "Yes" : "No", true);
+
+            embed.setTitle(module.getName(), null);
+            embed.setDescription(module.getHelpText());
+            if (module.isEnabled(message.getGuild().getId())) {
+                embed.setColor(Color.GREEN);
+                embed.addField("Disable Command", "!moduledisable " + module.getName().toLowerCase(), true);
+            } else {
+                embed.setColor(Color.RED);
+                embed.addField("Enable Command", "!moduleenable " + module.getName().toLowerCase(), true);
+            }
+
+            message.getChannel().sendMessage(embed.build()).queue();
         }
-
-        embed.addField("Dev", "A few useful development commands", false);
-
-        message.getChannel().sendMessage(embed.build()).queue();
     }
 }

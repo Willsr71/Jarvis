@@ -10,6 +10,7 @@ import sr.will.jarvis.module.levels.ModuleLevels;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -69,5 +70,17 @@ public class ModuleManager {
         }
 
         return permissions;
+    }
+
+    public void enableDefaultModules(String guildId) {
+        for (String module : getDefaultModules()) {
+            enableModule(guildId, module);
+        }
+    }
+
+    public ArrayList<String> getDefaultModules() {
+        return new ArrayList<>(Arrays.asList(
+                "admin"
+        ));
     }
 }

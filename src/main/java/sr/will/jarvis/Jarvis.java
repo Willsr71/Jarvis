@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.noxal.common.util.config.JSONConfigManager;
 import sr.will.jarvis.config.Config;
-import sr.will.jarvis.listener.GuildAvailableListener;
+import sr.will.jarvis.listener.GuildJoinListener;
 import sr.will.jarvis.listener.MessageListener;
 import sr.will.jarvis.listener.ReadyListener;
 import sr.will.jarvis.manager.CommandManager;
@@ -51,7 +51,7 @@ public class Jarvis {
             jda = new JDABuilder(AccountType.BOT)
                     .setToken(config.discord.token)
                     .setAutoReconnect(true)
-                    .addListener(new GuildAvailableListener(this))
+                    .addListener(new GuildJoinListener(this))
                     .addListener(new MessageListener(this))
                     .addListener(new ReadyListener())
                     .buildAsync();

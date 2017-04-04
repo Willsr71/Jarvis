@@ -12,6 +12,6 @@ public class CommandInvite extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        sendSuccessMessage(message, Jarvis.getJda().asBot().getInviteUrl(jarvis.moduleManager.getNeededPermissions()), false);
+        message.getChannel().sendMessage(Jarvis.getJda().asBot().getInviteUrl(jarvis.moduleManager.getNeededPermissions())).queue();
     }
 }
