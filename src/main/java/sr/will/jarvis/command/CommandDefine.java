@@ -21,7 +21,7 @@ public class CommandDefine extends Command {
     public void execute(Message message, String... args) {
         Gson gson = new Gson();
 
-        if (args.length != 1) {
+        if (args.length == 0) {
             sendFailureMessage(message, "No word defined");
             return;
         }
@@ -35,9 +35,15 @@ public class CommandDefine extends Command {
         }
 
         Definition definition = gson.fromJson(string, Definition.class);
+
+        if (definition.list.size() == 0) {
+            sendFailureMessage(message, "Word not defined");
+            return;
+        }
+
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setTitle(args[0], null)
+                .setTitle(args[0], "https://www.urbandictionary.com/define.php?term=" + definition.list.get(0).word)
                 .setDescription(definition.list.get(0).definition + "\n\n_" + definition.list.get(0).example + "_");
         message.getChannel().sendMessage(embed.build()).queue();
     }
