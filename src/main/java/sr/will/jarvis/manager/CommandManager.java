@@ -53,6 +53,7 @@ public class CommandManager {
         registerCommand("restart", new CommandRestart(jarvis));
         registerCommand("source", new CommandSource());
         registerCommand("stats", new CommandStats(jarvis));
+        registerCommand("trump", new CommandTrump(jarvis));
     }
 
     public void addCustomCommand(String guildId, String command, String response) {

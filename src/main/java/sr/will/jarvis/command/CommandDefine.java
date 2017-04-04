@@ -32,7 +32,7 @@ public class CommandDefine extends Command {
             string = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + condenseArgs("+", args)).asString().getBody();
         } catch (UnirestException e) {
             e.printStackTrace();
-            sendFailureMessage(message, "An error occured");
+            sendFailureMessage(message, "An error occurred");
         }
 
         Definition definition = gson.fromJson(string, Definition.class);
