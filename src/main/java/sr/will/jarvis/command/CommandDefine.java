@@ -26,7 +26,8 @@ public class CommandDefine extends Command {
             return;
         }
 
-        String string = "";
+        String string = condenseArgs(args);
+        
         try {
             string = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + args[0]).asString().getBody();
         } catch (UnirestException e) {
