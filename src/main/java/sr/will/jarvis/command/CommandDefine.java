@@ -29,7 +29,7 @@ public class CommandDefine extends Command {
         String string = "";
 
         try {
-            string = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + args[0]).asString().getBody();
+            string = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + condenseArgs(args)).asString().getBody();
         } catch (UnirestException e) {
             e.printStackTrace();
             sendFailureMessage(message, "An error occured");
