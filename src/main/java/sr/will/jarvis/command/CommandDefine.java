@@ -29,7 +29,7 @@ public class CommandDefine extends Command {
         String string = "";
 
         try {
-            string = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + condenseArgs(args)).asString().getBody();
+            string = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + condenseArgs("+", args)).asString().getBody();
         } catch (UnirestException e) {
             e.printStackTrace();
             sendFailureMessage(message, "An error occured");
@@ -44,7 +44,7 @@ public class CommandDefine extends Command {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setTitle(condenseArgs(args), "https://www.urbandictionary.com/define.php?term=" + definition.list.get(0).word)
+                .setTitle(definition.list.get(0).word, "https://www.urbandictionary.com/define.php?term=" + condenseArgs("+", args))
                 .setDescription(definition.list.get(0).definition + "\n\n_" + definition.list.get(0).example + "_");
         message.getChannel().sendMessage(embed.build()).queue();
     }

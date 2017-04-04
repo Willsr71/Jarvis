@@ -51,16 +51,19 @@ public abstract class Command {
         }
     }
 
-    protected String condenseArgs(String... args)
-    {
+    protected String condenseArgs(String joiner, String... args) {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (String arg : args) {
-            stringBuilder.append(arg).append(" ");
+            stringBuilder.append(arg).append(joiner);
         }
 
         stringBuilder.trimToSize();
         return stringBuilder.toString();
+    }
+
+    protected String condenseArgs(String... args) {
+        return condenseArgs(" ", args);
     }
 
     protected void sendSuccessEmote(Message message) {
