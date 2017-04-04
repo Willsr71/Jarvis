@@ -26,8 +26,8 @@ public class CommandDefine extends Command {
             return;
         }
 
-        String string = condenseArgs(args);
-        
+        String string = "";
+
         try {
             string = Unirest.get("http://api.urbandictionary.com/v0/define?term=" + args[0]).asString().getBody();
         } catch (UnirestException e) {
@@ -44,7 +44,7 @@ public class CommandDefine extends Command {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setTitle(args[0], "https://www.urbandictionary.com/define.php?term=" + definition.list.get(0).word)
+                .setTitle(condenseArgs(args), "https://www.urbandictionary.com/define.php?term=" + definition.list.get(0).word)
                 .setDescription(definition.list.get(0).definition + "\n\n_" + definition.list.get(0).example + "_");
         message.getChannel().sendMessage(embed.build()).queue();
     }
