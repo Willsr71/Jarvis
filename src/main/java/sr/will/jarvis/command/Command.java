@@ -58,7 +58,7 @@ public abstract class Command {
             stringBuilder.append(arg).append(joiner);
         }
 
-        stringBuilder.deleteCharAt(stringBuilder.length());
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         return stringBuilder.toString();
     }
 
