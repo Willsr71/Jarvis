@@ -41,6 +41,7 @@ public class CommandManager {
         registerCommand("clear", new CommandClear(jarvis));
         registerCommand("commandadd", new CommandCommandAdd(jarvis));
         registerCommand("commandremove", new CommandCommandRemove(jarvis));
+        registerCommand("define", new CommandDefine(jarvis));
         registerCommand("emoji", new CommandEmoji(jarvis));
         registerCommand("emote", new CommandEmote(jarvis));
         registerCommand("google", new CommandGoogle(jarvis));
