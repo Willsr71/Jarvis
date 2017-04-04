@@ -1,7 +1,7 @@
 package sr.will.jarvis.module.levels;
 
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.TextChannel;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.levels.command.CommandLeaderboard;
@@ -138,7 +138,11 @@ public class ModuleLevels extends Module {
         return 0;
     }
 
-    public void increase(String guildId, String userId, MessageChannel channel) {
+    public void increase(String guildId, String userId, TextChannel channel) {
+        if (!isEnabled(channel.getGuild().getId())) {
+            return;
+        }
+
         if (!userExists(guildId, userId)) {
             addUser(guildId, userId);
         }

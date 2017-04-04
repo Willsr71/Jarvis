@@ -34,7 +34,7 @@ public abstract class Command {
 
     protected void checkModuleEnabled(Message message, Module module) {
         if (!module.isEnabled(message.getGuild().getId())) {
-            sendFailureMessage(message, "Module " + module.getName() + " is not enabled on this server");
+            sendFailureMessage(message, "Module \"" + module.getName() + "\" is not enabled on this server");
             throw new ModuleNotEnabledException(module, message.getGuild());
         }
     }

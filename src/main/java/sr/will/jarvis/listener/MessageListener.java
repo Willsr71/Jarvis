@@ -60,6 +60,6 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        moduleLevels.increase(event.getGuild().getId(), event.getAuthor().getId(), event.getChannel());
+        moduleLevels.increase(event.getGuild().getId(), event.getAuthor().getId(), event.getTextChannel());
     }
 }
