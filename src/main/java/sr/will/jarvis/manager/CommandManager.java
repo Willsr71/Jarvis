@@ -1,5 +1,6 @@
 package sr.will.jarvis.manager;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.*;
@@ -7,6 +8,7 @@ import sr.will.jarvis.exception.BotPermissionException;
 import sr.will.jarvis.exception.ModuleNotEnabledException;
 import sr.will.jarvis.exception.UserPermissionException;
 
+import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -115,6 +117,9 @@ public class CommandManager {
                 commands.get(command).execute(message, args);
             } catch (BotPermissionException | UserPermissionException | ModuleNotEnabledException e) {
                 System.out.println(e.getMessage());
+            } catch (Exception e) {
+                message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error!", null).setColor(Color.RED).setDescription(e.getMessage()).build()).queue();
+                e.printStackTrace();
             }
             return;
         }
