@@ -26,13 +26,13 @@ public class CommandDefine extends Command {
             return;
         }
 
-        String string = "";
-
+        String string;
         try {
             string = Unirest.get("https://api.urbandictionary.com/v0/define?term=" + condenseArgs("+", args)).asString().getBody();
         } catch (UnirestException e) {
             e.printStackTrace();
             sendFailureMessage(message, "An error occurred");
+            return;
         }
 
         Definition definition = gson.fromJson(string, Definition.class);

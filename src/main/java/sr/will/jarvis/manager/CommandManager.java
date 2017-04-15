@@ -118,7 +118,7 @@ public class CommandManager {
             } catch (BotPermissionException | UserPermissionException | ModuleNotEnabledException e) {
                 System.out.println(e.getMessage());
             } catch (Exception e) {
-                message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error!", null).setColor(Color.RED).setDescription(e.getMessage()).build()).queue();
+                message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error!", null).setColor(Color.RED).setDescription(e.toString()).build()).queue();
                 e.printStackTrace();
             }
             return;

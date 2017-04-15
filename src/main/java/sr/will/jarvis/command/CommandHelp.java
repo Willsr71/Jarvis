@@ -36,4 +36,6 @@ public class CommandHelp extends Command {
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+
 }
