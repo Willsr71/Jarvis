@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.overwatch.ModuleOverwatch;
+import sr.will.jarvis.module.overwatch.Tier;
 import sr.will.jarvis.rest.owapi.UserStats;
 
 import java.awt.*;
@@ -29,6 +30,11 @@ public class CommandOWStats extends Command {
             return;
         }
 
+        if (!module.isValidBattleTag(args[0])) {
+            sendFailureMessage(message, "Invalid battletag");
+            return;
+        }
+
         String string;
         try {
             string = Unirest.get("https://owapi.net/api/v3/u/" + args[0].replace("#", "-") + "/stats").asString().getBody();
@@ -38,8 +44,6 @@ public class CommandOWStats extends Command {
             return;
         }
 
-        System.out.println(string);
-
         UserStats userStats = gson.fromJson(string, UserStats.class);
 
         if (userStats.error != null) {
@@ -48,13 +52,15 @@ public class CommandOWStats extends Command {
         }
 
         UserStats.Region.Stats.Mode.OverallStats overallStats = userStats.getRegion().stats.quickplay.overall_stats;
+        String userUrl = "https://playoverwatch.com/en-" + userStats.getRegion().toString() + "/career/pc/us/" + args[0].replace("#", "-");
+        Tier tier = Tier.fromSR(overallStats.comprank);
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setTitle(args[0], null)
+                .setAuthor(args[0], userUrl, overallStats.avatar)
                 .addField("Level", ((overallStats.prestige * 100) + overallStats.level) + "", true)
                 .addField("SR", overallStats.comprank + "", true)
-                .setThumbnail(overallStats.avatar);
+                .setThumbnail(tier.getImageURL());
         message.getChannel().sendMessage(embed.build()).queue();
     }
 }

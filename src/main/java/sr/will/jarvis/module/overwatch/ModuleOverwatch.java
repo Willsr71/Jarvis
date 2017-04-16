@@ -7,9 +7,13 @@ import sr.will.jarvis.module.overwatch.command.CommandOWStats;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ModuleOverwatch extends Module {
     private Jarvis jarvis;
+
+    public static String BATTLETAG_REGEX = "(?i).{3,12}\\#[0-9]{4,5}";
 
     public ModuleOverwatch(Jarvis jarvis) {
         this.jarvis = jarvis;
@@ -53,5 +57,10 @@ public class ModuleOverwatch extends Module {
     @Override
     public boolean isDefaultEnabled() {
         return false;
+    }
+
+    public boolean isValidBattleTag(String battletag) {
+        Matcher matcher = Pattern.compile(BATTLETAG_REGEX).matcher(battletag);
+        return matcher.find();
     }
 }
