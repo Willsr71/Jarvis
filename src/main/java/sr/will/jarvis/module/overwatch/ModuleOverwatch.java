@@ -9,18 +9,18 @@ import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.overwatch.command.CommandBattleTagAdd;
 import sr.will.jarvis.module.overwatch.command.CommandBattleTagRemove;
 import sr.will.jarvis.module.overwatch.command.CommandOWStats;
-import sr.will.jarvis.rest.owapi.UserStats;
+import sr.will.jarvis.rest.owapi.UserBlob;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ModuleOverwatch extends Module {
     public static String BATTLETAG_REGEX = "(?i).{3,12}[\\#\\-][0-9]{4,5}";
-    public static ArrayList<String> tiers = new ArrayList<>(Arrays.asList("bronze", "silver", "gold", "platinum", "diamond", "masters", "grandmasters"));
+    public static ArrayList<String> tiers = new ArrayList<>(Arrays.asList("bronze", "silver", "gold", "platinum", "diamond", "master", "grandmaster"));
     private Jarvis jarvis;
 
     public ModuleOverwatch(Jarvis jarvis) {
@@ -74,10 +74,10 @@ public class ModuleOverwatch extends Module {
         return matcher.find();
     }
 
-    public UserStats getUserStats(String battletag) throws UnirestException {
+    public UserBlob getUserBlob(String battletag) throws UnirestException {
         Gson gson = new Gson();
-        String string = Unirest.get("https://owapi.net/api/v3/u/" + battletag.replace("#", "-") + "/stats").asString().getBody();
-        return gson.fromJson(string, UserStats.class);
+        String string = Unirest.get("https://owapi.net/api/v3/u/" + battletag.replace("#", "-") + "/blob").asString().getBody();
+        return gson.fromJson(string, UserBlob.class);
     }
 
     public void addBattletag(String userId, String battletag) {
@@ -109,5 +109,17 @@ public class ModuleOverwatch extends Module {
         }
 
         return "https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-1.png";
+    }
+
+    public HashMap<String, Double> sortHeroesByTime(HashMap<String, Double> heroes) {
+        return heroes.entrySet()
+                .stream()
+                .sorted(HashMap.Entry.comparingByValue(Collections.reverseOrder()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
 }

@@ -99,6 +99,10 @@ public abstract class Command {
         return condenseArgs(" ", args);
     }
 
+    protected String capitalizeProperly(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1, string.length()).toLowerCase();
+    }
+
     protected void sendSuccessEmote(Message message) {
         message.addReaction("\uD83D\uDC4C").queue();
     }

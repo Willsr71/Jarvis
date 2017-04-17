@@ -5,9 +5,10 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.overwatch.ModuleOverwatch;
-import sr.will.jarvis.rest.owapi.UserStats;
+import sr.will.jarvis.rest.owapi.UserBlob;
 
 import java.awt.*;
+import java.util.HashMap;
 
 public class CommandOWStats extends Command {
     private ModuleOverwatch module;
@@ -41,21 +42,21 @@ public class CommandOWStats extends Command {
             return;
         }
 
-        UserStats userStats;
+        UserBlob userBlob;
         try {
-            userStats = module.getUserStats(battletag);
+            userBlob = module.getUserBlob(battletag);
         } catch (UnirestException e) {
             e.printStackTrace();
             sendFailureMessage(message, "An error occurred");
             return;
         }
 
-        if (userStats.error != null) {
-            sendFailureMessage(message, userStats.msg);
+        if (userBlob.error != null) {
+            sendFailureMessage(message, capitalizeProperly(userBlob.msg));
             return;
         }
 
-        UserStats.Region.Stats.Mode.OverallStats overallStats = userStats.getRegion().stats.quickplay.overall_stats;
+        UserBlob.Region.Stats.Mode.OverallStats overallStats = userBlob.getRegion().stats.quickplay.overall_stats;
         String userUrl = "https://playoverwatch.com/en-us/career/pc/us/" + battletag;
 
         EmbedBuilder embed = new EmbedBuilder()
@@ -63,7 +64,25 @@ public class CommandOWStats extends Command {
                 .setAuthor(battletag, userUrl, overallStats.avatar)
                 .addField("Level", ((overallStats.prestige * 100) + overallStats.level) + "", true)
                 .addField("SR", overallStats.comprank + "", true)
+                .addField("Top heroes (Comp)", getTopHeroes(userBlob.getRegion().heroes.playtime.competitive), true)
+                .addField("Top heroes (QP)", getTopHeroes(userBlob.getRegion().heroes.playtime.quickplay), true)
                 .setThumbnail(module.getTierImage(overallStats.tier));
         message.getChannel().sendMessage(embed.build()).queue();
+    }
+
+    public String getTopHeroes(HashMap<String, Double> heroes) {
+        HashMap<String, Double> topHeroes = module.sortHeroesByTime(heroes);
+        String topHeroesString = "";
+        int x = 0;
+        for (String hero : topHeroes.keySet()) {
+            topHeroesString += capitalizeProperly(hero) + " (" + topHeroes.get(hero).intValue() + " hours)\n";
+
+            x += 1;
+            if (x >= 3) {
+                break;
+            }
+        }
+
+        return topHeroesString;
     }
 }

@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.overwatch.ModuleOverwatch;
-import sr.will.jarvis.rest.owapi.UserStats;
+import sr.will.jarvis.rest.owapi.UserBlob;
 
 public class CommandBattleTagAdd extends Command {
     private ModuleOverwatch module;
@@ -40,17 +40,17 @@ public class CommandBattleTagAdd extends Command {
             return;
         }
 
-        UserStats userStats;
+        UserBlob userBlob;
         try {
-            userStats = module.getUserStats(battletag);
+            userBlob = module.getUserBlob(battletag);
         } catch (UnirestException e) {
             e.printStackTrace();
             sendFailureMessage(message, "An error occurred");
             return;
         }
 
-        if (userStats.error != null) {
-            sendFailureMessage(message, userStats.msg);
+        if (userBlob.error != null) {
+            sendFailureMessage(message, capitalizeProperly(userBlob.msg));
             return;
         }
 

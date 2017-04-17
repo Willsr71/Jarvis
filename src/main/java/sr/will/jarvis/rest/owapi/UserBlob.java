@@ -2,7 +2,7 @@ package sr.will.jarvis.rest.owapi;
 
 import java.util.HashMap;
 
-public class UserStats {
+public class UserBlob {
     public Request _request;
     public Region any;
     public Region eu;
@@ -46,7 +46,8 @@ public class UserStats {
 
                 public class Hero {
                     public HashMap<String, Double> average_stats;
-                    public HashMap<String, Double> general_stats;
+                    // Double currently fails because of a bug with owapi
+                    public HashMap<String, Object> general_stats;
                     public HashMap<String, Double> hero_stats;
                 }
             }
