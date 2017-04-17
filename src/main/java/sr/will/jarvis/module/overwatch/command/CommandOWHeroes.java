@@ -8,10 +8,10 @@ import sr.will.jarvis.rest.owapi.UserBlob;
 
 import java.awt.*;
 
-public class CommandOWStats extends Command {
+public class CommandOWHeroes extends Command {
     private ModuleOverwatch module;
 
-    public CommandOWStats(ModuleOverwatch module) {
+    public CommandOWHeroes(ModuleOverwatch module) {
         this.module = module;
     }
 
@@ -30,10 +30,8 @@ public class CommandOWStats extends Command {
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
                 .setAuthor(userBlob.battletag, userUrl, module.getTierImage(overallStats.tier))
-                .addField("Level", ((overallStats.prestige * 100) + overallStats.level) + "", true)
-                .addField("SR", overallStats.comprank + "", true)
-                .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay, 3), true)
-                .addField("Top heroes (Comp)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive, 3), true)
+                .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay), true)
+                .addField("Top heroes (Comp)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive), true)
                 .setThumbnail(overallStats.avatar);
         message.getChannel().sendMessage(embed.build()).queue();
     }

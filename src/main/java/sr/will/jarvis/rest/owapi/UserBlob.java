@@ -10,6 +10,7 @@ public class UserBlob {
     public Region us;
     public String msg;
     public String error;
+    public String battletag;
 
     public class Request {
         public String api_ver;

@@ -61,14 +61,14 @@ public abstract class Command {
         }
     }
 
-    protected void checkModuleEnabled(Message message, Module module) {
+    public static void checkModuleEnabled(Message message, Module module) {
         if (!module.isEnabled(message.getGuild().getId())) {
             sendFailureMessage(message, "Module \"" + module.getName() + "\" is not enabled on this server");
             throw new ModuleNotEnabledException(module, message.getGuild());
         }
     }
 
-    protected User getMentionedUser(Message message, String... args) {
+    public static User getMentionedUser(Message message, String... args) {
         if (message.getMentionedUsers().size() != 0) {
             return message.getMentionedUsers().get(0);
         }
@@ -84,7 +84,7 @@ public abstract class Command {
         return null;
     }
 
-    protected String condenseArgs(String joiner, String... args) {
+    public static String condenseArgs(String joiner, String... args) {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (String arg : args) {
@@ -95,19 +95,19 @@ public abstract class Command {
         return stringBuilder.toString();
     }
 
-    protected String condenseArgs(String... args) {
+    public static String condenseArgs(String... args) {
         return condenseArgs(" ", args);
     }
 
-    protected String capitalizeProperly(String string) {
+    public static String capitalizeProperly(String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1, string.length()).toLowerCase();
     }
 
-    protected void sendSuccessEmote(Message message) {
+    public static void sendSuccessEmote(Message message) {
         message.addReaction("\uD83D\uDC4C").queue();
     }
 
-    protected void sendSuccessMessage(TextChannel channel, String string, boolean delete, Message... messagesToDelete) {
+    public static void sendSuccessMessage(TextChannel channel, String string, boolean delete, Message... messagesToDelete) {
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Success!", null)
                 .setColor(Color.GREEN)
@@ -136,19 +136,19 @@ public abstract class Command {
         }
     }
 
-    protected void sendSuccessMessage(TextChannel channel, String string, Message... messagesToDelete) {
+    public static void sendSuccessMessage(TextChannel channel, String string, Message... messagesToDelete) {
         sendSuccessMessage(channel, string, true, messagesToDelete);
     }
 
-    protected void sendSuccessMessage(Message message, String string, boolean delete) {
+    public static void sendSuccessMessage(Message message, String string, boolean delete) {
         sendSuccessMessage(message.getTextChannel(), string, delete, message);
     }
 
-    protected void sendSuccessMessage(Message message, String string) {
+    public static void sendSuccessMessage(Message message, String string) {
         sendSuccessMessage(message, string, true);
     }
 
-    protected void sendFailureMessage(Message message, String string) {
+    public static void sendFailureMessage(Message message, String string) {
         message.getChannel().sendMessage(new EmbedBuilder()
                 .setTitle("Error", null)
                 .setColor(Color.RED)
