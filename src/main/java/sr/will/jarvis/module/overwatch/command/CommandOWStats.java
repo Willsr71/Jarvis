@@ -5,7 +5,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.overwatch.ModuleOverwatch;
-import sr.will.jarvis.module.overwatch.Tier;
 import sr.will.jarvis.rest.owapi.UserStats;
 
 import java.awt.*;
@@ -58,14 +57,13 @@ public class CommandOWStats extends Command {
 
         UserStats.Region.Stats.Mode.OverallStats overallStats = userStats.getRegion().stats.quickplay.overall_stats;
         String userUrl = "https://playoverwatch.com/en-us/career/pc/us/" + battletag;
-        Tier tier = Tier.fromSR(overallStats.comprank);
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
                 .setAuthor(battletag, userUrl, overallStats.avatar)
                 .addField("Level", ((overallStats.prestige * 100) + overallStats.level) + "", true)
                 .addField("SR", overallStats.comprank + "", true)
-                .setThumbnail(tier.getImageURL());
+                .setThumbnail(module.getTierImage(overallStats.tier));
         message.getChannel().sendMessage(embed.build()).queue();
     }
 }

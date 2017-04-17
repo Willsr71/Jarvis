@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 public class ModuleOverwatch extends Module {
     public static String BATTLETAG_REGEX = "(?i).{3,12}[\\#\\-][0-9]{4,5}";
+    public static ArrayList<String> tiers = new ArrayList<>(Arrays.asList("bronze", "silver", "gold", "platinum", "diamond", "masters", "grandmasters"));
     private Jarvis jarvis;
 
     public ModuleOverwatch(Jarvis jarvis) {
@@ -68,11 +69,6 @@ public class ModuleOverwatch extends Module {
         return false;
     }
 
-    public String getBattletagGroup(String arg) {
-        Matcher matcher = Pattern.compile(BATTLETAG_REGEX).matcher(arg);
-        return matcher.group();
-    }
-
     public boolean isValidBattleTag(String battletag) {
         Matcher matcher = Pattern.compile(BATTLETAG_REGEX).matcher(battletag);
         return matcher.find();
@@ -103,5 +99,15 @@ public class ModuleOverwatch extends Module {
         }
 
         return null;
+    }
+
+    public String getTierImage(String tier) {
+        for (int x = 0; x < tiers.size(); x += 1) {
+            if (tiers.get(x).equals(tier)) {
+                return "https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-" + (x + 1) + ".png";
+            }
+        }
+
+        return "https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-1.png";
     }
 }
