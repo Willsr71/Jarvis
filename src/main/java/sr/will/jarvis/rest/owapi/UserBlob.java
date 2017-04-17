@@ -46,8 +46,7 @@ public class UserBlob {
 
                 public class Hero {
                     public HashMap<String, Double> average_stats;
-                    // Double currently fails because of a bug with owapi
-                    public HashMap<String, Object> general_stats;
+                    public HashMap<String, Double> general_stats;
                     public HashMap<String, Double> hero_stats;
                 }
             }
