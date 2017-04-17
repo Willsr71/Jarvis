@@ -17,12 +17,12 @@ public class CommandBotAdd extends Command {
         checkModuleEnabled(message, module);
         checkUserPermission(message, Permission.MESSAGE_MANAGE);
 
-        if (module.isBotChannel(message.getChannel().getId())) {
+        if (module.isBotChannel(message.getChannel().getIdLong())) {
             sendFailureMessage(message, "Bot already active in this channel");
             return;
         }
 
         sendSuccessEmote(message);
-        module.addBot(message.getChannel().getId());
+        module.addBot(message.getChannel().getIdLong());
     }
 }

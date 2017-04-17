@@ -21,7 +21,7 @@ public class CommandMuteMe extends Command {
 
         if (args.length == 0) {
             sendSuccessEmote(message);
-            module.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
+            module.muteManager.mute(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong());
             return;
         }
 
@@ -35,6 +35,6 @@ public class CommandMuteMe extends Command {
         }
 
         sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
-        module.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
+        module.muteManager.mute(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong(), duration);
     }
 }

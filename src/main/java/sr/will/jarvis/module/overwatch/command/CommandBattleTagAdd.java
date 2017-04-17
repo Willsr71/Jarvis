@@ -23,7 +23,7 @@ public class CommandBattleTagAdd extends Command {
             user = getMentionedUser(message, args);
         }
 
-        String battletag = module.getBattletag(user.getId());
+        String battletag = module.getBattletag(user.getIdLong());
         if (battletag != null) {
             sendFailureMessage(message, "Account already linked to battletag " + battletag);
             return;
@@ -54,7 +54,7 @@ public class CommandBattleTagAdd extends Command {
             return;
         }
 
-        module.addBattletag(user.getId(), battletag);
+        module.addBattletag(user.getIdLong(), battletag);
         sendSuccessMessage(message, "Account " + user.getAsMention() + " linked to battletag " + battletag, false);
     }
 }

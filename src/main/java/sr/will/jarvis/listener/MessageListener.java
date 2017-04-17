@@ -34,7 +34,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (moduleAdmin.muteManager.isMuted(event.getGuild().getId(), event.getAuthor().getId())) {
+        if (moduleAdmin.muteManager.isMuted(event.getGuild().getIdLong(), event.getAuthor().getIdLong())) {
             event.getMessage().delete().queue();
             System.out.println("deleting message");
 
@@ -51,7 +51,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (moduleChatBot.isBotChannel(event.getChannel().getId())) {
+        if (moduleChatBot.isBotChannel(event.getChannel().getIdLong())) {
             if (event.getMessage().getContent().startsWith("<")) {
                 return;
             }

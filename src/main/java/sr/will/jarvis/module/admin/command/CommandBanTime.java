@@ -26,7 +26,7 @@ public class CommandBanTime extends Command {
             return;
         }
 
-        long duration = module.banManager.getBanDuration(message.getGuild().getId(), user.getId());
+        long duration = module.banManager.getBanDuration(message.getGuild().getIdLong(), user.getIdLong());
 
         if (!DateUtils.timestampApplies(duration)) {
             sendSuccessMessage(message, "User not banned", false);

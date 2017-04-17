@@ -22,15 +22,15 @@ public class CommandMuteList extends Command {
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
 
-        HashMap<String, Long> mutes = module.muteManager.getMutes(message.getGuild().getId());
+        HashMap<Long, Long> mutes = module.muteManager.getMutes(message.getGuild().getIdLong());
 
         EmbedBuilder embed = new EmbedBuilder().setTitle("Active mutes", "https://jarvis.will.sr").setColor(Color.GREEN);
 
         if (mutes.size() == 0) {
             embed.setDescription("None");
         } else {
-            for (String userId : mutes.keySet()) {
-                String userName = userId;
+            for (long userId : mutes.keySet()) {
+                String userName = String.valueOf(userId);
 
                 User user = message.getJDA().getUserById(userId);
                 if (user != null) {

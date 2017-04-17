@@ -22,12 +22,12 @@ public class BanManager {
         this.module = module;
     }
 
-    public HashMap<String, Long> getBans(String guildId) {
-        HashMap<String, Long> bans = new HashMap<>();
+    public HashMap<Long, Long> getBans(long guildId) {
+        HashMap<Long, Long> bans = new HashMap<>();
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, duration FROM bans WHERE (guild = ?);", guildId);
             while (result.next()) {
-                bans.put(result.getString("user"), result.getLong("duration"));
+                bans.put(result.getLong("user"), result.getLong("duration"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -36,7 +36,7 @@ public class BanManager {
         return bans;
     }
 
-    public long getBanDuration(String guildId, String userId) {
+    public long getBanDuration(long guildId, long userId) {
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT duration FROM bans WHERE (guild = ? AND user = ?) ORDER BY id DESC LIMIT 1;", guildId, userId);
             if (result.first()) {
@@ -49,15 +49,15 @@ public class BanManager {
         return 0;
     }
 
-    public boolean isBanned(String guildId, String userId) {
+    public boolean isBanned(long guildId, long userId) {
         return DateUtils.timestampApplies(getBanDuration(guildId, userId));
     }
 
-    public void ban(String guildId, String userId, String invokerId) {
+    public void ban(long guildId, long userId, long invokerId) {
         ban(guildId, userId, invokerId, -1);
     }
 
-    public void ban(String guildId, String userId, String invokerId, long duration) {
+    public void ban(long guildId, long userId, long invokerId, long duration) {
         Jarvis.getDatabase().execute("INSERT INTO bans (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
         setBanned(guildId, userId, true);
         startUnbanThread(guildId, userId, duration);
@@ -73,7 +73,7 @@ public class BanManager {
         }));
     }
 
-    public void unban(String guildId, String userId) {
+    public void unban(long guildId, long userId) {
         Jarvis.getDatabase().execute("DELETE FROM bans WHERE (guild = ? AND user = ? );", guildId, userId);
         setBanned(guildId, userId, false);
 
@@ -101,33 +101,33 @@ public class BanManager {
     }
 
     public void processBannedMembers(Guild guild) {
-        HashMap<String, Long> bans = getBans(guild.getId());
+        HashMap<Long, Long> bans = getBans(guild.getIdLong());
 
         System.out.println("Processing " + bans.size() + " banned members for " + guild.getName());
 
-        for (String userId : bans.keySet()) {
+        for (long userId : bans.keySet()) {
             if (!DateUtils.timestampApplies(bans.get(userId))) {
-                unban(guild.getId(), userId);
+                unban(guild.getIdLong(), userId);
                 continue;
             }
 
-            startUnbanThread(guild.getId(), userId, bans.get(userId));
+            startUnbanThread(guild.getIdLong(), userId, bans.get(userId));
         }
     }
 
-    public void setBanned(String guildId, String userId, boolean banned) {
+    public void setBanned(long guildId, long userId, boolean banned) {
         setBanned(Jarvis.getJda().getGuildById(guildId), userId, banned);
     }
 
-    public void setBanned(Guild guild, String userId, boolean banned) {
+    public void setBanned(Guild guild, long userId, boolean banned) {
         if (banned) {
-            guild.getController().ban(userId, 0).queue();
+            guild.getController().ban(String.valueOf(userId), 0).queue();
         } else {
-            guild.getController().unban(userId).queue();
+            guild.getController().unban(String.valueOf(userId)).queue();
         }
     }
 
-    public void startUnbanThread(final String guildId, final String userId, final long duration) {
+    public void startUnbanThread(final long guildId, final long userId, final long duration) {
         if (duration == -1) {
             return;
         }

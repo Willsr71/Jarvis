@@ -21,15 +21,15 @@ public class CommandBanList extends Command {
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
 
-        HashMap<String, Long> bans = module.banManager.getBans(message.getGuild().getId());
+        HashMap<Long, Long> bans = module.banManager.getBans(message.getGuild().getIdLong());
 
         EmbedBuilder embed = new EmbedBuilder().setTitle("Active bans", "https://jarvis.will.sr").setColor(Color.GREEN);
 
         if (bans.size() == 0) {
             embed.setDescription("None");
         } else {
-            for (String userId : bans.keySet()) {
-                String userName = userId;
+            for (long userId : bans.keySet()) {
+                String userName = String.valueOf(userId);
 
                 User user = message.getJDA().getUserById(userId);
                 if (user != null) {

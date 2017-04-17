@@ -27,12 +27,12 @@ public class CommandRank extends Command {
         EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
         embed.setAuthor(message.getGuild().getMember(user).getEffectiveName(), null, user.getEffectiveAvatarUrl());
 
-        long userXp = module.getUserXp(message.getGuild().getId(), user.getId());
+        long userXp = module.getUserXp(message.getGuild().getIdLong(), user.getIdLong());
         int userLevel = module.getLevelFromXp(userXp);
         long levelXp = module.getLevelXp(userLevel);
         long nextLevelXp = module.getLevelXp(userLevel + 1);
         long userLevelXp = userXp - levelXp;
-        int userRank = module.getLeaderboardPosition(message.getGuild().getId(), user.getId());
+        int userRank = module.getLeaderboardPosition(message.getGuild().getIdLong(), user.getIdLong());
 
         embed.addField("Rank", userRank + "", true);
         embed.addField("Lvl", userLevel + "", true);

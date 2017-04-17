@@ -24,12 +24,12 @@ public class CommandUnmute extends Command {
             return;
         }
 
-        if (!module.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
+        if (!module.muteManager.isMuted(message.getGuild().getIdLong(), user.getIdLong())) {
             sendFailureMessage(message, "User is not muted");
             return;
         }
 
         sendSuccessMessage(message, user.getAsMention() + " has been unmuted");
-        module.muteManager.unmute(message.getGuild().getId(), user.getId());
+        module.muteManager.unmute(message.getGuild().getIdLong(), user.getIdLong());
     }
 }

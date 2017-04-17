@@ -86,15 +86,15 @@ public class ModuleOverwatch extends Module {
         return userBlob;
     }
 
-    public void addBattletag(String userId, String battletag) {
+    public void addBattletag(long userId, String battletag) {
         jarvis.database.execute("INSERT INTO overwatch_accounts (user, battletag) VALUES (?, ?);", userId, battletag);
     }
 
-    public void removeBattletag(String userid) {
+    public void removeBattletag(long userid) {
         jarvis.database.execute("DELETE FROM overwatch_accounts WHERE (user = ?);", userid);
     }
 
-    public String getBattletag(String userId) {
+    public String getBattletag(long userId) {
         try {
             ResultSet result = jarvis.database.executeQuery("SELECT battletag FROM overwatch_accounts WHERE (user = ?);", userId);
             if (result.first()) {
@@ -168,14 +168,14 @@ public class ModuleOverwatch extends Module {
         if (args.length != 0) {
             if (isValidBattleTag(args[0])) {
                 battletag = args[0].replace("#", "-");
-            } else if (Command.getMentionedUser(message, args) != null){
-                battletag = getBattletag(Command.getMentionedUser(message, args).getId());
+            } else if (Command.getMentionedUser(message, args) != null) {
+                battletag = getBattletag(Command.getMentionedUser(message, args).getIdLong());
             } else {
                 Command.sendFailureMessage(message, "Invalid battletag");
                 return null;
             }
         } else {
-            battletag = getBattletag(message.getAuthor().getId());
+            battletag = getBattletag(message.getAuthor().getIdLong());
         }
 
         if (battletag == null) {

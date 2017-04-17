@@ -17,12 +17,12 @@ public class CommandBotRemove extends Command {
         checkModuleEnabled(message, module);
         checkUserPermission(message, Permission.MESSAGE_MANAGE);
 
-        if (!module.isBotChannel(message.getChannel().getId())) {
+        if (!module.isBotChannel(message.getChannel().getIdLong())) {
             sendFailureMessage(message, "There is no bot active in this channel");
             return;
         }
 
         sendSuccessEmote(message);
-        module.removeBot(message.getChannel().getId());
+        module.removeBot(message.getChannel().getIdLong());
     }
 }

@@ -15,13 +15,13 @@ public class CommandBattleTagRemove extends Command {
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
 
-        String battletag = module.getBattletag(message.getAuthor().getId());
+        String battletag = module.getBattletag(message.getAuthor().getIdLong());
         if (battletag == null) {
             sendFailureMessage(message, "Account is not linked to a battletag");
             return;
         }
 
-        module.removeBattletag(message.getAuthor().getId());
+        module.removeBattletag(message.getAuthor().getIdLong());
         sendSuccessMessage(message, "Account unlinked from battletag " + battletag);
     }
 }

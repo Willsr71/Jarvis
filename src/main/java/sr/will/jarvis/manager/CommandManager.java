@@ -58,15 +58,15 @@ public class CommandManager {
         registerCommand("trump", new CommandTrump(jarvis));
     }
 
-    public void addCustomCommand(String guildId, String command, String response) {
+    public void addCustomCommand(long guildId, String command, String response) {
         jarvis.database.execute("INSERT INTO custom_commands (guild, command, response) VALUES (?, ?, ?);", guildId, command, encodeString(response));
     }
 
-    public void removeCustomCommand(String guildId, String command) {
+    public void removeCustomCommand(long guildId, String command) {
         jarvis.database.execute("DELETE FROM custom_commands WHERE (guild = ? AND command = ?);", guildId, command);
     }
 
-    public String getCustomCommandResponse(String guildId, String command) {
+    public String getCustomCommandResponse(long guildId, String command) {
         try {
             ResultSet result = jarvis.database.executeQuery("SELECT response FROM custom_commands WHERE (guild = ? AND command = ?) LIMIT 1;", guildId, command);
             if (result.first()) {
@@ -79,7 +79,7 @@ public class CommandManager {
         return null;
     }
 
-    public ArrayList<String> getCustomCommandsByGuild(String guildId) {
+    public ArrayList<String> getCustomCommandsByGuild(long guildId) {
         ArrayList<String> commandList = new ArrayList<>();
 
         try {
@@ -124,7 +124,7 @@ public class CommandManager {
             return;
         }
 
-        String customCommandResponse = getCustomCommandResponse(message.getGuild().getId(), command);
+        String customCommandResponse = getCustomCommandResponse(message.getGuild().getIdLong(), command);
 
         if (customCommandResponse != null) {
             message.getChannel().sendMessage(customCommandResponse).queue();

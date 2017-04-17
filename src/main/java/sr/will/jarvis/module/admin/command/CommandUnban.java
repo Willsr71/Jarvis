@@ -25,12 +25,12 @@ public class CommandUnban extends Command {
             return;
         }
 
-        if (!module.banManager.isBanned(message.getGuild().getId(), user.getId())) {
+        if (!module.banManager.isBanned(message.getGuild().getIdLong(), user.getIdLong())) {
             sendFailureMessage(message, "User is not banned");
             return;
         }
 
         sendSuccessMessage(message, user.getAsMention() + " has been unbanned");
-        module.banManager.unban(message.getGuild().getId(), user.getId());
+        module.banManager.unban(message.getGuild().getIdLong(), user.getIdLong());
     }
 }

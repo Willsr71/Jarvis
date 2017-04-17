@@ -29,6 +29,6 @@ public class CommandModuleEnable extends Command {
         }
 
         sendSuccessEmote(message);
-        jarvis.moduleManager.enableModule(message.getGuild().getId(), module.getName());
+        jarvis.moduleManager.enableModule(message.getGuild().getIdLong(), module.getName());
     }
 }

@@ -22,7 +22,7 @@ public class CommandModules extends Command {
 
             embed.setTitle(module.getName(), null);
             embed.setDescription(module.getHelpText());
-            if (module.isEnabled(message.getGuild().getId())) {
+            if (module.isEnabled(message.getGuild().getIdLong())) {
                 embed.setColor(Color.GREEN);
                 embed.addField("Disable Command", "!moduledisable " + module.getName().toLowerCase(), true);
             } else {

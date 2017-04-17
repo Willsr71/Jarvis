@@ -132,48 +132,48 @@ public class Database {
         // Create various tables if they do not exist
         execute("CREATE TABLE IF NOT EXISTS modules(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "guild char(64) NOT NULL," +
+                "guild bigint(20) NOT NULL," +
                 "module varchar(64) NOT NULL," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS mutes(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "guild char(64) NOT NULL," +
-                "user char(64) NOT NULL," +
-                "invoker char(64)," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "invoker bigint(20)," +
                 "duration bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS bans(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "guild char(64) NOT NULL," +
-                "user char(64) NOT NULL," +
-                "invoker char(64)," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "invoker bigint(20)," +
                 "duration bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS scheduled_messages(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "guild char(64) NOT NULL," +
-                "channel char(64) NOT NULL," +
+                "guild bigint(20) NOT NULL," +
+                "channel bigint(20) NOT NULL," +
                 "message text NOT NULL," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS levels(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "guild char(64) NOT NULL," +
-                "user char(64) NOT NULL," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
                 "xp bigint(20) NOT NULL DEFAULT 0," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "guild char(64) NOT NULL," +
+                "guild bigint(20) NOT NULL," +
                 "command varchar(255) NOT NULL," +
                 "response text NOT NULL," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS chatterbot_channels(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "channel char(64) NOT NULL," +
+                "channel bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS overwatch_accounts(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "user char(64) NOT NULL," +
+                "user bigint(20) NOT NULL," +
                 "battletag char(20) NOT NULL," +
                 "PRIMARY KEY (id));");
 

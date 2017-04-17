@@ -69,19 +69,19 @@ public class ModuleLevels extends Module {
     }
 
 
-    public void addUser(String guildId, String userId) {
+    public void addUser(long guildId, long userId) {
         Jarvis.getDatabase().execute("INSERT INTO levels (guild, user) VALUES (?, ?);", guildId, userId);
     }
 
-    public void resetUser(String guildId, String userId) {
+    public void resetUser(long guildId, long userId) {
         Jarvis.getDatabase().execute("UPDATE levels SET xp = 0 WHERE (guild = ? AND user = ?);", guildId, userId);
     }
 
-    public int getUserLevel(String guildId, String userId) {
+    public int getUserLevel(long guildId, long userId) {
         return getLevelFromXp(getUserXp(guildId, userId));
     }
 
-    public long getUserXp(String guildId, String userId) {
+    public long getUserXp(long guildId, long userId) {
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT xp FROM levels WHERE (guild = ? AND user = ?);", guildId, userId);
             if (result.first()) {
@@ -94,7 +94,7 @@ public class ModuleLevels extends Module {
         return 0;
     }
 
-    public boolean userExists(String guildId, String userId) {
+    public boolean userExists(long guildId, long userId) {
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels WHERE (guild = ? AND user = ?);", guildId, userId);
             return result.first();
@@ -105,16 +105,16 @@ public class ModuleLevels extends Module {
         return false;
     }
 
-    public HashMap<Long, ArrayList<String>> getLeaderboard(String guildId) {
-        HashMap<Long, ArrayList<String>> leaderboard = new HashMap<>();
+    public HashMap<Long, ArrayList<Long>> getLeaderboard(long guildId) {
+        HashMap<Long, ArrayList<Long>> leaderboard = new HashMap<>();
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp FROM levels WHERE (guild = ?) ORDER BY xp DESC;", guildId);
             while (result.next()) {
                 System.out.println(result.getString("user") + " = " + result.getLong("xp"));
                 if (!leaderboard.containsKey(result.getLong("xp"))) {
-                    leaderboard.put(result.getLong("xp"), new ArrayList<>(Collections.singletonList(result.getString("user"))));
+                    leaderboard.put(result.getLong("xp"), new ArrayList<>(Collections.singletonList(result.getLong("user"))));
                 } else {
-                    leaderboard.get(result.getLong("xp")).add(result.getString("user"));
+                    leaderboard.get(result.getLong("xp")).add(result.getLong("user"));
                 }
             }
 
@@ -125,8 +125,8 @@ public class ModuleLevels extends Module {
         return leaderboard;
     }
 
-    public int getLeaderboardPosition(String guildId, String userId) {
-        HashMap<Long, ArrayList<String>> leaderboard = getLeaderboard(guildId);
+    public int getLeaderboardPosition(long guildId, long userId) {
+        HashMap<Long, ArrayList<Long>> leaderboard = getLeaderboard(guildId);
 
         int pos = 1;
         for (long xp : leaderboard.keySet()) {
@@ -138,8 +138,8 @@ public class ModuleLevels extends Module {
         return 0;
     }
 
-    public void increase(String guildId, String userId, TextChannel channel) {
-        if (!isEnabled(channel.getGuild().getId())) {
+    public void increase(long guildId, long userId, TextChannel channel) {
+        if (!isEnabled(channel.getGuild().getIdLong())) {
             return;
         }
 
@@ -161,15 +161,15 @@ public class ModuleLevels extends Module {
         }
     }
 
-    public boolean canGain(String guildId, String userid) {
+    public boolean canGain(long guildId, long userid) {
         return !disallowedUsers.contains(guildId + "|" + userid);
     }
 
-    public synchronized void allowGain(String guildId, String userId) {
+    public synchronized void allowGain(long guildId, long userId) {
         disallowedUsers.remove(guildId + "|" + userId);
     }
 
-    public synchronized void disallowGain(String guildId, String userId) {
+    public synchronized void disallowGain(long guildId, long userId) {
         disallowedUsers.add(guildId + "|" + userId);
 
         new Thread(() -> {

@@ -27,7 +27,7 @@ public class CommandHelp extends Command {
         embed.addField("Commands", string, true);
 
         string = "";
-        ArrayList<String> customCommands = jarvis.commandManager.getCustomCommandsByGuild(message.getGuild().getId());
+        ArrayList<String> customCommands = jarvis.commandManager.getCustomCommandsByGuild(message.getGuild().getIdLong());
         for (String command : customCommands) {
             string += command + "\n";
         }

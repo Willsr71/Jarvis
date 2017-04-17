@@ -19,7 +19,7 @@ public class GuildJoinListener extends ListenerAdapter {
     public void onGuildJoin(GuildJoinEvent event) {
         System.out.println(String.format("Joined guild %s (%s)", event.getGuild().getName(), event.getGuild().getId()));
 
-        jarvis.moduleManager.enableDefaultModules(event.getGuild().getId());
+        jarvis.moduleManager.enableDefaultModules(event.getGuild().getIdLong());
         moduleAdmin.muteManager.setup(event.getGuild());
     }
 }

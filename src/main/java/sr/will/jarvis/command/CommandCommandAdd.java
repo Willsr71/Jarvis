@@ -25,7 +25,7 @@ public class CommandCommandAdd extends Command {
             return;
         }
 
-        if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getId(), args[0]) != null) {
+        if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getIdLong(), args[0]) != null) {
             sendFailureMessage(message, "Command already exists");
             return;
         }
@@ -37,6 +37,6 @@ public class CommandCommandAdd extends Command {
         response = response.trim();
 
         sendSuccessEmote(message);
-        jarvis.commandManager.addCustomCommand(message.getGuild().getId(), args[0], response);
+        jarvis.commandManager.addCustomCommand(message.getGuild().getIdLong(), args[0], response);
     }
 }

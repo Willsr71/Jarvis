@@ -21,14 +21,14 @@ public class CommandLeaderboard extends Command {
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
 
-        HashMap<Long, ArrayList<String>> leaderboard = module.getLeaderboard(message.getGuild().getId());
+        HashMap<Long, ArrayList<Long>> leaderboard = module.getLeaderboard(message.getGuild().getIdLong());
 
         EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
 
         for (long xp : leaderboard.keySet()) {
             System.out.println(xp);
 
-            for (String user : leaderboard.get(xp)) {
+            for (long user : leaderboard.get(xp)) {
                 embed.addField(Jarvis.getJda().getUserById(user).getName(), "Level " + module.getLevelFromXp(xp) + " (" + xp + "xp)", false);
             }
         }

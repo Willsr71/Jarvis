@@ -49,9 +49,9 @@ public class Jarvis {
             jda = new JDABuilder(AccountType.BOT)
                     .setToken(config.discord.token)
                     .setAutoReconnect(true)
-                    .addListener(new GuildJoinListener(this))
-                    .addListener(new MessageListener(this))
-                    .addListener(new ReadyListener())
+                    .addEventListener(new GuildJoinListener(this))
+                    .addEventListener(new MessageListener(this))
+                    .addEventListener(new ReadyListener())
                     .buildAsync();
         } catch (LoginException | RateLimitedException e) {
             e.printStackTrace();

@@ -20,12 +20,12 @@ public class CommandCommandRemove extends Command {
             return;
         }
 
-        if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getId(), args[0]) == null) {
+        if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getIdLong(), args[0]) == null) {
             sendFailureMessage(message, "Command does not exist");
             return;
         }
 
         sendSuccessEmote(message);
-        jarvis.commandManager.removeCustomCommand(message.getGuild().getId(), args[0]);
+        jarvis.commandManager.removeCustomCommand(message.getGuild().getIdLong(), args[0]);
     }
 }

@@ -31,14 +31,14 @@ public class CommandBan extends Command {
             return;
         }
 
-        if (module.banManager.isBanned(message.getGuild().getId(), user.getId())) {
+        if (module.banManager.isBanned(message.getGuild().getIdLong(), user.getIdLong())) {
             sendFailureMessage(message, "User already banned");
             return;
         }
 
         if (args.length == 1) {
             sendSuccessEmote(message);
-            module.banManager.ban(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
+            module.banManager.ban(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong());
             return;
         }
 
@@ -52,6 +52,6 @@ public class CommandBan extends Command {
         }
 
         sendSuccessMessage(message, user.getAsMention() + " has been banned for " + DateUtils.formatDateDiff(duration));
-        module.banManager.ban(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
+        module.banManager.ban(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong(), duration);
     }
 }

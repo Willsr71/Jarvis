@@ -41,15 +41,15 @@ public class ModuleManager {
         registerModule("overwatch", new ModuleOverwatch(jarvis));
     }
 
-    public void enableModule(String guildId, String module) {
+    public void enableModule(long guildId, String module) {
         jarvis.database.execute("INSERT INTO modules (guild, module) VALUES (?, ?);", guildId, module.toLowerCase());
     }
 
-    public void disableModule(String guildId, String module) {
+    public void disableModule(long guildId, String module) {
         jarvis.database.execute("DELETE FROM modules WHERE (guild = ? AND module = ?);", guildId, module.toLowerCase());
     }
 
-    public boolean isModuleEnabled(String guildId, String module) {
+    public boolean isModuleEnabled(long guildId, String module) {
         try {
             ResultSet result = jarvis.database.executeQuery("SELECT 1 FROM modules WHERE (guild = ? AND module = ?);", guildId, module.toLowerCase());
             return (result.first());
@@ -73,7 +73,7 @@ public class ModuleManager {
         return permissions;
     }
 
-    public void enableDefaultModules(String guildId) {
+    public void enableDefaultModules(long guildId) {
         for (String module : getDefaultModules()) {
             enableModule(guildId, module);
         }

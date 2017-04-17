@@ -28,12 +28,12 @@ public class MuteManager {
         this.module = module;
     }
 
-    public HashMap<String, Long> getMutes(String guildId) {
-        HashMap<String, Long> mutes = new HashMap<>();
+    public HashMap<Long, Long> getMutes(long guildId) {
+        HashMap<Long, Long> mutes = new HashMap<>();
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, duration FROM mutes WHERE (guild = ?);", guildId);
             while (result.next()) {
-                mutes.put(result.getString("user"), result.getLong("duration"));
+                mutes.put(result.getLong("user"), result.getLong("duration"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class MuteManager {
         return mutes;
     }
 
-    public long getMuteDuration(String guildId, String userId) {
+    public long getMuteDuration(long guildId, long userId) {
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT duration FROM mutes WHERE (guild = ? AND user = ?) ORDER BY id DESC LIMIT 1;", guildId, userId);
             if (result.first()) {
@@ -55,15 +55,15 @@ public class MuteManager {
         return 0;
     }
 
-    public boolean isMuted(String guildId, String userId) {
+    public boolean isMuted(long guildId, long userId) {
         return DateUtils.timestampApplies(getMuteDuration(guildId, userId));
     }
 
-    public void mute(String guildId, String userId, String invokerId) {
+    public void mute(long guildId, long userId, long invokerId) {
         mute(guildId, userId, invokerId, -1);
     }
 
-    public void mute(String guildId, String userId, String invokerId, long duration) {
+    public void mute(long guildId, long userId, long invokerId, long duration) {
         Jarvis.getDatabase().execute("INSERT INTO mutes (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
         setMuted(guildId, userId, true);
         startUnmuteThread(guildId, userId, duration);
@@ -81,7 +81,7 @@ public class MuteManager {
         */
     }
 
-    public void unmute(String guildId, String userId) {
+    public void unmute(long guildId, long userId) {
         Jarvis.getDatabase().execute("DELETE FROM mutes WHERE (guild = ? AND user = ? );", guildId, userId);
         setMuted(guildId, userId, false);
 
@@ -142,22 +142,22 @@ public class MuteManager {
     }
 
     public void processMutedMembers(Guild guild, Role role) {
-        HashMap<String, Long> mutes = getMutes(guild.getId());
+        HashMap<Long, Long> mutes = getMutes(guild.getIdLong());
 
         System.out.println("Processing " + mutes.size() + " muted members for " + guild.getName());
 
-        for (String userId : mutes.keySet()) {
+        for (long userId : mutes.keySet()) {
             if (!DateUtils.timestampApplies(mutes.get(userId))) {
-                unmute(guild.getId(), userId);
+                unmute(guild.getIdLong(), userId);
                 continue;
             }
 
             setMuted(guild, guild.getMemberById(userId), role, true);
-            startUnmuteThread(guild.getId(), userId, mutes.get(userId));
+            startUnmuteThread(guild.getIdLong(), userId, mutes.get(userId));
         }
     }
 
-    public void setMuted(String guildId, String userId, boolean applied) {
+    public void setMuted(long guildId, long userId, boolean applied) {
         Guild guild = Jarvis.getJda().getGuildById(guildId);
 
         setMuted(guild, guild.getMemberById(userId), guild.getRolesByName("Jarvis_Mute", true).get(0), applied);
@@ -171,7 +171,7 @@ public class MuteManager {
         }
     }
 
-    public void startUnmuteThread(final String guildId, final String userId, final long duration) {
+    public void startUnmuteThread(final long guildId, final long userId, final long duration) {
         if (duration == -1) {
             return;
         }

@@ -20,7 +20,7 @@ public abstract class Module {
 
     public abstract boolean isDefaultEnabled();
 
-    public boolean isEnabled(String guildId) {
+    public boolean isEnabled(long guildId) {
         return Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, getName().toLowerCase());
     }
 }

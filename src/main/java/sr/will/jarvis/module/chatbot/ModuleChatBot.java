@@ -20,7 +20,7 @@ public class ModuleChatBot extends Module {
     private Jarvis jarvis;
 
     private ChatterBotFactory botFactory = new ChatterBotFactory();
-    private HashMap<String, ChatterBotSession> chatterBots = new HashMap<>();
+    private HashMap<Long, ChatterBotSession> chatterBots = new HashMap<>();
 
     public ModuleChatBot(Jarvis jarvis) {
         this.jarvis = jarvis;
@@ -68,19 +68,19 @@ public class ModuleChatBot extends Module {
     }
 
 
-    public void addBot(String channelId) {
+    public void addBot(long channelId) {
         Jarvis.getDatabase().execute("INSERT INTO chatterbot_channels (channel) VALUES (?);", channelId);
 
         createBot(channelId);
     }
 
-    public void removeBot(String channelId) {
+    public void removeBot(long channelId) {
         Jarvis.getDatabase().execute("DELETE FROM chatterbot_channels WHERE (channel = ?);", channelId);
 
         chatterBots.remove(channelId);
     }
 
-    public void createBot(String channelId) {
+    public void createBot(long channelId) {
         try {
             chatterBots.put(channelId, botFactory.create(ChatterBotType.PANDORABOTS, "a847934aae3456cb").createSession());
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class ModuleChatBot extends Module {
         }
     }
 
-    public boolean isBotChannel(String channelId) {
+    public boolean isBotChannel(long channelId) {
         if (chatterBots.containsKey(channelId)) {
             return true;
         }
@@ -106,12 +106,12 @@ public class ModuleChatBot extends Module {
     }
 
     public void sendResponse(Message message) {
-        if (!chatterBots.containsKey(message.getChannel().getId())) {
-            createBot(message.getChannel().getId());
+        if (!chatterBots.containsKey(message.getChannel().getIdLong())) {
+            createBot(message.getChannel().getIdLong());
         }
 
         try {
-            message.getChannel().sendMessage(chatterBots.get(message.getChannel().getId()).think(message.getContent())).queue();
+            message.getChannel().sendMessage(chatterBots.get(message.getChannel().getIdLong()).think(message.getContent())).queue();
         } catch (Exception e) {
             message.getChannel().sendMessage("Error: " + e.getMessage()).queue();
             e.printStackTrace();

@@ -33,14 +33,14 @@ public class CommandMute extends Command {
             return;
         }
 
-        if (module.muteManager.isMuted(message.getGuild().getId(), user.getId())) {
+        if (module.muteManager.isMuted(message.getGuild().getIdLong(), user.getIdLong())) {
             sendFailureMessage(message, "User already muted");
             return;
         }
 
         if (args.length == 1) {
             sendSuccessEmote(message);
-            module.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId());
+            module.muteManager.mute(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong());
             return;
         }
 
@@ -54,6 +54,6 @@ public class CommandMute extends Command {
         }
 
         sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
-        module.muteManager.mute(message.getGuild().getId(), user.getId(), message.getAuthor().getId(), duration);
+        module.muteManager.mute(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong(), duration);
     }
 }
