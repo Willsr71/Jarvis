@@ -23,7 +23,11 @@ public class CommandOWStats extends Command {
         String battletag;
 
         if (args.length != 0) {
-            battletag = args[0].replace("#", "-");
+            if (module.isValidBattleTag(args[0])) {
+                battletag = args[0].replace("#", "-");
+            } else {
+                battletag = module.getBattletag(getMentionedUser(message, args).getId());
+            }
         } else {
             battletag = module.getBattletag(message.getAuthor().getId());
         }
