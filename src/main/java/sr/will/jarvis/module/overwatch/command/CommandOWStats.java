@@ -61,12 +61,12 @@ public class CommandOWStats extends Command {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setAuthor(battletag, userUrl, overallStats.avatar)
+                .setAuthor(battletag, userUrl, module.getTierImage(overallStats.tier))
                 .addField("Level", ((overallStats.prestige * 100) + overallStats.level) + "", true)
                 .addField("SR", overallStats.comprank + "", true)
                 .addField("Top heroes (Comp)", getTopHeroes(userBlob.getRegion().heroes.playtime.competitive), true)
                 .addField("Top heroes (QP)", getTopHeroes(userBlob.getRegion().heroes.playtime.quickplay), true)
-                .setThumbnail(module.getTierImage(overallStats.tier));
+                .setThumbnail(overallStats.avatar);
         message.getChannel().sendMessage(embed.build()).queue();
     }
 
