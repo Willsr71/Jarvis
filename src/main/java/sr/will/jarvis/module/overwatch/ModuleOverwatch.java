@@ -19,9 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ModuleOverwatch extends Module {
-    private Jarvis jarvis;
-
     public static String BATTLETAG_REGEX = "(?i).{3,12}[\\#\\-][0-9]{4,5}";
+    private Jarvis jarvis;
 
     public ModuleOverwatch(Jarvis jarvis) {
         this.jarvis = jarvis;

@@ -19,18 +19,6 @@ public enum Tier {
         this.imageURL = imageURL;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getMinSR() {
-        return minSR;
-    }
-
-    public String getImageURL() {
-        return imageURL;
-    }
-
     public static Tier fromSR(int sr) {
         // This is quite possibly the most cancerous function in this entire codebase.
         // If anyone has suggestions they are welcome
@@ -51,5 +39,17 @@ public enum Tier {
         } else {
             return BRONZE;
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getMinSR() {
+        return minSR;
+    }
+
+    public String getImageURL() {
+        return imageURL;
     }
 }

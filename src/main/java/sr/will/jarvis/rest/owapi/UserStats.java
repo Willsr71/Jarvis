@@ -8,6 +8,18 @@ public class UserStats {
     public String msg;
     public String error;
 
+    public Region getRegion() {
+        if (us != null) {
+            return us;
+        } else if (eu != null) {
+            return eu;
+        } else if (kr != null) {
+            return kr;
+        }
+
+        return null;
+    }
+
     public class Region {
         public Stats stats;
 
@@ -88,17 +100,5 @@ public class UserStats {
                 }
             }
         }
-    }
-
-    public Region getRegion() {
-        if (us != null) {
-            return us;
-        } else if (eu != null) {
-            return eu;
-        } else if (kr != null) {
-            return kr;
-        }
-
-        return null;
     }
 }

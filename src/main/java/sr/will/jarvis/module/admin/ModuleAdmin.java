@@ -11,10 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ModuleAdmin extends Module {
-    private Jarvis jarvis;
-
     public BanManager banManager;
     public MuteManager muteManager;
+    private Jarvis jarvis;
 
     public ModuleAdmin(Jarvis jarvis) {
         this.jarvis = jarvis;

@@ -2,6 +2,7 @@ package sr.will.jarvis.module.overwatch.command;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.overwatch.ModuleOverwatch;
 import sr.will.jarvis.rest.owapi.UserStats;
@@ -17,7 +18,12 @@ public class CommandBattleTagAdd extends Command {
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
 
-        String battletag = module.getBattletag(message.getAuthor().getId());
+        User user = message.getAuthor();
+        if (getMentionedUser(message, args) != null) {
+            user = getMentionedUser(message, args);
+        }
+
+        String battletag = module.getBattletag(user.getId());
         if (battletag != null) {
             sendFailureMessage(message, "Account already linked to battletag " + battletag);
             return;
@@ -48,7 +54,7 @@ public class CommandBattleTagAdd extends Command {
             return;
         }
 
-        module.addBattletag(message.getAuthor().getId(), battletag);
-        sendSuccessMessage(message, "Account linked to battletag " + battletag, false);
+        module.addBattletag(user.getId(), battletag);
+        sendSuccessMessage(message, "Account " + user.getAsMention() + " linked to battletag " + battletag, false);
     }
 }

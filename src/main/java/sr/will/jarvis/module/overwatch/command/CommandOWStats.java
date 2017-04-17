@@ -57,7 +57,7 @@ public class CommandOWStats extends Command {
         }
 
         UserStats.Region.Stats.Mode.OverallStats overallStats = userStats.getRegion().stats.quickplay.overall_stats;
-        String userUrl = "https://playoverwatch.com/en-" + userStats.getRegion().toString() + "/career/pc/us/" + battletag;
+        String userUrl = "https://playoverwatch.com/en-us/career/pc/us/" + battletag;
         Tier tier = Tier.fromSR(overallStats.comprank);
 
         EmbedBuilder embed = new EmbedBuilder()
