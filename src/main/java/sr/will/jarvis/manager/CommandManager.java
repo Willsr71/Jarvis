@@ -16,8 +16,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static sr.will.jarvis.command.Command.encodeString;
-
 public class CommandManager {
     private Jarvis jarvis;
 
@@ -44,8 +42,6 @@ public class CommandManager {
         registerCommand("commandadd", new CommandCommandAdd(jarvis));
         registerCommand("commandremove", new CommandCommandRemove(jarvis));
         registerCommand("define", new CommandDefine(jarvis));
-        registerCommand("emoji", new CommandEmoji(jarvis));
-        registerCommand("emote", new CommandEmote(jarvis));
         registerCommand("google", new CommandGoogle(jarvis));
         registerCommand("help", new CommandHelp(jarvis));
         registerCommand("invite", new CommandInvite(jarvis));
@@ -59,7 +55,7 @@ public class CommandManager {
     }
 
     public void addCustomCommand(long guildId, String command, String response) {
-        jarvis.database.execute("INSERT INTO custom_commands (guild, command, response) VALUES (?, ?, ?);", guildId, command, encodeString(response));
+        jarvis.database.execute("INSERT INTO custom_commands (guild, command, response) VALUES (?, ?, ?);", guildId, command, response);
     }
 
     public void removeCustomCommand(long guildId, String command) {
@@ -70,7 +66,7 @@ public class CommandManager {
         try {
             ResultSet result = jarvis.database.executeQuery("SELECT response FROM custom_commands WHERE (guild = ? AND command = ?) LIMIT 1;", guildId, command);
             if (result.first()) {
-                return Command.decodeString(result.getString("response"));
+                return result.getString("response");
             }
         } catch (SQLException e) {
             e.printStackTrace();

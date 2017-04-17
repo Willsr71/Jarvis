@@ -16,35 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class Command {
-    public static String encodeString(String string) {
-        StringBuilder builder = new StringBuilder();
-
-        for (char c : string.toCharArray()) {
-            if (c > 4095) {
-                builder.append(String.format("\\u%X", (int) c));
-            } else {
-                builder.append(c);
-            }
-        }
-
-        return builder.toString();
-    }
-
-    public static String decodeString(String string) {
-        StringBuilder builder = new StringBuilder(string);
-
-        while (builder.indexOf("\\u") != -1) {
-            int index = builder.indexOf("\\u");
-            String hex = builder.substring(index + 2, index + 6);
-            int val = Integer.valueOf(hex, 16);
-
-            builder.delete(index, index + 6);
-            builder.insert(index, (char) val);
-        }
-
-        return builder.toString();
-    }
-
     public abstract void execute(Message message, String... args);
 
     protected void checkUserPermission(Message message, Permission permission) {

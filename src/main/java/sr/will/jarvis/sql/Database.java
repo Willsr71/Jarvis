@@ -23,6 +23,7 @@ public class Database {
             dataSource.setDatabaseName(jarvis.config.sql.database);
             dataSource.setUser(jarvis.config.sql.user);
             dataSource.setPassword(jarvis.config.sql.password);
+            dataSource.setUseUnicode(true);
             dataSource.setSocketTimeout(86400);
             dataSource.setAutoReconnect(true);
 
