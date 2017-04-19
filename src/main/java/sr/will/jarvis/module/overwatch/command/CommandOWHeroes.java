@@ -31,7 +31,7 @@ public class CommandOWHeroes extends Command {
                 .setColor(Color.GREEN)
                 .setAuthor(userBlob.battletag, userUrl, module.getTierImage(overallStats.tier))
                 .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay), true)
-                .addField("Top heroes (Comp)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive), true)
+                .addField("Top heroes (Comp)", (userBlob.getRegion().heroes.playtime.competitive == null) ? "N/A" : module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive), true)
                 .setThumbnail(overallStats.avatar);
         message.getChannel().sendMessage(embed.build()).queue();
     }

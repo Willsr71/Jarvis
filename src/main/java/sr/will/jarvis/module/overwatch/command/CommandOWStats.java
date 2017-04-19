@@ -33,7 +33,7 @@ public class CommandOWStats extends Command {
                 .addField("Level", ((overallStats.prestige * 100) + overallStats.level) + "", true)
                 .addField("SR", overallStats.comprank + "", true)
                 .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay, 3), true)
-                .addField("Top heroes (Comp)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive, 3), true)
+                .addField("Top heroes (Comp)", (userBlob.getRegion().heroes.playtime.competitive == null) ? "N/A" : module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive, 3), true)
                 .setThumbnail(overallStats.avatar);
         message.getChannel().sendMessage(embed.build()).queue();
     }
