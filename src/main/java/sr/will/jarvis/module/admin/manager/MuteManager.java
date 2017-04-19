@@ -82,6 +82,10 @@ public class MuteManager {
     }
 
     public void unmute(long guildId, long userId) {
+        if (!isMuted(guildId, userId)) {
+            return;
+        }
+
         Jarvis.getDatabase().execute("DELETE FROM mutes WHERE (guild = ? AND user = ? );", guildId, userId);
         setMuted(guildId, userId, false);
 

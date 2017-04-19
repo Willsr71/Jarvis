@@ -74,6 +74,10 @@ public class BanManager {
     }
 
     public void unban(long guildId, long userId) {
+        if (!isBanned(guildId, userId)) {
+            return;
+        }
+
         Jarvis.getDatabase().execute("DELETE FROM bans WHERE (guild = ? AND user = ? );", guildId, userId);
         setBanned(guildId, userId, false);
 
