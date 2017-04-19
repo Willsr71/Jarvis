@@ -164,6 +164,10 @@ public class MuteManager {
     }
 
     public void setMuted(Guild guild, Member member, Role role, boolean applied) {
+        if (member == null) {
+            return;
+        }
+
         if (applied) {
             guild.getController().addRolesToMember(member, role).queue();
         } else {
