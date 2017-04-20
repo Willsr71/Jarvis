@@ -21,6 +21,7 @@ public class CommandStats extends Command {
         EmbedBuilder embed = new EmbedBuilder().setTitle("Stats", "https://jarvis.will.sr").setColor(Color.GREEN);
 
         embed.addField("Uptime", DateUtils.formatDateDiff(jarvis.startTime), true);
+        embed.addField("Ping", message.getJDA().getPing() + "ms", true);
         embed.addField("Guilds", message.getJDA().getGuilds().size() + "", true);
         embed.addField("Text channels", message.getJDA().getTextChannels().size() + "", true);
         embed.addField("Voice channels", message.getJDA().getVoiceChannels().size() + "", true);
