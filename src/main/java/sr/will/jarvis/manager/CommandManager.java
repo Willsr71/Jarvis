@@ -38,6 +38,7 @@ public class CommandManager {
     }
 
     public void registerCommands() {
+        registerCommand("actuallygoogle", new CommandActuallyGoogle(jarvis));
         registerCommand("clear", new CommandClear(jarvis));
         registerCommand("commandadd", new CommandCommandAdd(jarvis));
         registerCommand("commandremove", new CommandCommandRemove(jarvis));
@@ -52,7 +53,6 @@ public class CommandManager {
         registerCommand("source", new CommandSource());
         registerCommand("stats", new CommandStats(jarvis));
         registerCommand("trump", new CommandTrump(jarvis));
-        registerCommand("actuallygoogle", new CommandActuallyGoogle(jarvis));
     }
 
     public void addCustomCommand(long guildId, String command, String response) {
