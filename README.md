@@ -18,6 +18,7 @@ No module
 |commandremove \<name\>|Manage Messages|Removes a custom command. Guild specific|
 |define \<word\>|None|Displays the first Urban Dictionary result of a word|
 |google \<search string\>|None|Displays a lmgtfy.com link of the search string|
+|actuallygoogle \<search string\>|None|Displays a google.com link of the search string|
 |help|None|Displays commands and custom commands|
 |invite|None|Displays an invite link for the bot|
 |modules|None|Displays available modules|
