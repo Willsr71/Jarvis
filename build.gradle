@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+plugins {
+    id "java"
+    id "idea"
+    id "com.github.johnrengelman.shadow" version "1.2.4"
+    id "ninja.miserable.blossom" version "1.0.1"
+}
+
+def buildNumber = System.env.BUILD_NUMBER ?: "SNAPSHOT"
+
+def projectId = "jarvis"
+project.group = "sr.will"
+project.version = "1.0-" + buildNumber
+project.description = "A bot for Discord"
+def projectUrl = "https://github.com/Willsr71/Jarvis"
+def projectAuthor = "Willsr71"
+def projectSite = "https://will.sr"
+
+def commonDep = "net.noxal:common:1.4-30"
+
+def jarName = "${projectId}-${project.version.toString()}.jar"
+
+repositories {
+    jcenter()
+
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://repo.noxal.net/artifactory/gradle-dev-local/" }
+}
+
+dependencies {
+    compile commonDep
+    compile "mysql:mysql-connector-java:5.1.42"
+    compile "net.dv8tion:JDA:3.0.0_185"
+    compile "com.mashape.unirest:unirest-java:1.4.9"
+    compile "ca.pjer:chatter-bot-api:1.4.7"
+}
+
+jar {
+    archiveName jarName
+}
+
+shadowJar {
+    manifest {
+        attributes "Main-Class": "sr.will.jarvis.Main"
+    }
+
+    dependencies {
+        include(dependency(commonDep))
+    }
+
+    archiveName jarName
+}
+
+build.finalizedBy(shadowJar)
