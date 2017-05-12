@@ -52,7 +52,7 @@ public class CommandManager {
         registerCommand("source", new CommandSource());
         registerCommand("stats", new CommandStats(jarvis));
         registerCommand("trump", new CommandTrump(jarvis));
-		registerCommand("actuallygoogle", new CommandActuallyGoogle(jarvis));
+	registerCommand("actuallygoogle", new CommandActuallyGoogle(jarvis));
     }
 
     public void addCustomCommand(long guildId, String command, String response) {
