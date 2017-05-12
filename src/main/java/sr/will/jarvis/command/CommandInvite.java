@@ -14,4 +14,19 @@ public class CommandInvite extends Command {
     public void execute(Message message, String... args) {
         message.getChannel().sendMessage(Jarvis.getJda().asBot().getInviteUrl(jarvis.moduleManager.getNeededPermissions())).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "invite";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays an invite link for the bot";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

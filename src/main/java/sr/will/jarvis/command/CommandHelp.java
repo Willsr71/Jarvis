@@ -37,5 +37,20 @@ public class CommandHelp extends Command {
         message.getChannel().sendMessage(embed.build()).queue();
     }
 
+    @Override
+    public String getUsage() {
+        return "help";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays commands and custom commands";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
+
 
 }

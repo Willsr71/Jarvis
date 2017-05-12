@@ -6,6 +6,7 @@ import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.module.chatbot.ModuleChatBot;
 import sr.will.jarvis.module.overwatch.ModuleOverwatch;
+import sr.will.jarvis.module.vex.ModuleVex;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,6 +40,7 @@ public class ModuleManager {
         registerModule("chatbot", new ModuleChatBot(jarvis));
         //registerModule("levels", new ModuleLevels(jarvis));
         registerModule("overwatch", new ModuleOverwatch(jarvis));
+        registerModule("vex", new ModuleVex(jarvis));
     }
 
     public void enableModule(long guildId, String module) {

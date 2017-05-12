@@ -110,6 +110,10 @@ public class ModuleChatBot extends Module {
             createBot(message.getChannel().getIdLong());
         }
 
+        if (message.getContent().isEmpty()) {
+            return;
+        }
+
         try {
             message.getChannel().sendMessage(chatterBots.get(message.getChannel().getIdLong()).think(message.getContent())).queue();
         } catch (Exception e) {

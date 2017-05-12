@@ -74,12 +74,12 @@ public class BanManager {
     }
 
     public void unban(long guildId, long userId) {
+        Jarvis.getDatabase().execute("DELETE FROM bans WHERE (guild = ? AND user = ? );", guildId, userId);
+        setBanned(guildId, userId, false);
+
         if (!isBanned(guildId, userId)) {
             return;
         }
-
-        Jarvis.getDatabase().execute("DELETE FROM bans WHERE (guild = ? AND user = ? );", guildId, userId);
-        setBanned(guildId, userId, false);
 
         Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
@@ -144,7 +144,7 @@ public class BanManager {
                     return;
                 }
 
-                System.out.println("Sleeping for " + sleepTime);
+                System.out.println("Thread " + Thread.currentThread().getId() + " sleeping for " + sleepTime + "ms");
                 sleep(sleepTime);
                 unban(guildId, userId);
             } catch (InterruptedException e) {
@@ -152,8 +152,9 @@ public class BanManager {
                     e.printStackTrace();
                     startUnbanThread(guildId, userId, duration);
                 }
-                System.out.println("Stopping thread!");
+                System.out.println("Stopping thread " + Thread.currentThread().getId() + "!");
             }
+            System.out.println("Thread " + Thread.currentThread().getId() + " finished");
         });
     }
 

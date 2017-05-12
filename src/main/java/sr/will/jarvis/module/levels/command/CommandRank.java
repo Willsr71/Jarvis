@@ -40,4 +40,19 @@ public class CommandRank extends Command {
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "rank [user mention|user id]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays the experience info about the mentioned member";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

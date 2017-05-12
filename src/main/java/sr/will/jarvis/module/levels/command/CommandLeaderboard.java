@@ -35,4 +35,19 @@ public class CommandLeaderboard extends Command {
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "leaderboard";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays the experience leaderboard of the members of the guild";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

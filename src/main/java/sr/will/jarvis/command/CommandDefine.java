@@ -48,4 +48,19 @@ public class CommandDefine extends Command {
                 .setDescription(definition.list.get(0).definition + "\n\n_" + definition.list.get(0).example + "_");
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "define <word>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays the first Urban Dictionary result of a word";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

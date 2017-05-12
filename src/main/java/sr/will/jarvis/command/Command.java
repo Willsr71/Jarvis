@@ -18,6 +18,12 @@ import java.util.Arrays;
 public abstract class Command {
     public abstract void execute(Message message, String... args);
 
+    public abstract String getUsage();
+
+    public abstract String getDescription();
+
+    public abstract boolean getModuleEnabled(long guildId);
+
     protected void checkUserPermission(Message message, Permission permission) {
         if (!message.getGuild().getMember(message.getAuthor()).hasPermission(permission)) {
             sendFailureMessage(message, "You don't have permission for that (" + permission.getName() + ")");

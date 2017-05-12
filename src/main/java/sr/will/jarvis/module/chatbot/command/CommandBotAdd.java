@@ -25,4 +25,19 @@ public class CommandBotAdd extends Command {
         sendSuccessEmote(message);
         module.addBot(message.getChannel().getIdLong());
     }
+
+    @Override
+    public String getUsage() {
+        return "botadd";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Adds a chat bot to the current channel";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

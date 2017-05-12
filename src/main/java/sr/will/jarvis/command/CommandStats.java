@@ -32,4 +32,19 @@ public class CommandStats extends Command {
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "stats";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays stats about the bot instance";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

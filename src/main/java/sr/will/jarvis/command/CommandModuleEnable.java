@@ -31,4 +31,19 @@ public class CommandModuleEnable extends Command {
         sendSuccessEmote(message);
         jarvis.moduleManager.enableModule(message.getGuild().getIdLong(), module.getName());
     }
+
+    @Override
+    public String getUsage() {
+        return "moduleenable <module>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Enables the specified module";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

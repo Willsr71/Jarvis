@@ -37,4 +37,19 @@ public class CommandMuteMe extends Command {
         sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
         module.muteManager.mute(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong(), duration);
     }
+
+    @Override
+    public String getUsage() {
+        return "muteme [duration]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Mutes the sender for the specified amount of time. Default time is infinite";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

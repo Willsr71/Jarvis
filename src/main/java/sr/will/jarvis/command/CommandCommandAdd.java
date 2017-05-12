@@ -39,4 +39,19 @@ public class CommandCommandAdd extends Command {
         sendSuccessEmote(message);
         jarvis.commandManager.addCustomCommand(message.getGuild().getIdLong(), args[0], response);
     }
+
+    @Override
+    public String getUsage() {
+        return "commandadd <name> <content>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Adds a custom command that responds with the response field. Guild specific";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

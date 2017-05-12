@@ -31,6 +31,11 @@ public class CommandBan extends Command {
             return;
         }
 
+        if (user.getId().equals(message.getAuthor().getId())) {
+            sendFailureMessage(message, "You cannot ban yourself");
+            return;
+        }
+
         if (module.banManager.isBanned(message.getGuild().getIdLong(), user.getIdLong())) {
             sendFailureMessage(message, "User already banned");
             return;
@@ -53,5 +58,20 @@ public class CommandBan extends Command {
 
         sendSuccessMessage(message, user.getAsMention() + " has been banned for " + DateUtils.formatDateDiff(duration));
         module.banManager.ban(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong(), duration);
+    }
+
+    @Override
+    public String getUsage() {
+        return "ban <user mention|user id> [duration]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Bans the specified member for the specified amount of time. Default time is infinite";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
     }
 }

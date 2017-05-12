@@ -57,4 +57,19 @@ public class CommandBattleTagAdd extends Command {
         module.addBattletag(user.getIdLong(), battletag);
         sendSuccessMessage(message, "Account " + user.getAsMention() + " linked to battletag " + battletag, false);
     }
+
+    @Override
+    public String getUsage() {
+        return "battletagadd <battletag> [user mention|user id]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Adds the battletag to the specified discord account to allow for mentioning";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

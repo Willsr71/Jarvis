@@ -42,4 +42,19 @@ public class CommandBanList extends Command {
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "banlist";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays the currently banned users and remaining durations";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

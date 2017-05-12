@@ -32,6 +32,21 @@ public class CommandClear extends Command {
         deleteFromChannel(channel, total, total);
     }
 
+    @Override
+    public String getUsage() {
+        return "clear [amount]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Deletes the specified number of messages from the current channel. Default is 10";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
+
     public void deleteFromChannel(TextChannel channel, int total, int current) {
         if (current <= 0) {
             sendSuccessMessage(channel, "The last " + total + " messages have been deleted");

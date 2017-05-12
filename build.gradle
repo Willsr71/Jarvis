@@ -35,7 +35,7 @@ repositories {
 dependencies {
     compile commonDep
     compile "mysql:mysql-connector-java:5.1.42"
-    compile "net.dv8tion:JDA:3.0.0_185"
+    compile "net.dv8tion:JDA:3.0.0_193"
     compile "com.mashape.unirest:unirest-java:1.4.9"
     compile "ca.pjer:chatter-bot-api:1.4.7"
 }
@@ -47,10 +47,6 @@ jar {
 shadowJar {
     manifest {
         attributes "Main-Class": "sr.will.jarvis.Main"
-    }
-
-    dependencies {
-        include(dependency(commonDep))
     }
 
     archiveName jarName

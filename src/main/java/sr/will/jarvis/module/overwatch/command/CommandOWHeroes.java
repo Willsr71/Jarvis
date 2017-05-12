@@ -35,4 +35,19 @@ public class CommandOWHeroes extends Command {
                 .setThumbnail(overallStats.avatar);
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "owheroes [user mention|user id|battletag]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Shows the user's quickplay and current competitive heroes in order of playtime";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

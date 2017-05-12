@@ -26,7 +26,6 @@ No module
 |restart <\bot mention\>|Bot Owner|Stops the bot|
 |source|None|Displays a link to this GitHub repository|
 |stats|None|Displays stats about the bot instance|
-|trump|None|Displays a random Trump quote|
 
 Admin Module
 ------------
@@ -34,20 +33,21 @@ Admin Module
 |---|---|---|
 |ban \<user mention&#124;user id\> \[duration\]|Ban Members|Bans the specified member for the specified amount of time. Default time is infinite|
 |banlist|None|Displays the currently banned users and remaining durations|
-|bantime \<user mention\>|None|Displays the remaining duration of the mentioned user's ban|
-|unban \<user mention\>|Ban Members|Unbans the specified member|
+|bantime \<user mention&#124;user id\>|None|Displays the remaining duration of the mentioned user's ban|
+|unban \<user mention&#124;user id\>|Ban Members|Unbans the specified member|
 |mute \<user mention&#124;user id\> \[duration\]|Voice Mute Others|Mutes the specified member for the specified amount of time. Default time is infinite|
 |mutelist|None|Displays the currently mutes users and remaining durations|
-|mutetime \<user mention\>|None|Displays the remaining duration of the mentioned user's mute|
-|unmute \<user mention\>|Voice Mute Others|Unmutes the specified member|
+|muteme \[duration\]|None|Mutes the sender for the specified amount of time. Default time is infinite|
+|mutetime \<user mention&#124;user id\>|None|Displays the remaining duration of the mentioned user's mute|
+|unmute \<user mention&#124;user id\>|Voice Mute Others|Unmutes the specified member|
 
 Overwatch Module
 ----------------
 |Command|Permission|Description|
 |---|---|---|
-|owstats \[user mention&#124;battletag\]|None|Shows the user's level, current competitive rank, and the top three heroes for quick play and competitive by playtime|
-|owheroes \[user mention&#124;battletag\]|None|Shows the user's quickplay and current competitive heroes in order of playtime|
-|battletagadd \<battletag\> \[user mention\]|None|Adds the battletag to the specified discord account to allow for mentioning|
+|owstats \[user mention&#124;user id&#124;battletag\]|None|Shows the user's level, current competitive rank, and the top three heroes for quick play and competitive by playtime|
+|owheroes \[user mention&#124;user id&#124;battletag\]|None|Shows the user's quickplay and current competitive heroes in order of playtime|
+|battletagadd \<battletag\> \[user mention&#124;user id\]|None|Adds the battletag to the specified discord account to allow for mentioning|
 |battletagremove|None|Removes the battletag from the sender's discord account|
 
 ChatBot Module

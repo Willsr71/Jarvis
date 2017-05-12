@@ -28,4 +28,19 @@ public class CommandCommandRemove extends Command {
         sendSuccessEmote(message);
         jarvis.commandManager.removeCustomCommand(message.getGuild().getIdLong(), args[0]);
     }
+
+    @Override
+    public String getUsage() {
+        return "commandremove <name>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Removes a custom command. Guild specific";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

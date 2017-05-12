@@ -31,4 +31,19 @@ public class CommandModuleDisable extends Command {
         sendSuccessEmote(message);
         jarvis.moduleManager.disableModule(message.getGuild().getIdLong(), module.getName());
     }
+
+    @Override
+    public String getUsage() {
+        return "moduledisable <module>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Disables the specified module";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

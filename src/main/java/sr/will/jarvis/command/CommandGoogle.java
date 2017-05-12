@@ -19,4 +19,19 @@ public class CommandGoogle extends Command {
 
         sendSuccessMessage(message, url, false);
     }
+
+    @Override
+    public String getUsage() {
+        return "google <search string>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays a lmgtfy.com link of the search string";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

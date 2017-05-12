@@ -33,4 +33,19 @@ public class CommandUnban extends Command {
         sendSuccessMessage(message, user.getAsMention() + " has been unbanned");
         module.banManager.unban(message.getGuild().getIdLong(), user.getIdLong());
     }
+
+    @Override
+    public String getUsage() {
+        return "unban <user mention|user id>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Unbans the specified member";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

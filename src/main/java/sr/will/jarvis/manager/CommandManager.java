@@ -51,7 +51,6 @@ public class CommandManager {
         registerCommand("restart", new CommandRestart(jarvis));
         registerCommand("source", new CommandSource());
         registerCommand("stats", new CommandStats(jarvis));
-        registerCommand("trump", new CommandTrump(jarvis));
     }
 
     public void addCustomCommand(long guildId, String command, String response) {
@@ -99,7 +98,7 @@ public class CommandManager {
 
         List<String> parts = Arrays.asList(string.split(" "));
 
-        System.out.println(parts);
+        System.out.println(message.getGuild().getId() + " | " + message.getAuthor().getId() + " | " + parts);
 
         String command = parts.get(0).toLowerCase();
         String[] args = parts.subList(1, parts.size()).toArray(new String[parts.size() - 1]);

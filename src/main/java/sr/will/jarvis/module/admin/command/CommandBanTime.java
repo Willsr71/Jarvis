@@ -35,4 +35,19 @@ public class CommandBanTime extends Command {
 
         message.getChannel().sendMessage(new EmbedBuilder().setTitle("Success", "https://jarvis.will.sr").setColor(Color.GREEN).addField(user.getName(), DateUtils.formatDateDiff(duration), true).build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "bantime <user mention|user id>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays the remaining duration of the mentioned user's ban";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

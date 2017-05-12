@@ -82,12 +82,12 @@ public class MuteManager {
     }
 
     public void unmute(long guildId, long userId) {
+        Jarvis.getDatabase().execute("DELETE FROM mutes WHERE (guild = ? AND user = ? );", guildId, userId);
+        setMuted(guildId, userId, false);
+
         if (!isMuted(guildId, userId)) {
             return;
         }
-
-        Jarvis.getDatabase().execute("DELETE FROM mutes WHERE (guild = ? AND user = ? );", guildId, userId);
-        setMuted(guildId, userId, false);
 
         Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
@@ -192,7 +192,7 @@ public class MuteManager {
                     return;
                 }
 
-                System.out.println("Sleeping for " + sleepTime);
+                System.out.println("Thread " + Thread.currentThread().getId() + " sleeping for " + sleepTime + "ms");
                 sleep(sleepTime);
                 unmute(guildId, userId);
             } catch (InterruptedException e) {
@@ -200,8 +200,9 @@ public class MuteManager {
                     e.printStackTrace();
                     startUnmuteThread(guildId, userId, duration);
                 }
-                System.out.println("Stopping thread!");
+                System.out.println("Stopping thread " + Thread.currentThread().getId() + "!");
             }
+            System.out.println("Thread " + Thread.currentThread().getId() + " finished");
         });
     }
 

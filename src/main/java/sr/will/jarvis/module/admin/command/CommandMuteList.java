@@ -48,4 +48,19 @@ public class CommandMuteList extends Command {
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "mutelist";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays the currently mutes users and remaining durations";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

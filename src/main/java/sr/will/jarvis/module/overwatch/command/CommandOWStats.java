@@ -37,4 +37,19 @@ public class CommandOWStats extends Command {
                 .setThumbnail(overallStats.avatar);
         message.getChannel().sendMessage(embed.build()).queue();
     }
+
+    @Override
+    public String getUsage() {
+        return "owstats [user mention|user id|battletag]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Shows the user's level, current competitive rank, and the top three heroes for quick play and competitive by playtime";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

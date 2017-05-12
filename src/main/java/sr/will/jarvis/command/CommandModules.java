@@ -33,4 +33,19 @@ public class CommandModules extends Command {
             message.getChannel().sendMessage(embed.build()).queue();
         }
     }
+
+    @Override
+    public String getUsage() {
+        return "modules";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Displays available modules";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

@@ -27,4 +27,19 @@ public class CommandRestart extends Command {
             }
         }
     }
+
+    @Override
+    public String getUsage() {
+        return "restart <bot mention>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Stops the bot";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return true;
+    }
 }

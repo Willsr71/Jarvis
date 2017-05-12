@@ -25,4 +25,19 @@ public class CommandBotRemove extends Command {
         sendSuccessEmote(message);
         module.removeBot(message.getChannel().getIdLong());
     }
+
+    @Override
+    public String getUsage() {
+        return "botremove";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Removes a chat bot to the current channel";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }

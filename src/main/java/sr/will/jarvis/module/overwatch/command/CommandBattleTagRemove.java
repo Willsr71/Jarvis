@@ -24,4 +24,19 @@ public class CommandBattleTagRemove extends Command {
         module.removeBattletag(message.getAuthor().getIdLong());
         sendSuccessMessage(message, "Account unlinked from battletag " + battletag);
     }
+
+    @Override
+    public String getUsage() {
+        return "battletagremove";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Removes the battletag from the sender's discord account";
+    }
+
+    @Override
+    public boolean getModuleEnabled(long guildId) {
+        return module.isEnabled(guildId);
+    }
 }
