@@ -11,7 +11,7 @@ public class CommandGoogle extends Command {
     }
 
     public void execute(Message message, String... args) {
-        String url = "https://lmgtfy.com/?q=";
+        String url = "https://google.com/?q=";
         for (String arg : args) {
             url += arg + "+";
         }
