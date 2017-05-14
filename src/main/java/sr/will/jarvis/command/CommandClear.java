@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.module.Module;
 
 import java.util.HashMap;
 
@@ -42,8 +43,13 @@ public class CommandClear extends Command {
         return "Deletes the specified number of messages from the current channel. Default is 10";
     }
 
+    //@Override
+    public Module getModule() {
+        return null;
+    }
+
     @Override
-    public boolean getModuleEnabled(long guildId) {
+    public boolean isModuleEnabled(long guildId) {
         return true;
     }
 

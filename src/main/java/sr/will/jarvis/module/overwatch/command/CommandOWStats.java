@@ -7,6 +7,7 @@ import sr.will.jarvis.module.overwatch.ModuleOverwatch;
 import sr.will.jarvis.rest.owapi.UserBlob;
 
 import java.awt.*;
+import java.util.Date;
 
 public class CommandOWStats extends Command {
     private ModuleOverwatch module;
@@ -18,6 +19,8 @@ public class CommandOWStats extends Command {
     @Override
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
+
+        long startTime = new Date().getTime();
 
         UserBlob userBlob = module.getUserBlob(message, args);
         if (userBlob == null) {
@@ -34,7 +37,8 @@ public class CommandOWStats extends Command {
                 .addField("SR", overallStats.comprank + "", true)
                 .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay, 3), true)
                 .addField("Top heroes (Comp)", (userBlob.getRegion().heroes.playtime.competitive == null) ? "N/A" : module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive, 3), true)
-                .setThumbnail(overallStats.avatar);
+                .setThumbnail(overallStats.avatar)
+                .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
         message.getChannel().sendMessage(embed.build()).queue();
     }
 
@@ -49,7 +53,7 @@ public class CommandOWStats extends Command {
     }
 
     @Override
-    public boolean getModuleEnabled(long guildId) {
+    public boolean isModuleEnabled(long guildId) {
         return module.isEnabled(guildId);
     }
 }

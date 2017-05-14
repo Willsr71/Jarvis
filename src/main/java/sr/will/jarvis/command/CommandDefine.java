@@ -60,7 +60,7 @@ public class CommandDefine extends Command {
     }
 
     @Override
-    public boolean getModuleEnabled(long guildId) {
+    public boolean isModuleEnabled(long guildId) {
         return true;
     }
 }

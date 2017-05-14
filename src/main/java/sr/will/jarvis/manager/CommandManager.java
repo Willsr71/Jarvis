@@ -2,6 +2,7 @@ package sr.will.jarvis.manager;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import org.apache.commons.lang3.ArrayUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.*;
 import sr.will.jarvis.exception.BotPermissionException;
@@ -11,9 +12,8 @@ import sr.will.jarvis.exception.UserPermissionException;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.List;
 
 public class CommandManager {
@@ -98,8 +98,6 @@ public class CommandManager {
 
         List<String> parts = Arrays.asList(string.split(" "));
 
-        System.out.println(message.getGuild().getId() + " | " + message.getAuthor().getId() + " | " + parts);
-
         String command = parts.get(0).toLowerCase();
         String[] args = parts.subList(1, parts.size()).toArray(new String[parts.size() - 1]);
 
@@ -107,6 +105,8 @@ public class CommandManager {
     }
 
     public void executeCommand(String command, Message message, String... args) {
+        long startTime = new Date().getTime();
+
         if (commands.containsKey(command)) {
             try {
                 commands.get(command).execute(message, args);
@@ -116,6 +116,9 @@ public class CommandManager {
                 message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error!", null).setColor(Color.RED).setDescription(e.toString()).build()).queue();
                 e.printStackTrace();
             }
+
+            long time = new Date().getTime() - startTime;
+            System.out.println(String.format("%s | %s | %s | %dms | %s", message.getGuild().getId(), message.getAuthor().getId(), command, time, Arrays.toString(args)));
             return;
         }
 

@@ -69,7 +69,7 @@ public class CommandBattleTagAdd extends Command {
     }
 
     @Override
-    public boolean getModuleEnabled(long guildId) {
+    public boolean isModuleEnabled(long guildId) {
         return module.isEnabled(guildId);
     }
 }

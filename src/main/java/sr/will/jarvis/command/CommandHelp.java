@@ -18,21 +18,12 @@ public class CommandHelp extends Command {
     public void execute(Message message, String... args) {
         EmbedBuilder embed = new EmbedBuilder().setTitle("Commands", "https://jarvis.will.sr").setColor(Color.GREEN);
 
-        String string = "";
+        // Moduleless commands
+
         ArrayList<String> commands = jarvis.commandManager.getCommands();
-        for (String command : commands) {
-            string += command + "\n";
-        }
 
-        embed.addField("Commands", string, true);
 
-        string = "";
-        ArrayList<String> customCommands = jarvis.commandManager.getCustomCommandsByGuild(message.getGuild().getIdLong());
-        for (String command : customCommands) {
-            string += command + "\n";
-        }
-
-        embed.addField("Custom commands", string, true);
+        embed.setDescription(getCommandGroupString(jarvis.commandManager.getCommands()));
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
@@ -48,9 +39,35 @@ public class CommandHelp extends Command {
     }
 
     @Override
-    public boolean getModuleEnabled(long guildId) {
+    public boolean isModuleEnabled(long guildId) {
         return true;
     }
 
+    public String getCommandGroupString(ArrayList<String> commands) {
+        int maxLen = 0;
 
+        for (String command : commands) {
+            maxLen = Math.max(command.length(), maxLen);
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String commandName : commands) {
+            Command command = jarvis.commandManager.getCommand(commandName);
+            stringBuilder.append('`').append(commandName).append(getFiller(maxLen - commandName.length())).append('`');
+            stringBuilder.append(' ').append(command.getUsage());
+            stringBuilder.append('\n');
+        }
+
+        System.out.println(stringBuilder.length());
+        return stringBuilder.toString();
+    }
+
+    public String getFiller(int len) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int x = 0; x < len + 1; x += 1) {
+            stringBuilder.append(".");
+        }
+
+        return stringBuilder.toString();
+    }
 }

@@ -10,10 +10,12 @@ import sr.will.jarvis.exception.BotPermissionException;
 import sr.will.jarvis.exception.ModuleNotEnabledException;
 import sr.will.jarvis.exception.UserPermissionException;
 import sr.will.jarvis.module.Module;
+import sr.will.jarvis.module.vex.ModuleVex;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public abstract class Command {
     public abstract void execute(Message message, String... args);
@@ -22,7 +24,9 @@ public abstract class Command {
 
     public abstract String getDescription();
 
-    public abstract boolean getModuleEnabled(long guildId);
+    //public abstract Module getModule();
+
+    public abstract boolean isModuleEnabled(long guildId);
 
     protected void checkUserPermission(Message message, Permission permission) {
         if (!message.getGuild().getMember(message.getAuthor()).hasPermission(permission)) {
