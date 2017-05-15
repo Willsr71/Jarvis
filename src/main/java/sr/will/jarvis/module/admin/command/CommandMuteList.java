@@ -15,6 +15,7 @@ public class CommandMuteList extends Command {
     private ModuleAdmin module;
 
     public CommandMuteList(ModuleAdmin module) {
+        super("mutelist", "mutelist", "Displays the currently mutes users and remaining durations", module);
         this.module = module;
     }
 
@@ -47,20 +48,5 @@ public class CommandMuteList extends Command {
         }
 
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "mutelist";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays the currently mutes users and remaining durations";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

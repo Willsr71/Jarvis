@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.module.Module;
 
 import java.util.HashMap;
 
@@ -13,6 +12,7 @@ public class CommandClear extends Command {
     private HashMap<String, Integer> messagesDeleted = new HashMap<>();
 
     public CommandClear(Jarvis jarvis) {
+        super("clear", "clear [amount]", "Deletes the specified number of messages from the current channel. Default is 10", null);
         this.jarvis = jarvis;
     }
 
@@ -31,26 +31,6 @@ public class CommandClear extends Command {
 
         messagesDeleted.put(channel.getId(), 0);
         deleteFromChannel(channel, total, total);
-    }
-
-    @Override
-    public String getUsage() {
-        return "clear [amount]";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Deletes the specified number of messages from the current channel. Default is 10";
-    }
-
-    //@Override
-    public Module getModule() {
-        return null;
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 
     public void deleteFromChannel(TextChannel channel, int total, int current) {

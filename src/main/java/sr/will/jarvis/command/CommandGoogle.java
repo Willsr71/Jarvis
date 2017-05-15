@@ -7,6 +7,7 @@ public class CommandGoogle extends Command {
     private Jarvis jarvis;
 
     public CommandGoogle(Jarvis jarvis) {
+        super("google", "google <search string>", "Displays a lmgtfy.com link of the search string", null);
         this.jarvis = jarvis;
     }
 
@@ -18,20 +19,5 @@ public class CommandGoogle extends Command {
         url = url.substring(0, url.length() - 1);
 
         sendSuccessMessage(message, url, false);
-    }
-
-    @Override
-    public String getUsage() {
-        return "google <search string>";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays a lmgtfy.com link of the search string";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 }

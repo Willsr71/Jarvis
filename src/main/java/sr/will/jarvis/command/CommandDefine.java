@@ -14,6 +14,7 @@ public class CommandDefine extends Command {
     private Jarvis jarvis;
 
     public CommandDefine(Jarvis jarvis) {
+        super("define", "define <word>", "Displays the first Urban Dictionary result of a word", null);
         this.jarvis = jarvis;
     }
 
@@ -47,20 +48,5 @@ public class CommandDefine extends Command {
                 .setTitle(definition.list.get(0).word, "https://www.urbandictionary.com/define.php?term=" + condenseArgs("+", args))
                 .setDescription(definition.list.get(0).definition + "\n\n_" + definition.list.get(0).example + "_");
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "define <word>";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays the first Urban Dictionary result of a word";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 }

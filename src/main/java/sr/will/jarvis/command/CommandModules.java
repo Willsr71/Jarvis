@@ -11,6 +11,7 @@ public class CommandModules extends Command {
     private Jarvis jarvis;
 
     public CommandModules(Jarvis jarvis) {
+        super("modules", "modules", "Displays available modules", null);
         this.jarvis = jarvis;
     }
 
@@ -32,20 +33,5 @@ public class CommandModules extends Command {
 
             message.getChannel().sendMessage(embed.build()).queue();
         }
-    }
-
-    @Override
-    public String getUsage() {
-        return "modules";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays available modules";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 }

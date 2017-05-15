@@ -9,6 +9,7 @@ public class CommandBotAdd extends Command {
     private ModuleChatBot module;
 
     public CommandBotAdd(ModuleChatBot module) {
+        super("botadd", "botadd", "Adds a chat bot to the current channel", module);
         this.module = module;
     }
 
@@ -24,20 +25,5 @@ public class CommandBotAdd extends Command {
 
         sendSuccessEmote(message);
         module.addBot(message.getChannel().getIdLong());
-    }
-
-    @Override
-    public String getUsage() {
-        return "botadd";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Adds a chat bot to the current channel";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

@@ -13,6 +13,7 @@ public class CommandOWHeroes extends Command {
     private ModuleOverwatch module;
 
     public CommandOWHeroes(ModuleOverwatch module) {
+        super("owheroes", "owheroes [user mention|user id|battletag]", "Shows the user's quickplay and current competitive heroes in order of playtime", module);
         this.module = module;
     }
 
@@ -36,22 +37,7 @@ public class CommandOWHeroes extends Command {
                 .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay), true)
                 .addField("Top heroes (Comp)", (userBlob.getRegion().heroes.playtime.competitive == null) ? "N/A" : module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive), true)
                 .setThumbnail(overallStats.avatar)
-                .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);;
+                .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "owheroes [user mention|user id|battletag]";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Shows the user's quickplay and current competitive heroes in order of playtime";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

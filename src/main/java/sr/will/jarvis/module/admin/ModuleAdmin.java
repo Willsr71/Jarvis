@@ -26,7 +26,6 @@ public class ModuleAdmin extends Module {
         jarvis.commandManager.registerCommand("bantime", new CommandBanTime(this));
         jarvis.commandManager.registerCommand("mute", new CommandMute(this));
         jarvis.commandManager.registerCommand("mutelist", new CommandMuteList(this));
-        jarvis.commandManager.registerCommand("muteme", new CommandMuteMe(this));
         jarvis.commandManager.registerCommand("mutetime", new CommandMuteTime(this));
         jarvis.commandManager.registerCommand("unban", new CommandUnban(this));
         jarvis.commandManager.registerCommand("unmute", new CommandUnmute(this));

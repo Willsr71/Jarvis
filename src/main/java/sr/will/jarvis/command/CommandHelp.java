@@ -3,6 +3,7 @@ package sr.will.jarvis.command;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.module.Module;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class CommandHelp extends Command {
     private Jarvis jarvis;
 
     public CommandHelp(Jarvis jarvis) {
+        super("help", "help", "Displays commands and custom commands", null);
         this.jarvis = jarvis;
     }
 
@@ -19,28 +21,20 @@ public class CommandHelp extends Command {
         EmbedBuilder embed = new EmbedBuilder().setTitle("Commands", "https://jarvis.will.sr").setColor(Color.GREEN);
 
         // Moduleless commands
+        embed.addField("No module", getCommandGroupString(jarvis.commandManager.getCommandsByModule(null)), false);
 
-        ArrayList<String> commands = jarvis.commandManager.getCommands();
+        // All the other modules
+        for (String moduleName : jarvis.moduleManager.getModules().keySet()) {
+            Module module = jarvis.moduleManager.getModule(moduleName);
 
+            if (!module.isEnabled(message.getGuild().getIdLong())) {
+                continue;
+            }
 
-        embed.setDescription(getCommandGroupString(jarvis.commandManager.getCommands()));
+            embed.addField(module.getName(), getCommandGroupString(jarvis.commandManager.getCommandsByModule(module)), false);
+        }
 
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "help";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays commands and custom commands";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 
     public String getCommandGroupString(ArrayList<String> commands) {

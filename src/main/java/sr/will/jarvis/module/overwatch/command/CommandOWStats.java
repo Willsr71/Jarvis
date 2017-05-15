@@ -13,6 +13,7 @@ public class CommandOWStats extends Command {
     private ModuleOverwatch module;
 
     public CommandOWStats(ModuleOverwatch module) {
+        super("owstats", "owstats [user mention|user id|battletag]", "Shows the user's level, current competitive rank, and the top three heroes for quick play and competitive by playtime", module);
         this.module = module;
     }
 
@@ -40,20 +41,5 @@ public class CommandOWStats extends Command {
                 .setThumbnail(overallStats.avatar)
                 .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "owstats [user mention|user id|battletag]";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Shows the user's level, current competitive rank, and the top three heroes for quick play and competitive by playtime";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

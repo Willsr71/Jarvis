@@ -12,6 +12,7 @@ public class CommandRank extends Command {
     private ModuleLevels module;
 
     public CommandRank(ModuleLevels module) {
+        super("rank", "rank [user mention|user id]", "Displays the experience info about the mentioned member", module);
         this.module = module;
     }
 
@@ -39,20 +40,5 @@ public class CommandRank extends Command {
         embed.addField("Exp", userLevelXp + "/" + nextLevelXp + " (tot " + userXp + ")", true);
 
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "rank [user mention|user id]";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays the experience info about the mentioned member";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

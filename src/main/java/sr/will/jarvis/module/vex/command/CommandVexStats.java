@@ -8,26 +8,12 @@ public class CommandVexStats extends Command {
     private ModuleVex module;
 
     public CommandVexStats(ModuleVex module) {
+        super("vexstats", "vexstats", "Display stats for a vex team", module);
         this.module = module;
     }
 
     @Override
     public void execute(Message message, String... args) {
         sendSuccessMessage(message, "Not implemented yet");
-    }
-
-    @Override
-    public String getUsage() {
-        return "vexstats";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Display stats for a vex team";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

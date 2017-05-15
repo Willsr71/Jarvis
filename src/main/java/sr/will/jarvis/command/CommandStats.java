@@ -11,6 +11,7 @@ public class CommandStats extends Command {
     private Jarvis jarvis;
 
     public CommandStats(Jarvis jarvis) {
+        super("stats", "stats", "Displays stats about the bot instance", null);
         this.jarvis = jarvis;
     }
 
@@ -31,20 +32,5 @@ public class CommandStats extends Command {
         embed.addField("Memory", ((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)) + "MB / " + (runtime.maxMemory() / (1024 * 1024)) + "MB", true);
 
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "stats";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays stats about the bot instance";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 }

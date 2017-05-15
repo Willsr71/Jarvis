@@ -2,17 +2,16 @@ package sr.will.jarvis.manager;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
-import org.apache.commons.lang3.ArrayUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.*;
 import sr.will.jarvis.exception.BotPermissionException;
 import sr.will.jarvis.exception.ModuleNotEnabledException;
 import sr.will.jarvis.exception.UserPermissionException;
+import sr.will.jarvis.module.Module;
 
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
@@ -31,6 +30,18 @@ public class CommandManager {
 
     public ArrayList<String> getCommands() {
         return new ArrayList<>(commands.keySet());
+    }
+
+    public ArrayList<String> getCommandsByModule(Module module) {
+        ArrayList<String> commandList = new ArrayList<>();
+
+        for (String command : commands.keySet()) {
+            if (getCommand(command).getModule() == module) {
+                commandList.add(command);
+            }
+        }
+
+        return commandList;
     }
 
     public Command getCommand(String name) {

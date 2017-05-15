@@ -37,7 +37,6 @@ Admin Module
 |unban \<user mention&#124;user id\>|Ban Members|Unbans the specified member|
 |mute \<user mention&#124;user id\> \[duration\]|Voice Mute Others|Mutes the specified member for the specified amount of time. Default time is infinite|
 |mutelist|None|Displays the currently mutes users and remaining durations|
-|muteme \[duration\]|None|Mutes the sender for the specified amount of time. Default time is infinite|
 |mutetime \<user mention&#124;user id\>|None|Displays the remaining duration of the mentioned user's mute|
 |unmute \<user mention&#124;user id\>|Voice Mute Others|Unmutes the specified member|
 

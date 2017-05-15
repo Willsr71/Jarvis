@@ -11,6 +11,7 @@ public class CommandBan extends Command {
     private ModuleAdmin module;
 
     public CommandBan(ModuleAdmin module) {
+        super("ban", "ban <user mention|user id> [duration]", "Bans the specified member for the specified amount of time. Default time is infinite", module);
         this.module = module;
     }
 
@@ -58,20 +59,5 @@ public class CommandBan extends Command {
 
         sendSuccessMessage(message, user.getAsMention() + " has been banned for " + DateUtils.formatDateDiff(duration));
         module.banManager.ban(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong(), duration);
-    }
-
-    @Override
-    public String getUsage() {
-        return "ban <user mention|user id> [duration]";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Bans the specified member for the specified amount of time. Default time is infinite";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

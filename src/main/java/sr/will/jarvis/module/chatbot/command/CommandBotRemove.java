@@ -9,6 +9,7 @@ public class CommandBotRemove extends Command {
     private ModuleChatBot module;
 
     public CommandBotRemove(ModuleChatBot module) {
+        super("botremove", "botremove", "Removes a chat bot from the current channel", module);
         this.module = module;
     }
 
@@ -24,20 +25,5 @@ public class CommandBotRemove extends Command {
 
         sendSuccessEmote(message);
         module.removeBot(message.getChannel().getIdLong());
-    }
-
-    @Override
-    public String getUsage() {
-        return "botremove";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Removes a chat bot to the current channel";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

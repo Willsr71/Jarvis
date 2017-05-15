@@ -14,6 +14,7 @@ public class CommandBanList extends Command {
     private ModuleAdmin module;
 
     public CommandBanList(ModuleAdmin module) {
+        super("banlist", "banlist", "Displays the currently banned users and remaining durations", module);
         this.module = module;
     }
 
@@ -41,20 +42,5 @@ public class CommandBanList extends Command {
         }
 
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "banlist";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays the currently banned users and remaining durations";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

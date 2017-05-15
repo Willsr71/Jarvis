@@ -8,6 +8,7 @@ public class CommandCommandAdd extends Command {
     private Jarvis jarvis;
 
     public CommandCommandAdd(Jarvis jarvis) {
+        super("commandadd", "commandadd <name> <content>", "Adds a custom command that responds with the response field. Guild specific", null);
         this.jarvis = jarvis;
     }
 
@@ -38,20 +39,5 @@ public class CommandCommandAdd extends Command {
 
         sendSuccessEmote(message);
         jarvis.commandManager.addCustomCommand(message.getGuild().getIdLong(), args[0], response);
-    }
-
-    @Override
-    public String getUsage() {
-        return "commandadd <name> <content>";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Adds a custom command that responds with the response field. Guild specific";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 }

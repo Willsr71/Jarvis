@@ -11,6 +11,7 @@ public class CommandMute extends Command {
     private ModuleAdmin module;
 
     public CommandMute(ModuleAdmin module) {
+        super("mute", "mute <user mention|user id> [duration]", "Mutes the specified member for the specified amount of time. Default time is infinite", module);
         this.module = module;
     }
 
@@ -55,20 +56,5 @@ public class CommandMute extends Command {
 
         sendSuccessMessage(message, user.getAsMention() + " has been muted for " + DateUtils.formatDateDiff(duration));
         module.muteManager.mute(message.getGuild().getIdLong(), user.getIdLong(), message.getAuthor().getIdLong(), duration);
-    }
-
-    @Override
-    public String getUsage() {
-        return "mute <user mention|user id> [duration]";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Mutes the specified member for the specified amount of time. Default time is infinite";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

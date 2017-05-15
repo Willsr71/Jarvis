@@ -10,23 +10,49 @@ import sr.will.jarvis.exception.BotPermissionException;
 import sr.will.jarvis.exception.ModuleNotEnabledException;
 import sr.will.jarvis.exception.UserPermissionException;
 import sr.will.jarvis.module.Module;
-import sr.will.jarvis.module.vex.ModuleVex;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 public abstract class Command {
+    private String name;
+    private String usage;
+    private String description;
+    private Module module;
+
+    protected Command(String name, String usage, String description, Module module) {
+        this.name = name;
+        this.usage = usage;
+        this.description = description;
+        this.module = module;
+    }
+
     public abstract void execute(Message message, String... args);
 
-    public abstract String getUsage();
+    public String getName() {
+        return name;
+    }
 
-    public abstract String getDescription();
+    public String getUsage() {
+        return usage;
+    }
 
-    //public abstract Module getModule();
+    public String getDescription() {
+        return description;
+    }
 
-    public abstract boolean isModuleEnabled(long guildId);
+    public Module getModule() {
+        return module;
+    }
+
+    public boolean isModuleEnabled(long guildId) {
+        if (module == null) {
+            return true;
+        }
+
+        return module.isEnabled(guildId);
+    }
 
     protected void checkUserPermission(Message message, Permission permission) {
         if (!message.getGuild().getMember(message.getAuthor()).hasPermission(permission)) {

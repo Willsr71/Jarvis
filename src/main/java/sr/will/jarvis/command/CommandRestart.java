@@ -8,6 +8,7 @@ public class CommandRestart extends Command {
     private Jarvis jarvis;
 
     public CommandRestart(Jarvis jarvis) {
+        super("restart", "restart <bot mention>", "Stops the bot", null);
         this.jarvis = jarvis;
     }
 
@@ -26,20 +27,5 @@ public class CommandRestart extends Command {
                 return;
             }
         }
-    }
-
-    @Override
-    public String getUsage() {
-        return "restart <bot mention>";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Stops the bot";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 }

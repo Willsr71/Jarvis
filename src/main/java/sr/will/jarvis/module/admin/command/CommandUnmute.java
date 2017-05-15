@@ -10,6 +10,7 @@ public class CommandUnmute extends Command {
     private ModuleAdmin module;
 
     public CommandUnmute(ModuleAdmin module) {
+        super("unmute", "unmute <user mention|user id>", "Unmutes the specified user", module);
         this.module = module;
     }
 
@@ -31,20 +32,5 @@ public class CommandUnmute extends Command {
 
         sendSuccessMessage(message, user.getAsMention() + " has been unmuted");
         module.muteManager.unmute(message.getGuild().getIdLong(), user.getIdLong());
-    }
-
-    @Override
-    public String getUsage() {
-        return "unmute <user mention|user id>";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Unmutes the specified member";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }

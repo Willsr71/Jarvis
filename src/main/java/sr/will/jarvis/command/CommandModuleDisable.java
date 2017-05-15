@@ -9,6 +9,7 @@ public class CommandModuleDisable extends Command {
     private Jarvis jarvis;
 
     public CommandModuleDisable(Jarvis jarvis) {
+        super("moduledisable", "moduledisable <module>", "Disables the specified module", null);
         this.jarvis = jarvis;
     }
 
@@ -30,20 +31,5 @@ public class CommandModuleDisable extends Command {
 
         sendSuccessEmote(message);
         jarvis.moduleManager.disableModule(message.getGuild().getIdLong(), module.getName());
-    }
-
-    @Override
-    public String getUsage() {
-        return "moduledisable <module>";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Disables the specified module";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return true;
     }
 }

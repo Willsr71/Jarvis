@@ -14,6 +14,7 @@ public class CommandLeaderboard extends Command {
     private ModuleLevels module;
 
     public CommandLeaderboard(ModuleLevels module) {
+        super("leaderboard", "leaderboard", "Displays the experience leaderboard of the members of the guild", module);
         this.module = module;
     }
 
@@ -34,20 +35,5 @@ public class CommandLeaderboard extends Command {
         }
 
         message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    @Override
-    public String getUsage() {
-        return "leaderboard";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Displays the experience leaderboard of the members of the guild";
-    }
-
-    @Override
-    public boolean isModuleEnabled(long guildId) {
-        return module.isEnabled(guildId);
     }
 }
