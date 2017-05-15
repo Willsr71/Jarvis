@@ -6,19 +6,39 @@ import sr.will.jarvis.Jarvis;
 import java.util.ArrayList;
 
 public abstract class Module {
+    private String name;
+    private String description;
+    private ArrayList<Permission> neededPermissions;
+    private boolean defaultEnabled;
+
+    protected Module(String name, String description, ArrayList<Permission> neededPermissions, boolean defaultEnabled) {
+        this.name = name;
+        this.description = description;
+        this.neededPermissions = neededPermissions;
+        this.defaultEnabled = defaultEnabled;
+    }
+
     public abstract void finishStart();
 
     public abstract void stop();
 
     public abstract void reload();
 
-    public abstract String getName();
+    public String getName() {
+        return name;
+    }
 
-    public abstract String getHelpText();
+    public String getDescription() {
+        return description;
+    }
 
-    public abstract ArrayList<Permission> getNeededPermissions();
+    public ArrayList<Permission> getNeededPermissions() {
+        return neededPermissions;
+    }
 
-    public abstract boolean isDefaultEnabled();
+    public boolean isDefaultEnabled() {
+        return defaultEnabled;
+    }
 
     public boolean isEnabled(long guildId) {
         return Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, getName().toLowerCase());

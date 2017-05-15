@@ -27,6 +27,15 @@ public class ModuleOverwatch extends Module {
     private Jarvis jarvis;
 
     public ModuleOverwatch(Jarvis jarvis) {
+        super(
+                "Overwatch",
+                "Overwatch related commands",
+                new ArrayList<>(Arrays.asList(
+                        Permission.MESSAGE_READ,
+                        Permission.MESSAGE_WRITE
+                )),
+                false
+        );
         this.jarvis = jarvis;
 
         jarvis.commandManager.registerCommand("battletagadd", new CommandBattleTagAdd(this));
@@ -48,29 +57,6 @@ public class ModuleOverwatch extends Module {
     @Override
     public void reload() {
 
-    }
-
-    @Override
-    public String getName() {
-        return "Overwatch";
-    }
-
-    @Override
-    public String getHelpText() {
-        return "Overwatch related commands";
-    }
-
-    @Override
-    public ArrayList<Permission> getNeededPermissions() {
-        return new ArrayList<>(Arrays.asList(
-                Permission.MESSAGE_READ,
-                Permission.MESSAGE_WRITE
-        ));
-    }
-
-    @Override
-    public boolean isDefaultEnabled() {
-        return false;
     }
 
     public boolean isValidBattleTag(String battletag) {

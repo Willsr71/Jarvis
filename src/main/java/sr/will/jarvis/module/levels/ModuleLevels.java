@@ -22,6 +22,15 @@ public class ModuleLevels extends Module {
     private ArrayList<String> disallowedUsers = new ArrayList<>();
 
     public ModuleLevels(Jarvis jarvis) {
+        super(
+                "Levels",
+                "Levels plugin and commands",
+                new ArrayList<>(Arrays.asList(
+                        Permission.MESSAGE_READ,
+                        Permission.MESSAGE_WRITE
+                )),
+                false
+        );
         this.jarvis = jarvis;
 
         jarvis.commandManager.registerCommand("leaderboard", new CommandLeaderboard(this));
@@ -44,30 +53,6 @@ public class ModuleLevels extends Module {
     public void reload() {
 
     }
-
-    @Override
-    public String getName() {
-        return "Levels";
-    }
-
-    @Override
-    public String getHelpText() {
-        return "Levels plugin and commands";
-    }
-
-    @Override
-    public ArrayList<Permission> getNeededPermissions() {
-        return new ArrayList<>(Arrays.asList(
-                Permission.MESSAGE_READ,
-                Permission.MESSAGE_WRITE
-        ));
-    }
-
-    @Override
-    public boolean isDefaultEnabled() {
-        return false;
-    }
-
 
     public void addUser(long guildId, long userId) {
         Jarvis.getDatabase().execute("INSERT INTO levels (guild, user) VALUES (?, ?);", guildId, userId);

@@ -16,6 +16,21 @@ public class ModuleAdmin extends Module {
     private Jarvis jarvis;
 
     public ModuleAdmin(Jarvis jarvis) {
+        super(
+                "Admin",
+                "Administrative commands such as ban and mute",
+                new ArrayList<>(Arrays.asList(
+                        Permission.MANAGE_ROLES,
+                        Permission.MANAGE_CHANNEL,
+                        Permission.KICK_MEMBERS,
+                        Permission.BAN_MEMBERS,
+                        Permission.MESSAGE_READ,
+                        Permission.MESSAGE_WRITE,
+                        Permission.MESSAGE_MANAGE,
+                        Permission.MESSAGE_ADD_REACTION
+                )),
+                false
+        );
         this.jarvis = jarvis;
 
         banManager = new BanManager(this);
@@ -46,34 +61,5 @@ public class ModuleAdmin extends Module {
     @Override
     public void reload() {
 
-    }
-
-    @Override
-    public String getName() {
-        return "Admin";
-    }
-
-    @Override
-    public String getHelpText() {
-        return "Administrative commands such as ban and mute";
-    }
-
-    @Override
-    public ArrayList<Permission> getNeededPermissions() {
-        return new ArrayList<>(Arrays.asList(
-                Permission.MANAGE_ROLES,
-                Permission.MANAGE_CHANNEL,
-                Permission.KICK_MEMBERS,
-                Permission.BAN_MEMBERS,
-                Permission.MESSAGE_READ,
-                Permission.MESSAGE_WRITE,
-                Permission.MESSAGE_MANAGE,
-                Permission.MESSAGE_ADD_REACTION
-        ));
-    }
-
-    @Override
-    public boolean isDefaultEnabled() {
-        return false;
     }
 }

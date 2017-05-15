@@ -23,6 +23,15 @@ public class ModuleChatBot extends Module {
     private HashMap<Long, ChatterBotSession> chatterBots = new HashMap<>();
 
     public ModuleChatBot(Jarvis jarvis) {
+        super(
+                "ChatBot",
+                "An interactive chatbot and commands",
+                new ArrayList<>(Arrays.asList(
+                        Permission.MESSAGE_READ,
+                        Permission.MESSAGE_WRITE
+                )),
+                false
+        );
         this.jarvis = jarvis;
 
         jarvis.commandManager.registerCommand("botadd", new CommandBotAdd(this));
@@ -43,30 +52,6 @@ public class ModuleChatBot extends Module {
     public void reload() {
 
     }
-
-    @Override
-    public String getName() {
-        return "ChatBot";
-    }
-
-    @Override
-    public String getHelpText() {
-        return "An interactive chatbot and commands";
-    }
-
-    @Override
-    public ArrayList<Permission> getNeededPermissions() {
-        return new ArrayList<>(Arrays.asList(
-                Permission.MESSAGE_READ,
-                Permission.MESSAGE_WRITE
-        ));
-    }
-
-    @Override
-    public boolean isDefaultEnabled() {
-        return false;
-    }
-
 
     public void addBot(long channelId) {
         Jarvis.getDatabase().execute("INSERT INTO chatterbot_channels (channel) VALUES (?);", channelId);
