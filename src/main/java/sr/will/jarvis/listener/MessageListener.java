@@ -9,8 +9,11 @@ import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.module.chatbot.ModuleChatBot;
 import sr.will.jarvis.module.levels.ModuleLevels;
 
+import java.util.Date;
+
 public class MessageListener extends ListenerAdapter {
     private Jarvis jarvis;
+
     private ModuleAdmin moduleAdmin;
     private ModuleChatBot moduleChatBot;
     private ModuleLevels moduleLevels;
@@ -24,6 +27,20 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        Thread thread = new Thread(() -> {
+            long startTime = new Date().getTime();
+            System.out.println("Thread " + Thread.currentThread().getId() + " started (event)");
+
+            processEvent(event);
+
+            long time = new Date().getTime() - startTime;
+            System.out.println("Thread " + Thread.currentThread().getId() + " finished (event) (" + time + "ms)");
+        });
+
+        thread.start();
+    }
+
+    private void processEvent(MessageReceivedEvent event) {
         if (event.getChannel().getType() != ChannelType.TEXT) {
             return;
         }

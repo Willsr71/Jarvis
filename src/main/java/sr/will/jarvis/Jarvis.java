@@ -19,17 +19,19 @@ import java.util.Date;
 
 public class Jarvis {
     private static Jarvis instance;
-    public final long startTime = new Date().getTime();
+
+    private JSONConfigManager configManager;
     public Config config;
 
     public Database database;
     public CommandManager commandManager;
     public ModuleManager moduleManager;
     public StatusService statusService;
+    private JDA jda;
+
+    public final long startTime = new Date().getTime();
     public boolean running = true;
     public int messagesReceived = 0;
-    private JSONConfigManager configManager;
-    private JDA jda;
 
     public Jarvis() {
         instance = this;
