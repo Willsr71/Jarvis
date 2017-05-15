@@ -117,8 +117,6 @@ public class CommandManager {
 
     public void executeCommand(String command, Message message, String... args) {
         if (commands.containsKey(command)) {
-            long startTime = new Date().getTime();
-
             try {
                 commands.get(command).execute(message, args);
             } catch (BotPermissionException | UserPermissionException | ModuleNotEnabledException e) {
@@ -128,9 +126,7 @@ public class CommandManager {
                 e.printStackTrace();
             }
 
-            long time = new Date().getTime() - startTime;
-            System.out.println(String.format("%s | %s | %s | %dms | %s", message.getGuild().getId(), message.getAuthor().getId(), command, time, Arrays.toString(args)));
-
+            System.out.println(String.format("%s | %s | %s | %s", message.getGuild().getId(), message.getAuthor().getId(), command, Arrays.toString(args)));
             return;
         }
 
