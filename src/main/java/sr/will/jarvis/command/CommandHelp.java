@@ -52,7 +52,6 @@ public class CommandHelp extends Command {
             stringBuilder.append('\n');
         }
 
-        System.out.println(stringBuilder.length());
         return stringBuilder.toString();
     }
 }
