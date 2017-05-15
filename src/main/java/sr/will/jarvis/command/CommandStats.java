@@ -19,7 +19,7 @@ public class CommandStats extends Command {
     public void execute(Message message, String... args) {
         Runtime runtime = Runtime.getRuntime();
 
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Stats", "https://jarvis.will.sr").setColor(Color.GREEN);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Stats", null).setColor(Color.GREEN);
 
         embed.addField("Uptime", DateUtils.formatDateDiff(jarvis.startTime), true);
         embed.addField("Ping", message.getJDA().getPing() + "ms", true);

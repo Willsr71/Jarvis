@@ -72,7 +72,7 @@ public class MuteManager {
         jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
                     new EmbedBuilder()
-                            .setTitle("Muted", "https://jarvis.will.sr")
+                            .setTitle("Muted", null)
                             .setColor(Color.RED)
                             .setDescription("You have been muted in " + jarvis.getJda().getGuildById(guildId).getName() + " for " + DateUtils.formatDateDiff(duration))
                             .build())
@@ -92,7 +92,7 @@ public class MuteManager {
         Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
                     new EmbedBuilder()
-                            .setTitle("Unmuted", "https://jarvis.will.sr")
+                            .setTitle("Unmuted", null)
                             .setColor(Color.GREEN)
                             .setDescription("You have been unmuted in " + Jarvis.getJda().getGuildById(guildId).getName())
                             .build())

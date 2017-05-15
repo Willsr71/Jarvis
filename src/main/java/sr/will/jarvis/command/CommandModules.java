@@ -18,7 +18,7 @@ public class CommandModules extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Modules", "https://jarvis.will.sr").setColor(Color.GREEN);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Modules", null).setColor(Color.GREEN);
         int maxLen = 0;
 
         ArrayList<String> modules = jarvis.moduleManager.getModules();

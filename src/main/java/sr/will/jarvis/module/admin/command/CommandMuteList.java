@@ -25,7 +25,7 @@ public class CommandMuteList extends Command {
 
         HashMap<Long, Long> mutes = module.muteManager.getMutes(message.getGuild().getIdLong());
 
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Active mutes", "https://jarvis.will.sr").setColor(Color.GREEN);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Active mutes", null).setColor(Color.GREEN);
 
         if (mutes.size() == 0) {
             embed.setDescription("None");

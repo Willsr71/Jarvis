@@ -65,7 +65,7 @@ public class BanManager {
         Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
                     new EmbedBuilder()
-                            .setTitle("Banned", "https://jarvis.will.sr")
+                            .setTitle("Banned", null)
                             .setColor(Color.RED)
                             .setDescription("You have been banned from " + Jarvis.getJda().getGuildById(guildId).getName() + " for " + DateUtils.formatDateDiff(duration))
                             .build())
@@ -84,7 +84,7 @@ public class BanManager {
         Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(
                     new EmbedBuilder()
-                            .setTitle("Unbanned", "https://jarvis.will.sr")
+                            .setTitle("Unbanned", null)
                             .setColor(Color.GREEN)
                             .setDescription("You have been unbanned from " + Jarvis.getJda().getGuildById(guildId).getName())
                             .build())

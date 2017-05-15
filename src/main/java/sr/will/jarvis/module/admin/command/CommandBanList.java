@@ -24,7 +24,7 @@ public class CommandBanList extends Command {
 
         HashMap<Long, Long> bans = module.banManager.getBans(message.getGuild().getIdLong());
 
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Active bans", "https://jarvis.will.sr").setColor(Color.GREEN);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Active bans", null).setColor(Color.GREEN);
 
         if (bans.size() == 0) {
             embed.setDescription("None");
