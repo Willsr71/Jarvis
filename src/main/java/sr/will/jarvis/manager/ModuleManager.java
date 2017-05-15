@@ -27,8 +27,8 @@ public class ModuleManager {
         modules.put(name, module);
     }
 
-    public HashMap<String, Module> getModules() {
-        return modules;
+    public ArrayList<String> getModules() {
+        return new ArrayList<>(modules.keySet());
     }
 
     public Module getModule(String name) {

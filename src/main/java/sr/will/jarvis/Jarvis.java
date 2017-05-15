@@ -76,9 +76,7 @@ public class Jarvis {
         statusService = new StatusService(config.discord.statusMessageInterval * 1000, config.discord.statusMessages);
         statusService.start();
 
-        moduleManager.getModules().forEach((s, module) -> {
-            module.finishStart();
-        });
+        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).finishStart()));
     }
 
     public void stop() {
@@ -86,9 +84,7 @@ public class Jarvis {
 
         running = false;
 
-        moduleManager.getModules().forEach((s, module) -> {
-            module.stop();
-        });
+        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).stop()));
 
         statusService.interrupt();
         jda.shutdown();
@@ -103,8 +99,6 @@ public class Jarvis {
 
         database.reconnect();
 
-        moduleManager.getModules().forEach((s, module) -> {
-            module.reload();
-        });
+        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).reload()));
     }
 }

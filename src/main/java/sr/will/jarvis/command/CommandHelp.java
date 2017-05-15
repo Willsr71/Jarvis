@@ -24,7 +24,7 @@ public class CommandHelp extends Command {
         embed.addField("No module", getCommandGroupString(jarvis.commandManager.getCommandsByModule(null)), false);
 
         // All the other modules
-        for (String moduleName : jarvis.moduleManager.getModules().keySet()) {
+        for (String moduleName : jarvis.moduleManager.getModules()) {
             Module module = jarvis.moduleManager.getModule(moduleName);
 
             if (!module.isEnabled(message.getGuild().getIdLong())) {
@@ -53,15 +53,6 @@ public class CommandHelp extends Command {
         }
 
         System.out.println(stringBuilder.length());
-        return stringBuilder.toString();
-    }
-
-    public String getFiller(int len) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int x = 0; x < len + 1; x += 1) {
-            stringBuilder.append(".");
-        }
-
         return stringBuilder.toString();
     }
 }

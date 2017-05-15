@@ -6,6 +6,7 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class CommandModules extends Command {
     private Jarvis jarvis;
@@ -17,21 +18,27 @@ public class CommandModules extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        for (String name : jarvis.moduleManager.getModules().keySet()) {
-            EmbedBuilder embed = new EmbedBuilder();
-            Module module = jarvis.moduleManager.getModule(name);
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Modules", "https://jarvis.will.sr").setColor(Color.GREEN);
+        int maxLen = 0;
 
-            embed.setTitle(module.getName(), null);
-            embed.setDescription(module.getHelpText());
-            if (module.isEnabled(message.getGuild().getIdLong())) {
-                embed.setColor(Color.GREEN);
-                embed.addField("Disable Command", "!moduledisable " + module.getName().toLowerCase(), true);
-            } else {
-                embed.setColor(Color.RED);
-                embed.addField("Enable Command", "!moduleenable " + module.getName().toLowerCase(), true);
-            }
+        ArrayList<String> modules = jarvis.moduleManager.getModules();
 
-            message.getChannel().sendMessage(embed.build()).queue();
+        for (String module : modules) {
+            maxLen = Math.max(module.length(), maxLen);
         }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String moduleName : modules) {
+            Module module = jarvis.moduleManager.getModule(moduleName);
+            stringBuilder.append('`').append(module.getName()).append(getFiller(maxLen - module.getName().length())).append('`');
+            stringBuilder.append(' ');
+            stringBuilder.append('`').append((module.isEnabled(message.getGuild().getIdLong()) ? "Enabled.." : "Disabled.")).append('`');
+            stringBuilder.append(' ');
+            stringBuilder.append(module.getHelpText());
+            stringBuilder.append('\n');
+        }
+
+        embed.setDescription(stringBuilder.toString());
+        message.getChannel().sendMessage(embed.build()).queue();
     }
 }

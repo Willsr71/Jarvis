@@ -91,6 +91,15 @@ public abstract class Command {
         return null;
     }
 
+    public static String getFiller(int len) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int x = 0; x < len + 1; x += 1) {
+            stringBuilder.append(".");
+        }
+
+        return stringBuilder.toString();
+    }
+
     public static String condenseArgs(String joiner, String... args) {
         StringBuilder stringBuilder = new StringBuilder();
 
