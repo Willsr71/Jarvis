@@ -7,6 +7,7 @@ public class CommandActuallyGoogle extends Command {
     private Jarvis jarvis;
 
     public CommandActuallyGoogle(Jarvis jarvis) {
+        super("actuallygoogle", "actuallygoogle <search string>", "Displays a google.com link of the search string", null);
         this.jarvis = jarvis;
     }
 
