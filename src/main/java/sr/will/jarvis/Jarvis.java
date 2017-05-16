@@ -6,9 +6,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.noxal.common.util.config.JSONConfigManager;
 import sr.will.jarvis.config.Config;
-import sr.will.jarvis.listener.GuildJoinListener;
-import sr.will.jarvis.listener.MessageListener;
-import sr.will.jarvis.listener.ReadyListener;
+import sr.will.jarvis.listener.EventListener;
 import sr.will.jarvis.manager.CommandManager;
 import sr.will.jarvis.manager.ModuleManager;
 import sr.will.jarvis.service.StatusService;
@@ -51,9 +49,7 @@ public class Jarvis {
             jda = new JDABuilder(AccountType.BOT)
                     .setToken(config.discord.token)
                     .setAutoReconnect(true)
-                    .addEventListener(new GuildJoinListener(this))
-                    .addEventListener(new MessageListener(this))
-                    .addEventListener(new ReadyListener())
+                    .addEventListener(new EventListener(this))
                     .buildAsync();
         } catch (LoginException | RateLimitedException e) {
             e.printStackTrace();

@@ -145,6 +145,14 @@ public class MuteManager {
         }
     }
 
+    public void processNewMember(long guildId, long userId) {
+        long duration = getMuteDuration(guildId, userId);
+        if (DateUtils.timestampApplies(duration)) {
+            setMuted(guildId, userId, true);
+            startUnmuteThread(guildId, userId, duration);
+        }
+    }
+
     public void processMutedMembers(Guild guild, Role role) {
         HashMap<Long, Long> mutes = getMutes(guild.getIdLong());
 
