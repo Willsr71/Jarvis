@@ -14,6 +14,7 @@ import sr.will.jarvis.module.Module;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class Command {
     private String name;
@@ -117,6 +118,40 @@ public abstract class Command {
 
     public static String capitalizeProperly(String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1, string.length()).toLowerCase();
+    }
+
+    public static ArrayList<String> getMessageIds(java.util.List<Message> messages) {
+        ArrayList<String> messageIds = new ArrayList<>();
+        for (Message message : messages) {
+            messageIds.add(message.getId());
+        }
+
+        return messageIds;
+    }
+
+    public static void pinMessage(Message message) {
+        message.getChannel().getPinnedMessages().queue((java.util.List<Message> pinnedMessages) -> {
+            if (getMessageIds(pinnedMessages).contains(message.getId())) {
+                return;
+            }
+
+            if (pinnedMessages.size() == 50) {
+                sendFailureMessage(message, "Pinned message limit reached");
+                return;
+            }
+
+            message.pin().queue();
+        });
+    }
+
+    public static void unpinMessage(Message message) {
+        message.getChannel().getPinnedMessages().queue((List<Message> pinnedMessages) -> {
+            if (!getMessageIds(pinnedMessages).contains(message.getId())) {
+                return;
+            }
+
+            message.unpin().queue();
+        });
     }
 
     public static void sendSuccessEmote(Message message) {
