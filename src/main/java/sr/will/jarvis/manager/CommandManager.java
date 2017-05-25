@@ -61,6 +61,7 @@ public class CommandManager {
         registerCommand("moduledisable", new CommandModuleDisable(jarvis));
         registerCommand("moduleenable", new CommandModuleEnable(jarvis));
         registerCommand("modules", new CommandModules(jarvis));
+        registerCommand("remindme", new CommandRemindme(jarvis));
         registerCommand("restart", new CommandRestart(jarvis));
         registerCommand("source", new CommandSource());
         registerCommand("stats", new CommandStats(jarvis));

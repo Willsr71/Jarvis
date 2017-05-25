@@ -9,6 +9,7 @@ import sr.will.jarvis.config.Config;
 import sr.will.jarvis.listener.EventListener;
 import sr.will.jarvis.manager.CommandManager;
 import sr.will.jarvis.manager.ModuleManager;
+import sr.will.jarvis.manager.ReminderManager;
 import sr.will.jarvis.service.StatusService;
 import sr.will.jarvis.sql.Database;
 
@@ -24,6 +25,7 @@ public class Jarvis {
     public Database database;
     public CommandManager commandManager;
     public ModuleManager moduleManager;
+    public ReminderManager reminderManager;
     public StatusService statusService;
     private JDA jda;
 
@@ -71,6 +73,8 @@ public class Jarvis {
     public void finishStartup() {
         statusService = new StatusService(config.discord.statusMessageInterval * 1000, config.discord.statusMessages);
         statusService.start();
+        reminderManager = new ReminderManager(this);
+        reminderManager.setup();
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).finishStart()));
     }

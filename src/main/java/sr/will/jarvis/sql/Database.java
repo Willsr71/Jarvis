@@ -152,8 +152,9 @@ public class Database {
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS scheduled_messages(" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
                 "channel bigint(20) NOT NULL," +
+                "time bigint(20) NOT NULL," +
                 "message text NOT NULL," +
                 "PRIMARY KEY (id));");
         execute("CREATE TABLE IF NOT EXISTS levels(" +
