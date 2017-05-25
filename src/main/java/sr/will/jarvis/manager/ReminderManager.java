@@ -1,11 +1,9 @@
 package sr.will.jarvis.manager;
 
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
 
-import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,11 +45,7 @@ public class ReminderManager {
         User user = Jarvis.getJda().getUserById(userId);
         TextChannel channel = Jarvis.getJda().getTextChannelById(channelId);
 
-        channel.sendMessage(new EmbedBuilder()
-                .setTitle("Reminder", null)
-                .setColor(Color.GREEN)
-                .setDescription(user.getAsMention() + ", " + message)
-                .build()).queue();
+        channel.sendMessage(user.getAsMention() + ", " + message).queue();
     }
 
     public void startReminderThread(final long userId, final long channelId, final long time, final String message) {
