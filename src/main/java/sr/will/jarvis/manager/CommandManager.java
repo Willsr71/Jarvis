@@ -54,6 +54,7 @@ public class CommandManager {
         registerCommand("clear", new CommandClear(jarvis));
         registerCommand("commandadd", new CommandCommandAdd(jarvis));
         registerCommand("commandremove", new CommandCommandRemove(jarvis));
+        registerCommand("commands", new CommandCommands(jarvis));
         registerCommand("define", new CommandDefine(jarvis));
         registerCommand("google", new CommandGoogle(jarvis));
         registerCommand("help", new CommandHelp(jarvis));
