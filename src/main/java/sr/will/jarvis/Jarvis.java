@@ -4,14 +4,14 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.noxal.common.util.config.JSONConfigManager;
+import net.noxal.common.config.JSONConfigManager;
+import net.noxal.common.sql.Database;
 import sr.will.jarvis.config.Config;
 import sr.will.jarvis.listener.EventListener;
 import sr.will.jarvis.manager.CommandManager;
 import sr.will.jarvis.manager.ModuleManager;
 import sr.will.jarvis.manager.ReminderManager;
 import sr.will.jarvis.service.StatusService;
-import sr.will.jarvis.sql.Database;
 
 import javax.security.auth.login.LoginException;
 import java.util.Date;
@@ -43,7 +43,7 @@ public class Jarvis {
         moduleManager = new ModuleManager(this);
         moduleManager.registerModules();
 
-        database = new Database(this);
+        database = new Database();
 
         reload();
 
@@ -97,8 +97,64 @@ public class Jarvis {
         configManager.reloadConfig();
         config = (Config) configManager.getConfig();
 
+        database.setCredentials(config.sql.host, config.sql.database, config.sql.user, config.sql.password);
         database.reconnect();
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).reload()));
+    }
+
+    public void deployDatabase() {
+        System.out.println("Deploying database....");
+
+        // Create various tables if they do not exist
+        database.execute("CREATE TABLE IF NOT EXISTS modules(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "module varchar(64) NOT NULL," +
+                "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS mutes(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "invoker bigint(20)," +
+                "duration bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS bans(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "invoker bigint(20)," +
+                "duration bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS scheduled_messages(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "user bigint(20) NOT NULL," +
+                "channel bigint(20) NOT NULL," +
+                "time bigint(20) NOT NULL," +
+                "message text NOT NULL," +
+                "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS levels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "xp bigint(20) NOT NULL DEFAULT 0," +
+                "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "command varchar(255) NOT NULL," +
+                "response text NOT NULL," +
+                "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS chatterbot_channels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "channel bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS overwatch_accounts(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "user bigint(20) NOT NULL," +
+                "battletag char(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+
+        System.out.println("Done.");
     }
 }
