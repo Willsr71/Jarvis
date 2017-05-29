@@ -120,6 +120,14 @@ public class EventListener extends ListenerAdapter {
             event.getChannel().getMessageById(event.getMessageId()).queue(message -> {
                 int maxReactions = 0;
                 for (MessageReaction reaction : message.getReactions()) {
+                    if (reaction.getEmote().isEmote()) {
+                        continue;
+                    }
+
+                    if (!jarvis.config.discord.pinEmotes.contains(reaction.getEmote().getName())) {
+                        continue;
+                    }
+
                     if (reaction.getCount() > maxReactions) {
                         maxReactions = reaction.getCount();
                     }

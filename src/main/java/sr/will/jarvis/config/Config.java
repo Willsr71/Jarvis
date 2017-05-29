@@ -11,6 +11,7 @@ public class Config {
         public ArrayList<String> owners;
         public long statusMessageInterval;
         public ArrayList<String> statusMessages;
+        public ArrayList<String> pinEmotes;
     }
 
     public class Sql {

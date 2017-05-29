@@ -86,6 +86,11 @@ Config File
       "410 Gone",
       "418 I'm a teapot",
       "503 Servers on Fire"
+    ],
+    "pinEmotes": [
+      "\uD83D\uDC4C",
+      "\uD83D\uDCCC",
+      "\uD83D\uDCCD"
     ]
   },
   "sql": {
@@ -95,7 +100,6 @@ Config File
     "password": "password"
   }
 }
-
 ```
 
 |Field|Description|
@@ -104,6 +108,7 @@ Config File
 |discord - owners|Numerical ids of the owners of the bot|
 |discord - statusMessageInterval|Interval in seconds to wait before picking a new status message|
 |discord - statusMessages|Messages used as the "Playing" status of the bot|
+|discord - pinEmotes|Emotes able to be used to autopin messages (SmashBot module)|
 |sql - host|Host of the MySQL database|
 |sql - database|Database to use|
 |sql - user|User to use|
