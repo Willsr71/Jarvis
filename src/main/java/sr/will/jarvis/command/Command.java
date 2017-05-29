@@ -3,6 +3,7 @@ package sr.will.jarvis.command;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.ArrayUtils;
@@ -91,6 +92,25 @@ public abstract class Command {
         }
 
         return null;
+    }
+
+    public static int getMaxApplicableReactionCount(List<MessageReaction> reactions, List<String> applicableReactions) {
+        int maxReactions = 0;
+        for (MessageReaction reaction : reactions) {
+            if (reaction.getEmote().isEmote()) {
+                continue;
+            }
+
+            if (!applicableReactions.contains(reaction.getEmote().getName())) {
+                continue;
+            }
+
+            if (reaction.getCount() > maxReactions) {
+                maxReactions = reaction.getCount();
+            }
+        }
+
+        return maxReactions;
     }
 
     public static String getFiller(int len) {

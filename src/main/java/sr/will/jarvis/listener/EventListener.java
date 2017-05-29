@@ -2,7 +2,6 @@ package sr.will.jarvis.listener;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
@@ -118,22 +117,7 @@ public class EventListener extends ListenerAdapter {
             }
 
             event.getChannel().getMessageById(event.getMessageId()).queue(message -> {
-                int maxReactions = 0;
-                for (MessageReaction reaction : message.getReactions()) {
-                    if (reaction.getEmote().isEmote()) {
-                        continue;
-                    }
-
-                    if (!jarvis.config.discord.pinEmotes.contains(reaction.getEmote().getName())) {
-                        continue;
-                    }
-
-                    if (reaction.getCount() > maxReactions) {
-                        maxReactions = reaction.getCount();
-                    }
-                }
-
-                if (maxReactions >= 5) {
+                if (Command.getMaxApplicableReactionCount(message.getReactions(), jarvis.config.discord.pinEmotes) >= 5) {
                     Command.pinMessage(message);
                 }
             });
@@ -152,14 +136,7 @@ public class EventListener extends ListenerAdapter {
             }
 
             event.getChannel().getMessageById(event.getMessageId()).queue(message -> {
-                int maxReactions = 0;
-                for (MessageReaction reaction : message.getReactions()) {
-                    if (reaction.getCount() > maxReactions) {
-                        maxReactions = reaction.getCount();
-                    }
-                }
-
-                if (maxReactions <= 3) {
+                if (Command.getMaxApplicableReactionCount(message.getReactions(), jarvis.config.discord.pinEmotes) <= 3) {
                     Command.unpinMessage(message);
                 }
             });
