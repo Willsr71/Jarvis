@@ -50,6 +50,13 @@ Overwatch Module
 |battletagadd \<battletag\> \[user mention&#124;user id\]|None|Adds the battletag to the specified discord account to allow for mentioning|
 |battletagremove|None|Removes the battletag from the sender's discord account|
 
+Levels Module
+-------------
+|Command|Permission|Description|
+|---|---|---|
+|levels|None|Displays the xp leaderboard for the current server|
+|rank \[user mention&#124;user id\]|None|Displays xp, rank, and leaderboard position for the specified user|
+
 ChatBot Module
 --------------
 |Command|Permission|Description|
