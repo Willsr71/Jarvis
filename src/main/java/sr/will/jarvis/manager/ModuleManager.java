@@ -5,6 +5,7 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.module.chatbot.ModuleChatBot;
+import sr.will.jarvis.module.levels.ModuleLevels;
 import sr.will.jarvis.module.overwatch.ModuleOverwatch;
 import sr.will.jarvis.module.smashbot.ModuleSmashBot;
 
@@ -38,7 +39,7 @@ public class ModuleManager {
     public void registerModules() {
         registerModule("admin", new ModuleAdmin(jarvis));
         registerModule("chatbot", new ModuleChatBot(jarvis));
-        //registerModule("levels", new ModuleLevels(jarvis));
+        registerModule("levels", new ModuleLevels(jarvis));
         registerModule("overwatch", new ModuleOverwatch(jarvis));
         registerModule("smashbot", new ModuleSmashBot(jarvis));
     }

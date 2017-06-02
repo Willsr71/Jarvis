@@ -4,14 +4,13 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
-import sr.will.jarvis.module.levels.command.CommandLeaderboard;
+import sr.will.jarvis.module.levels.command.CommandLevels;
 import sr.will.jarvis.module.levels.command.CommandRank;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,7 +32,7 @@ public class ModuleLevels extends Module {
         );
         this.jarvis = jarvis;
 
-        jarvis.commandManager.registerCommand("leaderboard", new CommandLeaderboard(this));
+        jarvis.commandManager.registerCommand("levels", new CommandLevels(this));
         jarvis.commandManager.registerCommand("rank", new CommandRank(this));
 
         generateLevels(100);
@@ -90,17 +89,16 @@ public class ModuleLevels extends Module {
         return false;
     }
 
-    public HashMap<Long, ArrayList<Long>> getLeaderboard(long guildId) {
-        HashMap<Long, ArrayList<Long>> leaderboard = new HashMap<>();
+    public HashMap<Integer, XPUser> getLeaderboard(long guildId) {
+        HashMap<Integer, XPUser> leaderboard = new HashMap<>();
+
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp FROM levels WHERE (guild = ?) ORDER BY xp DESC;", guildId);
+
+            int pos = 1;
             while (result.next()) {
-                System.out.println(result.getString("user") + " = " + result.getLong("xp"));
-                if (!leaderboard.containsKey(result.getLong("xp"))) {
-                    leaderboard.put(result.getLong("xp"), new ArrayList<>(Collections.singletonList(result.getLong("user"))));
-                } else {
-                    leaderboard.get(result.getLong("xp")).add(result.getLong("user"));
-                }
+                leaderboard.put(pos, new XPUser(guildId, result.getLong("user"), result.getLong("xp")));
+                pos += 1;
             }
 
         } catch (SQLException e) {
@@ -111,11 +109,10 @@ public class ModuleLevels extends Module {
     }
 
     public int getLeaderboardPosition(long guildId, long userId) {
-        HashMap<Long, ArrayList<Long>> leaderboard = getLeaderboard(guildId);
+        HashMap<Integer, XPUser> leaderboard = getLeaderboard(guildId);
 
-        int pos = 1;
-        for (long xp : leaderboard.keySet()) {
-            if (leaderboard.get(xp).contains(userId)) {
+        for (int pos : leaderboard.keySet()) {
+            if (leaderboard.get(pos).userId == userId) {
                 return pos;
             }
         }
@@ -207,5 +204,17 @@ public class ModuleLevels extends Module {
         }
 
         return level;
+    }
+
+    public class XPUser {
+        public long guildId;
+        public long userId;
+        public long xp;
+
+        public XPUser(long guildId, long userId, long xp) {
+            this.guildId = guildId;
+            this.userId = userId;
+            this.xp = xp;
+        }
     }
 }
