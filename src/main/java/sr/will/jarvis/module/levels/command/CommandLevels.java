@@ -48,6 +48,10 @@ public class CommandLevels extends Command {
             ModuleLevels.XPUser xpUser = leaderboard.get(pos);
             Member member = Jarvis.getJda().getGuildById(xpUser.guildId).getMemberById(xpUser.userId);
 
+            if (member == null) {
+                continue;
+            }
+
             int userLevel = module.getLevelFromXp(xpUser.xp);
             long levelXp = module.getLevelXp(userLevel);
             long nextLevelXp = module.getLevelXp(userLevel + 1);

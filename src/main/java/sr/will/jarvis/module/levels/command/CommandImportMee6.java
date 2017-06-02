@@ -41,8 +41,6 @@ public class CommandImportMee6 extends Command {
         }
 
         for (Levels.Player player : levels.players) {
-            System.out.println(player.name + " = " + player.total_xp);
-
             if (!module.userExists(message.getGuild().getIdLong(), player.id)) {
                 module.addUser(message.getGuild().getIdLong(), player.id, player.total_xp);
             } else {
