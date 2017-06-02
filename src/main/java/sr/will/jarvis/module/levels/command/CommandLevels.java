@@ -30,7 +30,7 @@ public class CommandLevels extends Command {
         message.getChannel().sendMessage(embed.build()).queue();
     }
 
-    public String getLeaderboardString(HashMap<Integer, ModuleLevels.XPUser> leaderboard) {
+    private String getLeaderboardString(HashMap<Integer, ModuleLevels.XPUser> leaderboard) {
         int maxLen = 0;
 
         for (ModuleLevels.XPUser xpUser : leaderboard.values()) {

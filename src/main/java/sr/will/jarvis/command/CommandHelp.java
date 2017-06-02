@@ -18,10 +18,13 @@ public class CommandHelp extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Commands", null).setColor(Color.GREEN);
-
         // Moduleless commands
-        embed.addField("No module", getCommandGroupString(jarvis.commandManager.getCommandsByModule(null)), false);
+        message.getChannel().sendMessage(
+                new EmbedBuilder()
+                        .setTitle("No Module", null)
+                        .setColor(Color.GREEN)
+                        .setDescription(getCommandGroupString(jarvis.commandManager.getCommandsByModule(null)))
+                        .build()).queue();
 
         // All the other modules
         for (String moduleName : jarvis.moduleManager.getModules()) {
@@ -31,13 +34,16 @@ public class CommandHelp extends Command {
                 continue;
             }
 
-            embed.addField(module.getName(), getCommandGroupString(jarvis.commandManager.getCommandsByModule(module)), false);
+            message.getChannel().sendMessage(
+                    new EmbedBuilder()
+                            .setTitle(module.getName(), null)
+                            .setColor(Color.GREEN)
+                            .setDescription(getCommandGroupString(jarvis.commandManager.getCommandsByModule(module)))
+                            .build()).queue();
         }
-
-        message.getChannel().sendMessage(embed.build()).queue();
     }
 
-    public String getCommandGroupString(ArrayList<String> commands) {
+    private String getCommandGroupString(ArrayList<String> commands) {
         int maxLen = 0;
 
         for (String command : commands) {
