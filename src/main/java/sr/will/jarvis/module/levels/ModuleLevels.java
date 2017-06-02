@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
+import sr.will.jarvis.module.levels.command.CommandImportMee6;
 import sr.will.jarvis.module.levels.command.CommandLevels;
 import sr.will.jarvis.module.levels.command.CommandRank;
 
@@ -32,6 +33,7 @@ public class ModuleLevels extends Module {
         );
         this.jarvis = jarvis;
 
+        jarvis.commandManager.registerCommand("importmee6", new CommandImportMee6(this));
         jarvis.commandManager.registerCommand("levels", new CommandLevels(this));
         jarvis.commandManager.registerCommand("rank", new CommandRank(this));
 
@@ -55,6 +57,10 @@ public class ModuleLevels extends Module {
 
     public void addUser(long guildId, long userId) {
         Jarvis.getDatabase().execute("INSERT INTO levels (guild, user) VALUES (?, ?);", guildId, userId);
+    }
+
+    public void addUser(long guildId, long userId, long xp) {
+        Jarvis.getDatabase().execute("INSERT INTO levels (guild, user, xp) VALUES (?, ?, ?);", guildId, userId, xp);
     }
 
     public void resetUser(long guildId, long userId) {

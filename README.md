@@ -56,6 +56,7 @@ Levels Module
 |---|---|---|
 |levels|None|Displays the xp leaderboard for the current server|
 |rank \[user mention&#124;user id\]|None|Displays xp, rank, and leaderboard position for the specified user|
+|importmee6|Administrator|Imports level data from Mee6|
 
 ChatBot Module
 --------------
