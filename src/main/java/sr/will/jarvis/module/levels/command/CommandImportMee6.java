@@ -42,7 +42,12 @@ public class CommandImportMee6 extends Command {
 
         for (Levels.Player player : levels.players) {
             System.out.println(player.name + " = " + player.total_xp);
-            module.addUser(message.getGuild().getIdLong(), player.id, player.total_xp);
+
+            if (!module.userExists(message.getGuild().getIdLong(), player.id)) {
+                module.addUser(message.getGuild().getIdLong(), player.id, player.total_xp);
+            } else {
+                module.setUserXp(message.getGuild().getIdLong(), player.id, player.total_xp);
+            }
         }
 
         sendSuccessMessage(message, "Imported " + levels.players.size() + " players from Mee6", false);

@@ -28,16 +28,16 @@ public class CommandRank extends Command {
         EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
         embed.setAuthor(message.getGuild().getMember(user).getEffectiveName(), null, user.getEffectiveAvatarUrl());
 
-        long userXp = module.getUserXp(message.getGuild().getIdLong(), user.getIdLong());
-        int userLevel = module.getLevelFromXp(userXp);
+        ModuleLevels.XPUser xpUser = module.getXPUser(message.getGuild().getIdLong(), user.getIdLong());
+
+        int userLevel = module.getLevelFromXp(xpUser.xp);
         long levelXp = module.getLevelXp(userLevel);
         long nextLevelXp = module.getLevelXp(userLevel + 1);
-        long userLevelXp = userXp - levelXp;
-        int userRank = module.getLeaderboardPosition(message.getGuild().getIdLong(), user.getIdLong());
+        long userLevelXp = xpUser.xp - levelXp;
 
-        embed.addField("Rank", userRank + "", true);
-        embed.addField("Lvl", userLevel + "", true);
-        embed.addField("Exp", userLevelXp + "/" + nextLevelXp + " (tot " + userXp + ")", true);
+        embed.addField("Rank", xpUser.pos + "/" + xpUser.pos_total, true);
+        embed.addField("Lvl", xpUser.level + "", true);
+        embed.addField("Exp", userLevelXp + "/" + nextLevelXp + " (tot " + xpUser.xp + ")", true);
 
         message.getChannel().sendMessage(embed.build()).queue();
     }

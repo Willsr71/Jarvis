@@ -63,12 +63,26 @@ public class ModuleLevels extends Module {
         Jarvis.getDatabase().execute("INSERT INTO levels (guild, user, xp) VALUES (?, ?, ?);", guildId, userId, xp);
     }
 
+    public void setUserXp(long guildId, long userId, long xp) {
+        Jarvis.getDatabase().execute("UPDATE levels SET xp = ? WHERE (guild = ? AND user = ?);", xp, guildId, userId);
+    }
+
     public void resetUser(long guildId, long userId) {
         Jarvis.getDatabase().execute("UPDATE levels SET xp = 0 WHERE (guild = ? AND user = ?);", guildId, userId);
     }
 
-    public int getUserLevel(long guildId, long userId) {
-        return getLevelFromXp(getUserXp(guildId, userId));
+    public XPUser getXPUser(long guildId, long userId) {
+        HashMap<Integer, XPUser> leaderboard = getLeaderboard(guildId);
+
+        for (int pos : leaderboard.keySet()) {
+            XPUser user = leaderboard.get(pos);
+
+            if (user.userId == userId) {
+                return user;
+            }
+        }
+
+        return null;
     }
 
     public long getUserXp(long guildId, long userId) {
@@ -99,11 +113,11 @@ public class ModuleLevels extends Module {
         HashMap<Integer, XPUser> leaderboard = new HashMap<>();
 
         try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp FROM levels WHERE (guild = ?) ORDER BY xp DESC;", guildId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp, (SELECT COUNT(id) FROM levels WHERE (guild = ?)) AS pos_total FROM levels WHERE (guild = ?) ORDER BY xp DESC;", guildId, guildId);
 
             int pos = 1;
             while (result.next()) {
-                leaderboard.put(pos, new XPUser(guildId, result.getLong("user"), result.getLong("xp")));
+                leaderboard.put(pos, new XPUser(guildId, result.getLong("user"), result.getLong("xp"), pos, result.getInt("pos_total")));
                 pos += 1;
             }
 
@@ -112,18 +126,6 @@ public class ModuleLevels extends Module {
         }
 
         return leaderboard;
-    }
-
-    public int getLeaderboardPosition(long guildId, long userId) {
-        HashMap<Integer, XPUser> leaderboard = getLeaderboard(guildId);
-
-        for (int pos : leaderboard.keySet()) {
-            if (leaderboard.get(pos).userId == userId) {
-                return pos;
-            }
-        }
-
-        return 0;
     }
 
     public void increase(long guildId, long userId, TextChannel channel) {
@@ -216,11 +218,18 @@ public class ModuleLevels extends Module {
         public long guildId;
         public long userId;
         public long xp;
+        public int level;
+        public int pos;
+        public int pos_total;
 
-        public XPUser(long guildId, long userId, long xp) {
+        public XPUser(long guildId, long userId, long xp, int pos, int pos_total) {
             this.guildId = guildId;
             this.userId = userId;
             this.xp = xp;
+            this.pos = pos;
+            this.pos_total = pos_total;
+
+            this.level = getLevelFromXp(xp);
         }
     }
 }
