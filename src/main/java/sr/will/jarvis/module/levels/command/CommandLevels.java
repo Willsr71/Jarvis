@@ -24,13 +24,6 @@ public class CommandLevels extends Command {
 
         HashMap<Integer, ModuleLevels.XPUser> leaderboard = module.getLeaderboard(message.getGuild().getIdLong());
 
-        EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
-        embed.setDescription(getLeaderboardString(leaderboard));
-
-        message.getChannel().sendMessage(embed.build()).queue();
-    }
-
-    private String getLeaderboardString(HashMap<Integer, ModuleLevels.XPUser> leaderboard) {
         int maxLen = 0;
 
         for (ModuleLevels.XPUser xpUser : leaderboard.values()) {
@@ -62,8 +55,13 @@ public class CommandLevels extends Command {
             stringBuilder.append(" ").append("Level ").append(userLevel);
             stringBuilder.append(" (").append(userLevelXp).append("/").append(nextLevelXp).append(" (tot ").append(xpUser.xp).append("))");
             stringBuilder.append("\n");
-        }
 
-        return stringBuilder.toString();
+            if (pos % 10 == 0 || pos == leaderboard.size()) {
+                EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
+                embed.setDescription(stringBuilder.toString());
+                message.getChannel().sendMessage(embed.build()).queue();
+                stringBuilder = new StringBuilder();
+            }
+        }
     }
 }
