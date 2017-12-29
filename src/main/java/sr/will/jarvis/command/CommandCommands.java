@@ -35,7 +35,7 @@ public class CommandCommands extends Command {
         for (String commandName : commands) {
             String commandResult = Jarvis.getInstance().commandManager.getCustomCommandResponse(guildId, commandName);
             stringBuilder.append('`').append(commandName).append(getFiller(maxLen - commandName.length())).append('`');
-            stringBuilder.append(' ').append(commandResult);
+            //stringBuilder.append(' ').append(commandResult);
             stringBuilder.append('\n');
         }
 
