@@ -1,18 +1,14 @@
-package sr.will.jarvis.listener;
+package sr.will.jarvis.event;
 
-import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.Command;
-import sr.will.jarvis.module.admin.ModuleAdmin;
-import sr.will.jarvis.module.chatbot.ModuleChatBot;
 import sr.will.jarvis.module.levels.ModuleLevels;
 import sr.will.jarvis.module.smashbot.ModuleSmashBot;
 
@@ -21,15 +17,11 @@ import java.util.Date;
 public class EventListener extends ListenerAdapter {
     private Jarvis jarvis;
 
-    private ModuleAdmin moduleAdmin;
-    private ModuleChatBot moduleChatBot;
     private ModuleLevels moduleLevels;
     private ModuleSmashBot moduleSmashBot;
 
     public EventListener(Jarvis jarvis) {
         this.jarvis = jarvis;
-        this.moduleAdmin = (ModuleAdmin) jarvis.moduleManager.getModule("admin");
-        this.moduleChatBot = (ModuleChatBot) jarvis.moduleManager.getModule("chatbot");
         this.moduleLevels = (ModuleLevels) jarvis.moduleManager.getModule("levels");
         this.moduleSmashBot = (ModuleSmashBot) jarvis.moduleManager.getModule("smashbot");
     }
@@ -47,29 +39,8 @@ public class EventListener extends ListenerAdapter {
                 return;
             }
 
-            if (moduleAdmin.muteManager.isMuted(event.getGuild().getIdLong(), event.getAuthor().getIdLong())) {
-                event.getMessage().delete().queue();
-                System.out.println("deleting message");
-
-                if (event.getGuild().getMember(event.getAuthor()).hasPermission(Permission.ADMINISTRATOR)) {
-                    return;
-                }
-
-                moduleAdmin.muteManager.setup(event.getGuild());
-                return;
-            }
-
             if (event.getMessage().getContent().startsWith("!")) {
                 jarvis.commandManager.executeCommand(event.getMessage());
-                return;
-            }
-
-            if (moduleChatBot.isBotChannel(event.getChannel().getIdLong())) {
-                if (event.getMessage().getContent().startsWith("<")) {
-                    return;
-                }
-
-                moduleChatBot.sendResponse(event.getMessage());
                 return;
             }
 
@@ -90,18 +61,6 @@ public class EventListener extends ListenerAdapter {
             System.out.println(String.format("Joined guild %s (%s)", event.getGuild().getName(), event.getGuild().getId()));
 
             jarvis.moduleManager.enableDefaultModules(event.getGuild().getIdLong());
-            moduleAdmin.muteManager.setup(event.getGuild());
-        });
-    }
-
-    @Override
-    public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        startThread(() -> {
-            if (!moduleAdmin.isEnabled(event.getGuild().getIdLong())) {
-                return;
-            }
-
-            moduleAdmin.muteManager.processNewMember(event.getGuild().getIdLong(), event.getMember().getUser().getIdLong());
         });
     }
 

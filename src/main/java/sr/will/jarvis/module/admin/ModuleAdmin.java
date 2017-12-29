@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.Permission;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.admin.command.*;
+import sr.will.jarvis.module.admin.event.EventHandlerAdmin;
 import sr.will.jarvis.module.admin.manager.BanManager;
 import sr.will.jarvis.module.admin.manager.MuteManager;
 
@@ -35,6 +36,8 @@ public class ModuleAdmin extends Module {
 
         banManager = new BanManager(this);
         muteManager = new MuteManager(this);
+
+        jarvis.eventManager.registerHandler(new EventHandlerAdmin(this));
 
         jarvis.commandManager.registerCommand("ban", new CommandBan(this));
         jarvis.commandManager.registerCommand("banlist", new CommandBanList(this));

@@ -9,6 +9,7 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.chatbot.command.CommandBotAdd;
 import sr.will.jarvis.module.chatbot.command.CommandBotRemove;
+import sr.will.jarvis.module.chatbot.event.EventHandlerChatBot;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,6 +34,8 @@ public class ModuleChatBot extends Module {
                 false
         );
         this.jarvis = jarvis;
+
+        jarvis.eventManager.registerHandler(new EventHandlerChatBot(this));
 
         jarvis.commandManager.registerCommand("botadd", new CommandBotAdd(this));
         jarvis.commandManager.registerCommand("botremove", new CommandBotRemove(this));
@@ -95,12 +98,12 @@ public class ModuleChatBot extends Module {
             createBot(message.getChannel().getIdLong());
         }
 
-        if (message.getContent().isEmpty()) {
+        if (message.getContentDisplay().isEmpty()) {
             return;
         }
 
         try {
-            message.getChannel().sendMessage(chatterBots.get(message.getChannel().getIdLong()).think(message.getContent())).queue();
+            message.getChannel().sendMessage(chatterBots.get(message.getChannel().getIdLong()).think(message.getContentDisplay())).queue();
         } catch (Exception e) {
             message.getChannel().sendMessage("Error: " + e.getMessage()).queue();
             e.printStackTrace();

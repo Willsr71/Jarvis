@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
-import org.apache.commons.lang3.ArrayUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.exception.BotPermissionException;
 import sr.will.jarvis.exception.ModuleNotEnabledException;
@@ -138,7 +137,7 @@ public abstract class Command {
     }
 
     public static String condenseArgs(String[] args, int start) {
-        return condenseArgs(ArrayUtils.subarray(args, start, args.length));
+        return condenseArgs(Arrays.copyOfRange(args, start, args.length));
     }
 
     public static String capitalizeProperly(String string) {
