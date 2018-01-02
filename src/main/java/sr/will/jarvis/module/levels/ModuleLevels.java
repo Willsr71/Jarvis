@@ -147,7 +147,7 @@ public class ModuleLevels extends Module {
         Jarvis.getDatabase().execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", rand, guildId, userId);
 
         if (getLevelFromXp(xp + rand) > getLevelFromXp(xp)) {
-            channel.sendMessage("Congratulations! " + channel.getJDA().getUserById(userId).getAsMention() + " has reached level " + getLevelFromXp(xp + rand)).queue();
+            channel.sendMessage(":clap: Congratulations! :clap: " + channel.getJDA().getUserById(userId).getAsMention() + " has reached level " + getLevelFromXp(xp + rand)).queue();
         }
     }
 
