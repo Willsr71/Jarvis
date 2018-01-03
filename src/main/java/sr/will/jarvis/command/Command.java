@@ -2,10 +2,7 @@ package sr.will.jarvis.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageReaction;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.exception.BotPermissionException;
 import sr.will.jarvis.exception.ModuleNotEnabledException;
@@ -88,6 +85,14 @@ public abstract class Command {
             } catch (NumberFormatException e) {
                 continue;
             }
+        }
+
+        return null;
+    }
+
+    public static MessageChannel getMentionedChannel(Message message, String... args) {
+        if (message.getMentionedChannels().size() != 0) {
+            return message.getMentionedChannels().get(0);
         }
 
         return null;
@@ -225,7 +230,7 @@ public abstract class Command {
 
     public static void sendFailureMessage(Message message, String string) {
         message.getChannel().sendMessage(new EmbedBuilder()
-                .setTitle("Error", null)
+                .setTitle("Error!", null)
                 .setColor(Color.RED)
                 .setDescription(string)
                 .build()

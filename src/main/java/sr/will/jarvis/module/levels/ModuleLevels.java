@@ -6,6 +6,7 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.levels.command.CommandImportMee6;
 import sr.will.jarvis.module.levels.command.CommandLevels;
+import sr.will.jarvis.module.levels.command.CommandLevelsSilenceChannel;
 import sr.will.jarvis.module.levels.command.CommandRank;
 
 import java.sql.ResultSet;
@@ -35,6 +36,7 @@ public class ModuleLevels extends Module {
 
         jarvis.commandManager.registerCommand("importmee6", new CommandImportMee6(this));
         jarvis.commandManager.registerCommand("levels", new CommandLevels(this));
+        jarvis.commandManager.registerCommand("levelssilencechannel", new CommandLevelsSilenceChannel(this));
         jarvis.commandManager.registerCommand("rank", new CommandRank(this));
 
         generateLevels(100);
@@ -128,6 +130,25 @@ public class ModuleLevels extends Module {
         return leaderboard;
     }
 
+    public void silenceChannel(long channelId) {
+        Jarvis.getDatabase().execute("INSERT INTO levels_silenced_channels (channel) VALUES (?);", channelId);
+    }
+
+    public void unsilenceChannel(long channelId) {
+        Jarvis.getDatabase().execute("DELETE FROM levels_silenced_channels WHERE (channel = ?);", channelId);
+    }
+
+    public boolean channelSilenced(long channelId) {
+        try {
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels_silenced_channels WHERE (channel = ?)", channelId);
+            return result.first();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public void increase(long guildId, long userId, TextChannel channel) {
         if (!isEnabled(channel.getGuild().getIdLong())) {
             return;
@@ -146,7 +167,7 @@ public class ModuleLevels extends Module {
         int rand = ThreadLocalRandom.current().nextInt(15, 25);
         Jarvis.getDatabase().execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", rand, guildId, userId);
 
-        if (getLevelFromXp(xp + rand) > getLevelFromXp(xp)) {
+        if (getLevelFromXp(xp + rand) > getLevelFromXp(xp) && !channelSilenced(channel.getIdLong())) {
             channel.sendMessage("Congratulations! " + channel.getJDA().getUserById(userId).getAsMention() + " has reached level " + getLevelFromXp(xp + rand)).queue();
         }
     }

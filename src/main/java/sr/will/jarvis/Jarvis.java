@@ -104,6 +104,8 @@ public class Jarvis {
         database.setCredentials(config.sql.host, config.sql.database, config.sql.user, config.sql.password);
         database.reconnect();
 
+        deployDatabase();
+
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).reload()));
     }
 
@@ -142,6 +144,10 @@ public class Jarvis {
                 "guild bigint(20) NOT NULL," +
                 "user bigint(20) NOT NULL," +
                 "xp bigint(20) NOT NULL DEFAULT 0," +
+                "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS levels_silenced_channels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "channel bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
         database.execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
                 "id int NOT NULL AUTO_INCREMENT," +
