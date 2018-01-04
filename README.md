@@ -2,7 +2,7 @@ Jarvis
 ======
 [![Build Status](https://ci.noxal.net/job/Jarvis/badge/icon)](https://ci.noxal.net/job/Jarvis/)
 ![Java JDK v1.8][java]
-![JDA v3.1.0][jda]
+![JDA v3.4.0][jda]
 
 A multipurpose Discord bot  
 [Add this bot to your server](https://discordapp.com/oauth2/authorize?client_id=182630745108512768&scope=bot&permissions=268446806)
@@ -125,4 +125,4 @@ Config File
 |sql - password|Password to use|
 
 [java]: https://img.shields.io/badge/Java%20JDK-v1.8-blue.svg "Java JDK 8"
-[jda]: https://img.shields.io/badge/JDA-v3.1.0-green.svg "JDA 3.1"
+[jda]: https://img.shields.io/badge/JDA-v3.4.0-green.svg "JDA 3.4"
