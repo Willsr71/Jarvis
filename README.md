@@ -56,6 +56,7 @@ Levels Module
 |---|---|---|
 |levels|None|Displays the xp leaderboard for the current server|
 |rank \[user mention&#124;user id\]|None|Displays xp, rank, and leaderboard position for the specified user|
+|levelsignorechannel \[channel mention\]|Manage Channels|Ignores a channel for the purposes of gaining experience|
 |levelssilencechannel \[channel mention\]|Manage Channels|Silences or unsilences channels. Silencing prevents level up messages from appearing in specified channels|
 |importmee6|Administrator|Imports level data from Mee6|
 

@@ -4,10 +4,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
-import sr.will.jarvis.module.levels.command.CommandImportMee6;
-import sr.will.jarvis.module.levels.command.CommandLevels;
-import sr.will.jarvis.module.levels.command.CommandLevelsSilenceChannel;
-import sr.will.jarvis.module.levels.command.CommandRank;
+import sr.will.jarvis.module.levels.command.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,6 +33,7 @@ public class ModuleLevels extends Module {
 
         jarvis.commandManager.registerCommand("importmee6", new CommandImportMee6(this));
         jarvis.commandManager.registerCommand("levels", new CommandLevels(this));
+        jarvis.commandManager.registerCommand("levelsignorechannel", new CommandLevelsIgnoreChannel(this));
         jarvis.commandManager.registerCommand("levelssilencechannel", new CommandLevelsSilenceChannel(this));
         jarvis.commandManager.registerCommand("rank", new CommandRank(this));
 
@@ -140,7 +138,26 @@ public class ModuleLevels extends Module {
 
     public boolean channelSilenced(long channelId) {
         try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels_silenced_channels WHERE (channel = ?)", channelId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels_silenced_channels WHERE (channel = ?);", channelId);
+            return result.first();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public void ignoreChannel(long channelId) {
+        Jarvis.getDatabase().execute("INSERT INTO levels_ignored_channels (channel) VALUES (?);", channelId);
+    }
+
+    public void unignoreChannel(long channelId) {
+        Jarvis.getDatabase().execute("DELETE FROM levels_ignored_channels WHERE (channel = ?);", channelId);
+    }
+
+    public boolean channelIgnored(long channelId) {
+        try {
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels_ignored_channels WHERE (channel = ?);", channelId);
             return result.first();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -151,6 +168,10 @@ public class ModuleLevels extends Module {
 
     public void increase(long guildId, long userId, TextChannel channel) {
         if (!isEnabled(channel.getGuild().getIdLong())) {
+            return;
+        }
+
+        if (channelIgnored(channel.getIdLong())) {
             return;
         }
 

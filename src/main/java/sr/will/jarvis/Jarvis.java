@@ -149,6 +149,10 @@ public class Jarvis {
                 "id int NOT NULL AUTO_INCREMENT," +
                 "channel bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS levels_ignored_channels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "channel bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
         database.execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
                 "id int NOT NULL AUTO_INCREMENT," +
                 "guild bigint(20) NOT NULL," +
