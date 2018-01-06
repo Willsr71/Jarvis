@@ -168,6 +168,17 @@ public class Jarvis {
                 "user bigint(20) NOT NULL," +
                 "battletag char(20) NOT NULL," +
                 "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS message_data(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "channel bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "timestamp bigint(20) NOT NULL," +
+                "message_length int NOT NULL," +
+                "message_length_average int NOT NULL," +
+                "time_from_last bigint(20) NOT NULL," +
+                "xp_gained int NOT NULL," +
+                "PRIMARY KEY (id));");
 
         System.out.println("Done.");
     }

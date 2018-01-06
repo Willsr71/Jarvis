@@ -1,7 +1,8 @@
 package sr.will.jarvis.module.levels;
 
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Message;
+import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.levels.command.*;
@@ -11,13 +12,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ModuleLevels extends Module {
     private Jarvis jarvis;
 
     private HashMap<Integer, Long> levels = new HashMap<>();
-    private ArrayList<String> disallowedUsers = new ArrayList<>();
+    private ArrayList<RecentMessage> recentMessages = new ArrayList<>();
 
     public ModuleLevels(Jarvis jarvis) {
         super(
@@ -168,23 +168,22 @@ public class ModuleLevels extends Module {
         return false;
     }
 
-    public void increase(long guildId, long userId, TextChannel channel) {
-        if (!isEnabled(channel.getGuild().getIdLong())) {
+    public void increase(Message message) {
+        long guildId = message.getGuild().getIdLong();
+        long channelId = message.getChannel().getIdLong();
+        long userId = message.getAuthor().getIdLong();
+
+        if (!isEnabled(guildId)) {
             return;
         }
 
-        if (channelIgnored(channel.getIdLong())) {
+        if (channelIgnored(channelId)) {
             return;
         }
 
         if (!userExists(guildId, userId)) {
             addUser(guildId, userId);
         }
-
-        if (!canGain(guildId, userId)) {
-            return;
-        }
-        disallowGain(guildId, userId);
 
         long xp = getUserXp(guildId, userId);
 
@@ -193,33 +192,71 @@ public class ModuleLevels extends Module {
             return;
         }
 
-        int rand = ThreadLocalRandom.current().nextInt(15, 25);
-        Jarvis.getDatabase().execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", rand, guildId, userId);
+        long timestamp = message.getCreationTime().toInstant().toEpochMilli();
+        int messageLength = message.getContentDisplay().length();
 
-        if (getLevelFromXp(xp + rand) > getLevelFromXp(xp) && !channelSilenced(channel.getIdLong())) {
-            channel.sendMessage("Congratulations! " + channel.getJDA().getUserById(userId).getAsMention() + " has reached level " + getLevelFromXp(xp + rand)).queue();
+        recentMessages.add(new RecentMessage(guildId, channelId, userId, timestamp, messageLength));
+        int messageLengthAverage = getRecentMessageAverage();
+        long timeFromLast = getTimeFromLastMessage(guildId, userId, timestamp);
+
+        double baseAmount = 20.0;
+        double lengthMultiplier = (double) messageLength / (double) messageLengthAverage;
+        double timeMultiplier = ((double) timeFromLast / 1000.0) / 60.0;
+        double correctedTimeMultiplier = Math.min(1.0, timeMultiplier);
+
+        //System.out.println("length: " + lengthMultiplier);
+        //System.out.println("time:   " + timeMultiplier);
+        //System.out.println("timeco: " + correctedTimeMultiplier);
+
+        long xpGained = Math.round(baseAmount * lengthMultiplier * correctedTimeMultiplier);
+
+        //System.out.println("gained: " + xpGained);
+
+        Jarvis.getDatabase().execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", xpGained, guildId, userId);
+        Jarvis.getDatabase().execute("INSERT INTO message_data (guild, channel, user, timestamp, message_length, message_length_average, time_from_last, xp_gained) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", guildId, channelId, userId, timestamp, messageLength, messageLengthAverage, timeFromLast, xpGained);
+
+        if (getLevelFromXp(xp + xpGained) > getLevelFromXp(xp) && !channelSilenced(message.getChannel().getIdLong())) {
+            message.getChannel().sendMessage("Congratulations! " + message.getJDA().getUserById(userId).getAsMention() + " has reached level " + getLevelFromXp(xp + xpGained)).queue();
         }
     }
 
-    public boolean canGain(long guildId, long userid) {
-        return !disallowedUsers.contains(guildId + "|" + userid);
+    public void removeExpiredRecentMessages() {
+        for (int x = 0; x < recentMessages.size(); x += 1) {
+            RecentMessage message = recentMessages.get(x);
+            long expires = message.timestamp + (60 * 60 * 1000);
+            if (!DateUtils.timestampApplies(expires)) {
+                recentMessages.remove(x);
+                x -= 1;
+            }
+        }
     }
 
-    public synchronized void allowGain(long guildId, long userId) {
-        disallowedUsers.remove(guildId + "|" + userId);
+    public int getRecentMessageAverage() {
+        removeExpiredRecentMessages();
+
+        int total = 0;
+        for (RecentMessage message : recentMessages) {
+            total += message.messageLength;
+        }
+
+        return Math.floorDiv(total, recentMessages.size());
     }
 
-    public synchronized void disallowGain(long guildId, long userId) {
-        disallowedUsers.add(guildId + "|" + userId);
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(60 * 1000);
-            } catch (InterruptedException ignored) {
+    public long getTimeFromLastMessage(long guildId, long userId, long timestamp) {
+        long timeFromLast = (60 * 60 * 1000);
+        for (RecentMessage message : recentMessages) {
+            if (message.guildId != guildId || message.userId != userId) {
+                continue;
             }
 
-            allowGain(guildId, userId);
-        }).start();
+            if (message.timestamp == timestamp) {
+                continue;
+            }
+
+            timeFromLast = timestamp - message.timestamp;
+        }
+
+        return timeFromLast;
     }
 
     private void generateLevels(int size) {
@@ -280,6 +317,22 @@ public class ModuleLevels extends Module {
             this.pos_total = pos_total;
 
             this.level = getLevelFromXp(xp);
+        }
+    }
+
+    public class RecentMessage {
+        public long guildId;
+        public long channelid;
+        public long userId;
+        public long timestamp;
+        public int messageLength;
+
+        public RecentMessage(long guildId, long channelId, long userId, long timestamp, int messageLength) {
+            this.guildId = guildId;
+            this.channelid = channelId;
+            this.userId = userId;
+            this.timestamp = timestamp;
+            this.messageLength = messageLength;
         }
     }
 }

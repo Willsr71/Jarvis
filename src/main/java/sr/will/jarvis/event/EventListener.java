@@ -44,7 +44,7 @@ public class EventListener extends ListenerAdapter {
                 return;
             }
 
-            moduleLevels.increase(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), event.getTextChannel());
+            moduleLevels.increase(event.getMessage());
         });
     }
 
