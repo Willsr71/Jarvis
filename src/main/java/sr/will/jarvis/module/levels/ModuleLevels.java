@@ -34,6 +34,8 @@ public class ModuleLevels extends Module {
         jarvis.commandManager.registerCommand("importmee6", new CommandImportMee6(this));
         jarvis.commandManager.registerCommand("levels", new CommandLevels(this));
         jarvis.commandManager.registerCommand("levelsignorechannel", new CommandLevelsIgnoreChannel(this));
+        jarvis.commandManager.registerCommand("levelsoptin", new CommandLevelsOptIn(this));
+        jarvis.commandManager.registerCommand("levelsoptout", new CommandLevelsOptOut(this));
         jarvis.commandManager.registerCommand("levelssilencechannel", new CommandLevelsSilenceChannel(this));
         jarvis.commandManager.registerCommand("rank", new CommandRank(this));
 
@@ -113,7 +115,7 @@ public class ModuleLevels extends Module {
         HashMap<Integer, XPUser> leaderboard = new HashMap<>();
 
         try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp, (SELECT COUNT(id) FROM levels WHERE (guild = ?)) AS pos_total FROM levels WHERE (guild = ?) ORDER BY xp DESC;", guildId, guildId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp, (SELECT COUNT(id) FROM levels WHERE (guild = ?)) AS pos_total FROM levels WHERE (guild = ? AND xp != -1) ORDER BY xp DESC;", guildId, guildId);
 
             int pos = 1;
             while (result.next()) {
@@ -128,25 +130,6 @@ public class ModuleLevels extends Module {
         return leaderboard;
     }
 
-    public void silenceChannel(long channelId) {
-        Jarvis.getDatabase().execute("INSERT INTO levels_silenced_channels (channel) VALUES (?);", channelId);
-    }
-
-    public void unsilenceChannel(long channelId) {
-        Jarvis.getDatabase().execute("DELETE FROM levels_silenced_channels WHERE (channel = ?);", channelId);
-    }
-
-    public boolean channelSilenced(long channelId) {
-        try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels_silenced_channels WHERE (channel = ?);", channelId);
-            return result.first();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
     public void ignoreChannel(long channelId) {
         Jarvis.getDatabase().execute("INSERT INTO levels_ignored_channels (channel) VALUES (?);", channelId);
     }
@@ -158,6 +141,25 @@ public class ModuleLevels extends Module {
     public boolean channelIgnored(long channelId) {
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels_ignored_channels WHERE (channel = ?);", channelId);
+            return result.first();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public void silenceChannel(long channelId) {
+        Jarvis.getDatabase().execute("INSERT INTO levels_silenced_channels (channel) VALUES (?);", channelId);
+    }
+
+    public void unsilenceChannel(long channelId) {
+        Jarvis.getDatabase().execute("DELETE FROM levels_silenced_channels WHERE (channel = ?);", channelId);
+    }
+
+    public boolean channelSilenced(long channelId) {
+        try {
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels_silenced_channels WHERE (channel = ?);", channelId);
             return result.first();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -185,6 +187,12 @@ public class ModuleLevels extends Module {
         disallowGain(guildId, userId);
 
         long xp = getUserXp(guildId, userId);
+
+        // User is opted out
+        if (xp == -1) {
+            return;
+        }
+
         int rand = ThreadLocalRandom.current().nextInt(15, 25);
         Jarvis.getDatabase().execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", rand, guildId, userId);
 

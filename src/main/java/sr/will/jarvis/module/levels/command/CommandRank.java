@@ -25,8 +25,18 @@ public class CommandRank extends Command {
             user = message.getAuthor();
         }
 
+        if (!module.userExists(message.getGuild().getIdLong(), user.getIdLong())) {
+            module.addUser(message.getGuild().getIdLong(), user.getIdLong());
+        }
+
         EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
         embed.setAuthor(message.getGuild().getMember(user).getEffectiveName(), null, user.getEffectiveAvatarUrl());
+
+        if (module.getUserXp(message.getGuild().getIdLong(), user.getIdLong()) == -1) {
+            embed.setDescription("User has opted out of levels");
+            message.getChannel().sendMessage(embed.build()).queue();
+            return;
+        }
 
         ModuleLevels.XPUser xpUser = module.getXPUser(message.getGuild().getIdLong(), user.getIdLong());
 
