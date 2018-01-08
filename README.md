@@ -71,7 +71,7 @@ ChatBot Module
 
 Usage
 =====
-1. Download the jar from [https://ci.noxal.net/job/Jarvis/]() or compile it
+1. Download the jar from [https://ci.noxal.net/job/Jarvis/](https://ci.noxal.net/job/Jarvis/) or compile it
 2. Create a `config` directory
 3. Create `jarvis.json` in the config directory
 4. Paste in the example config file and modify it appropriately
@@ -116,7 +116,7 @@ Config File
 
 |Field|Description|
 |---|---|
-|discord - token|Discord Auth Token. You can acquire this by going to [discordapp.com/developers/applications/me]()|
+|discord - token|Discord Auth Token. You can acquire this by going to [discordapp.com/developers/applications/me](https://discordapp.com/developers/applications/me)|
 |discord - owners|Numerical ids of the owners of the bot|
 |discord - statusMessageInterval|Interval in seconds to wait before picking a new status message|
 |discord - statusMessages|Messages used as the "Playing" status of the bot|

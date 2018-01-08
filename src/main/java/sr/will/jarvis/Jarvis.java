@@ -168,6 +168,14 @@ public class Jarvis {
                 "user bigint(20) NOT NULL," +
                 "battletag char(20) NOT NULL," +
                 "PRIMARY KEY (id));");
+        database.execute("CREATE TABLE IF NOT EXISTS flairs(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "role bigint(20)," +
+                "name varchar(255) NOT NULL," +
+                "color char(7)," +
+                "PRIMARY KEY (id));");
         database.execute("CREATE TABLE IF NOT EXISTS message_data(" +
                 "id int NOT NULL AUTO_INCREMENT," +
                 "guild bigint(20) NOT NULL," +
