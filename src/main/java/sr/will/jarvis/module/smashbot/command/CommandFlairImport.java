@@ -34,10 +34,17 @@ public class CommandFlairImport extends Command {
                     continue;
                 }
 
-                message.getChannel().sendMessage("Importing role '" + role.getName() + "' from user " + member.getUser().getName()).queue();
+                message.getChannel().sendMessage("Importing user '" + member.getUser().getName() + "' role '" + role.getName() + "'").queue();
+
+                String color = "";
+                if (role.getColor() == null) {
+                    color = "#FFFFFF";
+                } else {
+                    color = module.getHexFromColor(role.getColor());
+                }
 
                 Jarvis.getDatabase().execute("INSERT INTO flairs (guild, user, role, name, color) VALUES (?, ?, ?, ?, ?);",
-                        guildId, member.getUser().getIdLong(), role.getIdLong(), role.getName(), module.getHexFromColor(role.getColor()));
+                        guildId, member.getUser().getIdLong(), role.getIdLong(), role.getName(), color);
             }
         }
 
