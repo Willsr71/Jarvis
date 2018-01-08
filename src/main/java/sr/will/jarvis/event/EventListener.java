@@ -1,6 +1,9 @@
 package sr.will.jarvis.event;
 
 import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
@@ -13,7 +16,6 @@ import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.levels.ModuleLevels;
 import sr.will.jarvis.module.smashbot.ModuleSmashBot;
 
-import java.awt.*;
 import java.util.Date;
 
 public class EventListener extends ListenerAdapter {
@@ -111,7 +113,19 @@ public class EventListener extends ListenerAdapter {
                 return;
             }
 
-            moduleSmashBot.addMemberFlair(event.getGuild().getIdLong(), event.getUser().getIdLong(), event.getUser().getName(), Color.WHITE);
+            ModuleSmashBot.Flair flair = moduleSmashBot.getMemberFlair(event.getMember());
+
+            if (flair.roleId != 0) {
+                Guild guild = event.getGuild();
+                Role role = guild.getRoleById(flair.roleId);
+                Member member = event.getMember();
+                if (role == null) {
+                    moduleSmashBot.createMemberFlair(member, flair.name, flair.color);
+                    return;
+                }
+
+                guild.getController().addSingleRoleToMember(member, role).queue();
+            }
         });
     }
 
