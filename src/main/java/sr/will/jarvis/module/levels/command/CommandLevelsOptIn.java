@@ -8,7 +8,7 @@ public class CommandLevelsOptIn extends Command {
     private ModuleLevels module;
 
     public CommandLevelsOptIn(ModuleLevels module) {
-        super("levelsoptin", "levelsoptin", "Opt into the leveling system. Note: This will reset your xp", module);
+        super("levelsoptin", "levelsoptin", "Opt into the leveling system", module);
         this.module = module;
     }
 
@@ -23,12 +23,12 @@ public class CommandLevelsOptIn extends Command {
             module.addUser(guildId, userId);
         }
 
-        if (module.getUserXp(guildId, userId) != -1) {
+        if (module.getUserXp(guildId, userId) >= 0) {
             sendFailureMessage(message, "You are already opted into leveling");
             return;
         }
 
-        module.setUserXp(guildId, userId, 0);
+        module.setUserXp(guildId, userId, -module.getUserXp(guildId, userId));
         sendSuccessMessage(message, "You are now opted into leveling", false);
     }
 }

@@ -57,8 +57,8 @@ Levels Module
 |levels|None|Displays the xp leaderboard for the current server|
 |rank \[user mention&#124;user id\]|None|Displays xp, rank, and leaderboard position for the specified user|
 |levelsignorechannel \[channel mention\]|Manage Channels|Ignores a channel for the purposes of gaining experience|
-|levelsoptin|None|Opt into the leveling system. Note: This will reset your xp|
-|levelsoptout|None|Opt out of the leveling system. Note: This will reset your xp|
+|levelsoptin|None|Opt into the leveling system|
+|levelsoptout|None|Opt out of the leveling system|
 |levelssilencechannel \[channel mention\]|Manage Channels|Silences or unsilences channels. Silencing prevents level up messages from appearing in specified channels|
 |importmee6|Administrator|Imports level data from Mee6|
 

@@ -32,7 +32,7 @@ public class CommandRank extends Command {
         EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
         embed.setAuthor(message.getGuild().getMember(user).getEffectiveName(), null, user.getEffectiveAvatarUrl());
 
-        if (module.getUserXp(message.getGuild().getIdLong(), user.getIdLong()) == -1) {
+        if (module.getUserXp(message.getGuild().getIdLong(), user.getIdLong()) < 0) {
             embed.setDescription("User has opted out of levels");
             message.getChannel().sendMessage(embed.build()).queue();
             return;

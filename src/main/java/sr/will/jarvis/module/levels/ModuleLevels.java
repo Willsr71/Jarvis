@@ -115,7 +115,7 @@ public class ModuleLevels extends Module {
         HashMap<Integer, XPUser> leaderboard = new HashMap<>();
 
         try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp, (SELECT COUNT(id) FROM levels WHERE (guild = ?)) AS pos_total FROM levels WHERE (guild = ? AND xp != -1) ORDER BY xp DESC;", guildId, guildId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp, (SELECT COUNT(id) FROM levels WHERE (guild = ? AND xp >= 0)) AS pos_total FROM levels WHERE (guild = ? AND xp >= 0) ORDER BY xp DESC;", guildId, guildId);
 
             int pos = 1;
             while (result.next()) {
@@ -188,7 +188,7 @@ public class ModuleLevels extends Module {
         long xp = getUserXp(guildId, userId);
 
         // User is opted out
-        if (xp == -1) {
+        if (xp < 0) {
             return;
         }
 
