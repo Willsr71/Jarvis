@@ -11,6 +11,8 @@ Commands
 =======
 No module
 ---------
+Always active
+
 |Command|Permission|Description|
 |---|---|---|
 |clear \[amount\]|Manage Messages|Deletes the specified number of messages from the current channel. Default is 10|
@@ -30,6 +32,8 @@ No module
 
 Admin Module
 ------------
+Administrative commands such as ban and mute
+
 |Command|Permission|Description|
 |---|---|---|
 |ban \<user mention&#124;user id\> \[duration\]|Ban Members|Bans the specified member for the specified amount of time. Default time is infinite|
@@ -43,6 +47,8 @@ Admin Module
 
 Overwatch Module
 ----------------
+Overwatch related commands
+
 |Command|Permission|Description|
 |---|---|---|
 |owstats \[user mention&#124;user id&#124;battletag\]|None|Shows the user's level, current competitive rank, and the top three heroes for quick play and competitive by playtime|
@@ -52,6 +58,8 @@ Overwatch Module
 
 Levels Module
 -------------
+Levels plugin and commands
+
 |Command|Permission|Description|
 |---|---|---|
 |levels|None|Displays the xp leaderboard for the current server|
@@ -62,8 +70,15 @@ Levels Module
 |levelssilencechannel \[channel mention\]|Manage Channels|Silences or unsilences channels. Silencing prevents level up messages from appearing in specified channels|
 |importmee6|Administrator|Imports level data from Mee6|
 
+OhNo Module
+-----------
+Responds with an "oh no" image whenever a user says "oh no"
+
+
 ChatBot Module
 --------------
+An interactive chatbot and commands
+
 |Command|Permission|Description|
 |---|---|---|
 |botadd|Manage Messages|Adds a chat bot to the current channel|

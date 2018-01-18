@@ -85,4 +85,4 @@ gradle-app.setting
 
 .idea/
 
-src/main/resources/
+src/main/resources/jarvis.json
