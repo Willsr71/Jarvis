@@ -1,18 +1,18 @@
-package sr.will.jarvis.module.smashbot.command;
+package sr.will.jarvis.module.flair.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.Command;
-import sr.will.jarvis.module.smashbot.ModuleSmashBot;
+import sr.will.jarvis.module.flair.ModuleFlair;
 
 import java.awt.*;
 import java.util.HashMap;
 
 public class CommandFlairList extends Command {
-    private ModuleSmashBot module;
+    private ModuleFlair module;
 
-    public CommandFlairList(ModuleSmashBot module) {
+    public CommandFlairList(ModuleFlair module) {
         super("commandflairlist", "commandflairlist", "List all flairs and owners", module);
         this.module = module;
     }

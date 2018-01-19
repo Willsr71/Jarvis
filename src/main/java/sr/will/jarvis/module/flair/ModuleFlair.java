@@ -1,4 +1,4 @@
-package sr.will.jarvis.module.smashbot;
+package sr.will.jarvis.module.flair;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -6,8 +6,8 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.managers.GuildController;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
-import sr.will.jarvis.module.smashbot.command.*;
-import sr.will.jarvis.module.smashbot.event.EventHandlerSmashBot;
+import sr.will.jarvis.module.flair.command.*;
+import sr.will.jarvis.module.flair.event.EventHandlerSmashBot;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -17,14 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class ModuleSmashBot extends Module {
+public class ModuleFlair extends Module {
     private Jarvis jarvis;
 
-    private ArrayList<String> globalIgnoredRoles = new ArrayList<>(Arrays.asList("@everyone", "Jarvis_Mute"));
-
-    public ModuleSmashBot(Jarvis jarvis) {
-        super("SmashBot",
-                "Things ported from SmashBot because this way it is easier to maintain",
+    public ModuleFlair(Jarvis jarvis) {
+        super("Flair",
+                "Offers per-user flairs (roles) with the ability to color and name them freely",
                 new ArrayList<>(Arrays.asList(
                         Permission.MESSAGE_READ,
                         Permission.MESSAGE_WRITE
@@ -55,12 +53,6 @@ public class ModuleSmashBot extends Module {
     @Override
     public void reload() {
 
-    }
-
-    public ArrayList<String> getIgnoredRoles(long guildId) {
-        ArrayList<String> ignoredRoles = new ArrayList<>(globalIgnoredRoles);
-
-        return ignoredRoles;
     }
 
     public void createMemberFlair(Member member, String name, Color color) {

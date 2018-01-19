@@ -1,17 +1,17 @@
-package sr.will.jarvis.module.smashbot.command;
+package sr.will.jarvis.module.flair.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
-import sr.will.jarvis.module.smashbot.ModuleSmashBot;
+import sr.will.jarvis.module.flair.ModuleFlair;
 
 import java.awt.*;
 
 public class CommandFlairSetColor extends Command {
-    private ModuleSmashBot module;
+    private ModuleFlair module;
 
-    public CommandFlairSetColor(ModuleSmashBot module) {
+    public CommandFlairSetColor(ModuleFlair module) {
         super("flairsetcolor", "flairsetcolor <color|hex code>", "Change your flair color", module);
         this.module = module;
     }

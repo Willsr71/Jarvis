@@ -5,10 +5,10 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.admin.ModuleAdmin;
 import sr.will.jarvis.module.chatbot.ModuleChatBot;
+import sr.will.jarvis.module.flair.ModuleFlair;
 import sr.will.jarvis.module.levels.ModuleLevels;
 import sr.will.jarvis.module.ohno.ModuleOhNo;
 import sr.will.jarvis.module.overwatch.ModuleOverwatch;
-import sr.will.jarvis.module.smashbot.ModuleSmashBot;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,7 +43,7 @@ public class ModuleManager {
         registerModule("levels", new ModuleLevels(jarvis));
         registerModule("ohno", new ModuleOhNo(jarvis));
         registerModule("overwatch", new ModuleOverwatch(jarvis));
-        registerModule("smashbot", new ModuleSmashBot(jarvis));
+        registerModule("flair", new ModuleFlair(jarvis));
     }
 
     public void enableModule(long guildId, String module) {

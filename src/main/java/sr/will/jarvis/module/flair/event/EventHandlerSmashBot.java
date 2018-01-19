@@ -1,4 +1,4 @@
-package sr.will.jarvis.module.smashbot.event;
+package sr.will.jarvis.module.flair.event;
 
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
@@ -12,12 +12,12 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.event.EventHandler;
 import sr.will.jarvis.event.EventPriority;
-import sr.will.jarvis.module.smashbot.ModuleSmashBot;
+import sr.will.jarvis.module.flair.ModuleFlair;
 
 public class EventHandlerSmashBot extends EventHandler {
-    private ModuleSmashBot module;
+    private ModuleFlair module;
 
-    public EventHandlerSmashBot(ModuleSmashBot module) {
+    public EventHandlerSmashBot(ModuleFlair module) {
         super(module, EventPriority.MEDIUM);
         this.module = module;
     }
@@ -70,7 +70,7 @@ public class EventHandlerSmashBot extends EventHandler {
             return;
         }
 
-        ModuleSmashBot.Flair flair = module.getMemberFlair(event.getMember());
+        ModuleFlair.Flair flair = module.getMemberFlair(event.getMember());
 
         if (flair.roleId != 0) {
             Guild guild = event.getGuild();

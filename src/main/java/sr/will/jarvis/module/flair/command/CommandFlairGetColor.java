@@ -1,18 +1,18 @@
-package sr.will.jarvis.module.smashbot.command;
+package sr.will.jarvis.module.flair.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.command.Command;
-import sr.will.jarvis.module.smashbot.ModuleSmashBot;
+import sr.will.jarvis.module.flair.ModuleFlair;
 
 import java.awt.*;
 
 public class CommandFlairGetColor extends Command {
-    private ModuleSmashBot module;
+    private ModuleFlair module;
 
-    public CommandFlairGetColor(ModuleSmashBot module) {
+    public CommandFlairGetColor(ModuleFlair module) {
         super("flairgetcolor", "flairgetcolor [user mention]", "Get the color of a user's flair", module);
         this.module = module;
     }

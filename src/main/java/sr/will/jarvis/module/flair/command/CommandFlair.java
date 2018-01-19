@@ -1,15 +1,15 @@
-package sr.will.jarvis.module.smashbot.command;
+package sr.will.jarvis.module.flair.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
-import sr.will.jarvis.module.smashbot.ModuleSmashBot;
+import sr.will.jarvis.module.flair.ModuleFlair;
 
 public class CommandFlair extends Command {
-    ModuleSmashBot module;
+    private ModuleFlair module;
 
 
-    public CommandFlair(ModuleSmashBot module) {
+    public CommandFlair(ModuleFlair module) {
         super("flair", "flair", "Flair help command", module);
         this.module = module;
     }

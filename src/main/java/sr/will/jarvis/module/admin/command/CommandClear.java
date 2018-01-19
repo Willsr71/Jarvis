@@ -1,19 +1,20 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.admin.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.admin.ModuleAdmin;
 
 import java.util.HashMap;
 
 public class CommandClear extends Command {
-    private Jarvis jarvis;
+    private ModuleAdmin module;
     private HashMap<String, Integer> messagesDeleted = new HashMap<>();
 
-    public CommandClear(Jarvis jarvis) {
+    public CommandClear(ModuleAdmin module) {
         super("clear", "clear [amount]", "Deletes the specified number of messages from the current channel. Default is 10", null);
-        this.jarvis = jarvis;
+        this.module = module;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package sr.will.jarvis.module.smashbot.command;
+package sr.will.jarvis.module.flair.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -6,15 +6,15 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.Command;
-import sr.will.jarvis.module.smashbot.ModuleSmashBot;
+import sr.will.jarvis.module.flair.ModuleFlair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CommandFlairImport extends Command {
-    private ModuleSmashBot module;
+    private ModuleFlair module;
 
-    public CommandFlairImport(ModuleSmashBot module) {
+    public CommandFlairImport(ModuleFlair module) {
         super("flairimport", "flairimport [ignored roles]", "Import flairs", module);
         this.module = module;
     }

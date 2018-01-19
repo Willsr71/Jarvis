@@ -70,6 +70,19 @@ Levels plugin and commands
 |levelssilencechannel \[channel mention\]|Manage Channels|Silences or unsilences channels. Silencing prevents level up messages from appearing in specified channels|
 |importmee6|Administrator|Imports level data from Mee6|
 
+Flair Module
+------------
+Offers per-user flairs (roles) with the ability to color and name them freely
+
+|Command|Permission|Description|
+|---|---|---|
+|flair|None|Displays a list of flair commands and their usage|
+|flairgetcolor \[user mention\]|None|Displays the specified user's flair color|
+|flairsetcolor \<color name&#124;hex code\>|None|Sets the color of the user's flair|
+|flairsetname \<name\>|None|Sets the name of the user's flair|
+|flairlist|None|Lists all flairs and the users associated with them|
+|flairimport \[role exclude list\]|Administrator|Adds the user's roles to the flair system|
+
 OhNo Module
 -----------
 Responds with an "oh no" image whenever a user says "oh no"

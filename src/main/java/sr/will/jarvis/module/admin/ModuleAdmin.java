@@ -19,7 +19,7 @@ public class ModuleAdmin extends Module {
     public ModuleAdmin(Jarvis jarvis) {
         super(
                 "Admin",
-                "Administrative commands such as ban and mute",
+                "Administrative commands such as ban, mute, and clear",
                 new ArrayList<>(Arrays.asList(
                         Permission.MANAGE_ROLES,
                         Permission.MANAGE_CHANNEL,
@@ -42,6 +42,7 @@ public class ModuleAdmin extends Module {
         jarvis.commandManager.registerCommand("ban", new CommandBan(this));
         jarvis.commandManager.registerCommand("banlist", new CommandBanList(this));
         jarvis.commandManager.registerCommand("bantime", new CommandBanTime(this));
+        jarvis.commandManager.registerCommand("clear", new CommandClear(this));
         jarvis.commandManager.registerCommand("mute", new CommandMute(this));
         jarvis.commandManager.registerCommand("mutelist", new CommandMuteList(this));
         jarvis.commandManager.registerCommand("mutetime", new CommandMuteTime(this));
