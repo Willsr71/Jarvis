@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.noxal.common.config.JSONConfigManager;
 import net.noxal.common.sql.Database;
 import sr.will.jarvis.config.Config;
-import sr.will.jarvis.event.EventListener;
+import sr.will.jarvis.event.EventHandlerJarvis;
 import sr.will.jarvis.manager.CommandManager;
 import sr.will.jarvis.manager.EventManager;
 import sr.will.jarvis.manager.ModuleManager;
@@ -41,6 +41,7 @@ public class Jarvis {
         configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
 
         eventManager = new EventManager(this);
+        eventManager.registerHandler(new EventHandlerJarvis(this));
         commandManager = new CommandManager(this);
         commandManager.registerCommands();
         moduleManager = new ModuleManager(this);
@@ -55,7 +56,6 @@ public class Jarvis {
                     .setToken(config.discord.token)
                     .setAutoReconnect(true)
                     .addEventListener(eventManager)
-                    .addEventListener(new EventListener(this))
                     .buildAsync();
         } catch (LoginException | RateLimitedException e) {
             e.printStackTrace();

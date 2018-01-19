@@ -1,5 +1,6 @@
 package sr.will.jarvis.event;
 
+import net.dv8tion.jda.core.events.Event;
 import sr.will.jarvis.module.Module;
 
 public abstract class EventHandler {
@@ -11,7 +12,7 @@ public abstract class EventHandler {
         this.priority = priority;
     }
 
-    public abstract void onEvent(net.dv8tion.jda.core.events.Event event);
+    public abstract void onEvent(Event event);
 
     public Module getModule() {
         return module;

@@ -6,6 +6,7 @@ import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.levels.command.*;
+import sr.will.jarvis.module.levels.event.EventHandlerLevels;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,6 +31,8 @@ public class ModuleLevels extends Module {
                 false
         );
         this.jarvis = jarvis;
+
+        jarvis.eventManager.registerHandler(new EventHandlerLevels(this));
 
         jarvis.commandManager.registerCommand("importmee6", new CommandImportMee6(this));
         jarvis.commandManager.registerCommand("levels", new CommandLevels(this));

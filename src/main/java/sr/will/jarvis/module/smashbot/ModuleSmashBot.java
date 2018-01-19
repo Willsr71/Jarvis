@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.managers.GuildController;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.smashbot.command.*;
+import sr.will.jarvis.module.smashbot.event.EventHandlerSmashBot;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -30,6 +31,8 @@ public class ModuleSmashBot extends Module {
                 )),
                 false);
         this.jarvis = jarvis;
+
+        jarvis.eventManager.registerHandler(new EventHandlerSmashBot(this));
 
         jarvis.commandManager.registerCommand("flair", new CommandFlair(this));
         jarvis.commandManager.registerCommand("flairgetcolor", new CommandFlairGetColor(this));
