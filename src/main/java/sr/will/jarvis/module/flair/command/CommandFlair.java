@@ -5,6 +5,8 @@ import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.flair.ModuleFlair;
 
+import java.awt.*;
+
 public class CommandFlair extends Command {
     private ModuleFlair module;
 
@@ -18,7 +20,7 @@ public class CommandFlair extends Command {
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
 
-        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Flair Help", null)
+        message.getChannel().sendMessage(new EmbedBuilder().setTitle("Flair Help", null).setColor(Color.GREEN)
                 .addField("flairsetname <name>", "Rename your flair to this name", false)
                 .addField("flairsetcolor <color|hex code>", "Change your flair color", false)
                 .addField("flairgetcolor [user mention]", "Get the color of a user's flair", false)

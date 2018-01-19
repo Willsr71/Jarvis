@@ -37,7 +37,7 @@ public class EventHandlerJarvis extends EventHandler {
             return;
         }
 
-        if (event.getMessage().getContentDisplay().startsWith("!")) {
+        if (event.getMessage().getContentRaw().startsWith("!")) {
             jarvis.commandManager.executeCommand(event.getMessage());
         }
     }

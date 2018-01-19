@@ -1,15 +1,16 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.customcommands.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.customcommands.ModuleCustomCommands;
 
 public class CommandCommandAdd extends Command {
-    private Jarvis jarvis;
+    private ModuleCustomCommands module;
 
-    public CommandCommandAdd(Jarvis jarvis) {
+    public CommandCommandAdd(ModuleCustomCommands module) {
         super("commandadd", "commandadd <name> <content>", "Adds a custom command that responds with the response field. Guild specific", null);
-        this.jarvis = jarvis;
+        this.module = module;
     }
 
     @Override
@@ -26,7 +27,7 @@ public class CommandCommandAdd extends Command {
             return;
         }
 
-        if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getIdLong(), args[0]) != null) {
+        if (module.getCustomCommandResponse(message.getGuild().getIdLong(), args[0]) != null) {
             sendFailureMessage(message, "Command already exists");
             return;
         }
@@ -38,6 +39,6 @@ public class CommandCommandAdd extends Command {
         response = response.trim();
 
         sendSuccessEmote(message);
-        jarvis.commandManager.addCustomCommand(message.getGuild().getIdLong(), args[0], response);
+        module.addCustomCommand(message.getGuild().getIdLong(), args[0], response);
     }
 }

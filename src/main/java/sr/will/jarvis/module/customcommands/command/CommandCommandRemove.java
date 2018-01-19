@@ -1,15 +1,16 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.customcommands.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.customcommands.ModuleCustomCommands;
 
 public class CommandCommandRemove extends Command {
-    private Jarvis jarvis;
+    private ModuleCustomCommands module;
 
-    public CommandCommandRemove(Jarvis jarvis) {
+    public CommandCommandRemove(ModuleCustomCommands module) {
         super("commandremove", "commandremove <name>", "Removes a custom command. Guild specific", null);
-        this.jarvis = jarvis;
+        this.module = module;
     }
 
     @Override
@@ -21,12 +22,12 @@ public class CommandCommandRemove extends Command {
             return;
         }
 
-        if (jarvis.commandManager.getCustomCommandResponse(message.getGuild().getIdLong(), args[0]) == null) {
+        if (module.getCustomCommandResponse(message.getGuild().getIdLong(), args[0]) == null) {
             sendFailureMessage(message, "Command does not exist");
             return;
         }
 
         sendSuccessEmote(message);
-        jarvis.commandManager.removeCustomCommand(message.getGuild().getIdLong(), args[0]);
+        module.removeCustomCommand(message.getGuild().getIdLong(), args[0]);
     }
 }

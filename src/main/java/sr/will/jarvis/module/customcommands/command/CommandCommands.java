@@ -1,30 +1,31 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.customcommands.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.customcommands.ModuleCustomCommands;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class CommandCommands extends Command {
-    private Jarvis jarvis;
+    private ModuleCustomCommands module;
 
-    public CommandCommands(Jarvis jarvis) {
+    public CommandCommands(ModuleCustomCommands module) {
         super("commands", "commands", "Displays custom commands", null);
-        this.jarvis = jarvis;
+        this.module = module;
     }
 
     @Override
     public void execute(Message message, String... args) {
         EmbedBuilder embed = new EmbedBuilder().setTitle("Custom Commands", null).setColor(Color.GREEN);
 
-        embed.setDescription(getCustomCommandGroupString(message.getGuild().getIdLong(), jarvis.commandManager.getCustomCommandsByGuild(message.getGuild().getIdLong())));
+        embed.setDescription(getCustomCommandGroupString(message.getGuild().getIdLong(), module.getCustomCommandsByGuild(message.getGuild().getIdLong())));
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
 
-    public static String getCustomCommandGroupString(long guildId, ArrayList<String> commands) {
+    public String getCustomCommandGroupString(long guildId, ArrayList<String> commands) {
         int maxLen = 0;
 
         for (String command : commands) {
@@ -33,7 +34,7 @@ public class CommandCommands extends Command {
 
         StringBuilder stringBuilder = new StringBuilder();
         for (String commandName : commands) {
-            String commandResult = Jarvis.getInstance().commandManager.getCustomCommandResponse(guildId, commandName);
+            String commandResult = module.getCustomCommandResponse(guildId, commandName);
             stringBuilder.append('`').append(commandName).append(getFiller(maxLen - commandName.length())).append('`');
             //stringBuilder.append(' ').append(commandResult);
             stringBuilder.append('\n');

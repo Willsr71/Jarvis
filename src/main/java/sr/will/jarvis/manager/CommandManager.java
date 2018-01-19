@@ -10,8 +10,6 @@ import sr.will.jarvis.exception.UserPermissionException;
 import sr.will.jarvis.module.Module;
 
 import java.awt.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,9 +49,6 @@ public class CommandManager {
     }
 
     public void registerCommands() {
-        registerCommand("commandadd", new CommandCommandAdd(jarvis));
-        registerCommand("commandremove", new CommandCommandRemove(jarvis));
-        registerCommand("commands", new CommandCommands(jarvis));
         registerCommand("define", new CommandDefine(jarvis));
         registerCommand("google", new CommandGoogle(jarvis));
         registerCommand("help", new CommandHelp(jarvis));
@@ -67,44 +62,8 @@ public class CommandManager {
         registerCommand("stats", new CommandStats(jarvis));
     }
 
-    public void addCustomCommand(long guildId, String command, String response) {
-        jarvis.database.execute("INSERT INTO custom_commands (guild, command, response) VALUES (?, ?, ?);", guildId, command, response);
-    }
-
-    public void removeCustomCommand(long guildId, String command) {
-        jarvis.database.execute("DELETE FROM custom_commands WHERE (guild = ? AND command = ?);", guildId, command);
-    }
-
-    public String getCustomCommandResponse(long guildId, String command) {
-        try {
-            ResultSet result = jarvis.database.executeQuery("SELECT response FROM custom_commands WHERE (guild = ? AND command = ?) LIMIT 1;", guildId, command);
-            if (result.first()) {
-                return result.getString("response");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public ArrayList<String> getCustomCommandsByGuild(long guildId) {
-        ArrayList<String> commandList = new ArrayList<>();
-
-        try {
-            ResultSet result = jarvis.database.executeQuery("SELECT command FROM custom_commands WHERE (guild = ?);", guildId);
-            while (result.next()) {
-                commandList.add(result.getString("command"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return commandList;
-    }
-
     public void executeCommand(Message message) {
-        String string = message.getRawContent().substring(1);
+        String string = message.getContentRaw().substring(1);
 
         if (string.equals("")) {
             return;
@@ -118,7 +77,7 @@ public class CommandManager {
         executeCommand(command, message, args);
     }
 
-    public void executeCommand(String command, Message message, String... args) {
+    private void executeCommand(String command, Message message, String... args) {
         if (commands.containsKey(command)) {
             try {
                 commands.get(command).execute(message, args);
@@ -130,13 +89,6 @@ public class CommandManager {
             }
 
             System.out.println(String.format("%s | %s | %s | %s", message.getGuild().getId(), message.getAuthor().getId(), command, Arrays.toString(args)));
-            return;
-        }
-
-        String customCommandResponse = getCustomCommandResponse(message.getGuild().getIdLong(), command);
-
-        if (customCommandResponse != null) {
-            message.getChannel().sendMessage(customCommandResponse).queue();
         }
     }
 }
