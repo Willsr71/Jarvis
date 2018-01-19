@@ -6,8 +6,13 @@ import sr.will.jarvis.event.EventHandler;
 import sr.will.jarvis.event.EventPriority;
 import sr.will.jarvis.module.ohno.ModuleOhNo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class EventHandlerOhNo extends EventHandler {
     private ModuleOhNo module;
+
+    private ArrayList<String> respondStrings = new ArrayList<>(Arrays.asList("oh no", "oh dear"));
 
     public EventHandlerOhNo(ModuleOhNo module) {
         super(module, EventPriority.MEDIUM);
@@ -22,7 +27,7 @@ public class EventHandlerOhNo extends EventHandler {
     }
 
     private void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getMessage().getContentDisplay().toLowerCase().equals("oh no")) {
+        if (!respondStrings.contains(event.getMessage().getContentDisplay().toLowerCase())) {
             return;
         }
 

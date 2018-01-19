@@ -81,6 +81,8 @@ public class Jarvis {
         reminderManager.setup();
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).finishStart()));
+
+        System.out.println("Finished starting!");
     }
 
     public void stop() {
