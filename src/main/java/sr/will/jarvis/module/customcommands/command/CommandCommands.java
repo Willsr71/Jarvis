@@ -18,6 +18,7 @@ public class CommandCommands extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
         EmbedBuilder embed = new EmbedBuilder().setTitle("Custom Commands", null).setColor(Color.GREEN);
 
         embed.setDescription(getCustomCommandGroupString(message.getGuild().getIdLong(), module.getCustomCommandsByGuild(message.getGuild().getIdLong())));

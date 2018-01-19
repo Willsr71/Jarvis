@@ -19,6 +19,7 @@ public class CommandClear extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
         checkBotPermission(message, Permission.MESSAGE_MANAGE);
         checkUserPermission(message, Permission.MESSAGE_MANAGE);
 

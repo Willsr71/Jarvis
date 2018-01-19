@@ -15,6 +15,7 @@ public class CommandCommandAdd extends Command {
 
     @Override
     public void execute(Message message, String... args) {
+        checkModuleEnabled(message, module);
         checkUserPermission(message, Permission.MESSAGE_MANAGE);
 
         if (args.length < 2) {
