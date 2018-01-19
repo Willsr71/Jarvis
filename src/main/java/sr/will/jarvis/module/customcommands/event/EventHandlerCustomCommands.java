@@ -10,7 +10,7 @@ public class EventHandlerCustomCommands extends EventHandler {
     private ModuleCustomCommands module;
 
     public EventHandlerCustomCommands(ModuleCustomCommands module) {
-        super(module, EventPriority.LOW);
+        super(module, EventPriority.MEDIUM);
         this.module = module;
     }
 

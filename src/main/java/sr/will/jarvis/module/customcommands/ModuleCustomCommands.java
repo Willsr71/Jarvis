@@ -3,7 +3,6 @@ package sr.will.jarvis.module.customcommands;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.command.Command;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.customcommands.command.CommandCommandAdd;
 import sr.will.jarvis.module.customcommands.command.CommandCommandRemove;
@@ -55,7 +54,9 @@ public class ModuleCustomCommands extends Module {
     }
 
     public void processCustomCommand(Message message) {
-        Command.checkModuleEnabled(message, this);
+        if (!isEnabled(message.getGuild().getIdLong())) {
+            return;
+        }
 
         String string = message.getContentRaw().substring(1);
         if (string.equals("")) {

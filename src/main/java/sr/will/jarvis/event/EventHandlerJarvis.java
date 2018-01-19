@@ -11,7 +11,7 @@ public class EventHandlerJarvis extends EventHandler {
     private Jarvis jarvis;
 
     public EventHandlerJarvis(Jarvis jarvis) {
-        super(null, EventPriority.LOWEST);
+        super(null, EventPriority.HIGH);
         this.jarvis = jarvis;
     }
 
