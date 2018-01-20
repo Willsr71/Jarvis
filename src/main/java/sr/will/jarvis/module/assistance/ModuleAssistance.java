@@ -17,10 +17,9 @@ import java.util.Arrays;
 import static java.lang.Thread.sleep;
 
 public class ModuleAssistance extends Module {
-    private Jarvis jarvis;
     private ArrayList<Thread> reminderThreads = new ArrayList<>();
 
-    public ModuleAssistance(Jarvis jarvis) {
+    public ModuleAssistance() {
         super(
                 "assistance",
                 "Basic assitance commands such as remindme, define, and google",
@@ -31,17 +30,24 @@ public class ModuleAssistance extends Module {
                 )),
                 true
         );
-        this.jarvis = jarvis;
 
-        jarvis.commandManager.registerCommand("define", new CommandDefine(this));
-        jarvis.commandManager.registerCommand("google", new CommandGoogle(this));
-        jarvis.commandManager.registerCommand("remindme", new CommandRemindme(this));
+        registerCommand("define", new CommandDefine(this));
+        registerCommand("google", new CommandGoogle(this));
+        registerCommand("remindme", new CommandRemindme(this));
     }
 
     @Override
     public void finishStart() {
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS scheduled_messages(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "user bigint(20) NOT NULL," +
+                "channel bigint(20) NOT NULL," +
+                "time bigint(20) NOT NULL," +
+                "message text NOT NULL," +
+                "PRIMARY KEY (id));");
+
         try {
-            ResultSet result = jarvis.database.executeQuery("SELECT user, channel, time, message FROM scheduled_messages;");
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, channel, time, message FROM scheduled_messages;");
             while (result.next()) {
                 startReminderThread(result.getLong("user"), result.getLong("channel"), result.getLong("time"), result.getString("message"));
             }
@@ -64,13 +70,13 @@ public class ModuleAssistance extends Module {
     }
 
     public void addReminder(long userId, long channelId, long time, String message) {
-        jarvis.database.execute("INSERT INTO scheduled_messages (user, channel, time, message) VALUES (?, ?, ?, ?);", userId, channelId, time, message);
+        Jarvis.getDatabase().execute("INSERT INTO scheduled_messages (user, channel, time, message) VALUES (?, ?, ?, ?);", userId, channelId, time, message);
 
         startReminderThread(userId, channelId, time, message);
     }
 
     public void removeReminder(long userId, long channelId) {
-        jarvis.database.execute("DELETE FROM scheduled_messages WHERE (user = ? AND channel = ?);", userId, channelId);
+        Jarvis.getDatabase().execute("DELETE FROM scheduled_messages WHERE (user = ? AND channel = ?);", userId, channelId);
     }
 
     public void remind(long userId, long channelId, String message) {

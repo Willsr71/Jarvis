@@ -20,9 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ModuleOhNo extends Module {
-    private Jarvis jarvis;
 
-    public ModuleOhNo(Jarvis jarvis) {
+    public ModuleOhNo() {
         super(
                 "OhNo",
                 "Responds with an \"oh no\" image whenever a user says \"oh no\"",
@@ -32,9 +31,8 @@ public class ModuleOhNo extends Module {
                 )),
                 false
         );
-        this.jarvis = jarvis;
 
-        jarvis.eventManager.registerHandler(new EventHandlerOhNo(this));
+        registerEventHandler(new EventHandlerOhNo(this));
     }
 
     @Override
@@ -91,7 +89,7 @@ public class ModuleOhNo extends Module {
 
     public void memeMessageHistory(ArrayList<Message> messages) {
         try {
-            BufferedImage image = ImageIO.read(jarvis.getClass().getClassLoader().getResourceAsStream("ohno.png"));
+            BufferedImage image = ImageIO.read(Jarvis.getInstance().getClass().getClassLoader().getResourceAsStream("ohno.png"));
 
             addTextToImage(messages.get(0).getContentDisplay(), image, 60, 90);
             addImageToImage(messages.get(0).getAuthor().getAvatarUrl(), image, 185, 275);

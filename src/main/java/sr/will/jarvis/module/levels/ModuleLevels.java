@@ -15,12 +15,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class ModuleLevels extends Module {
-    private Jarvis jarvis;
-
     private HashMap<Integer, Long> levels = new HashMap<>();
     private ArrayList<RecentMessage> recentMessages = new ArrayList<>();
 
-    public ModuleLevels(Jarvis jarvis) {
+    public ModuleLevels() {
         super(
                 "Levels",
                 "Levels plugin and commands",
@@ -30,24 +28,47 @@ public class ModuleLevels extends Module {
                 )),
                 false
         );
-        this.jarvis = jarvis;
 
-        jarvis.eventManager.registerHandler(new EventHandlerLevels(this));
+        registerEventHandler(new EventHandlerLevels(this));
 
-        jarvis.commandManager.registerCommand("importmee6", new CommandImportMee6(this));
-        jarvis.commandManager.registerCommand("levels", new CommandLevels(this));
-        jarvis.commandManager.registerCommand("levelsignorechannel", new CommandLevelsIgnoreChannel(this));
-        jarvis.commandManager.registerCommand("levelsoptin", new CommandLevelsOptIn(this));
-        jarvis.commandManager.registerCommand("levelsoptout", new CommandLevelsOptOut(this));
-        jarvis.commandManager.registerCommand("levelssilencechannel", new CommandLevelsSilenceChannel(this));
-        jarvis.commandManager.registerCommand("rank", new CommandRank(this));
+        registerCommand("importmee6", new CommandImportMee6(this));
+        registerCommand("levels", new CommandLevels(this));
+        registerCommand("levelsignorechannel", new CommandLevelsIgnoreChannel(this));
+        registerCommand("levelsoptin", new CommandLevelsOptIn(this));
+        registerCommand("levelsoptout", new CommandLevelsOptOut(this));
+        registerCommand("levelssilencechannel", new CommandLevelsSilenceChannel(this));
+        registerCommand("rank", new CommandRank(this));
 
         generateLevels(100);
     }
 
     @Override
     public void finishStart() {
-
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS levels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "xp bigint(20) NOT NULL DEFAULT 0," +
+                "PRIMARY KEY (id));");
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS levels_ignored_channels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "channel bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS levels_silenced_channels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "channel bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS message_data(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "channel bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "timestamp bigint(20) NOT NULL," +
+                "message_length int NOT NULL," +
+                "message_length_average int NOT NULL," +
+                "time_from_last bigint(20) NOT NULL," +
+                "xp_gained int NOT NULL," +
+                "PRIMARY KEY (id));");
     }
 
     @Override

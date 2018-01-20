@@ -18,12 +18,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class ModuleChatBot extends Module {
-    private Jarvis jarvis;
-
     private ChatterBotFactory botFactory = new ChatterBotFactory();
     private HashMap<Long, ChatterBotSession> chatterBots = new HashMap<>();
 
-    public ModuleChatBot(Jarvis jarvis) {
+    public ModuleChatBot() {
         super(
                 "ChatBot",
                 "An interactive chatbot and commands",
@@ -33,17 +31,19 @@ public class ModuleChatBot extends Module {
                 )),
                 false
         );
-        this.jarvis = jarvis;
 
-        jarvis.eventManager.registerHandler(new EventHandlerChatBot(this));
+        registerEventHandler(new EventHandlerChatBot(this));
 
-        jarvis.commandManager.registerCommand("botadd", new CommandBotAdd(this));
-        jarvis.commandManager.registerCommand("botremove", new CommandBotRemove(this));
+        registerCommand("botadd", new CommandBotAdd(this));
+        registerCommand("botremove", new CommandBotRemove(this));
     }
 
     @Override
     public void finishStart() {
-
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS chatterbot_channels(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "channel bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
     }
 
     @Override

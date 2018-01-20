@@ -14,9 +14,8 @@ import java.util.Arrays;
 public class ModuleAdmin extends Module {
     public BanManager banManager;
     public MuteManager muteManager;
-    private Jarvis jarvis;
 
-    public ModuleAdmin(Jarvis jarvis) {
+    public ModuleAdmin() {
         super(
                 "Admin",
                 "Administrative commands such as ban, mute, and clear",
@@ -32,26 +31,40 @@ public class ModuleAdmin extends Module {
                 )),
                 true
         );
-        this.jarvis = jarvis;
 
         banManager = new BanManager(this);
         muteManager = new MuteManager(this);
 
-        jarvis.eventManager.registerHandler(new EventHandlerAdmin(this));
+        registerEventHandler(new EventHandlerAdmin(this));
 
-        jarvis.commandManager.registerCommand("ban", new CommandBan(this));
-        jarvis.commandManager.registerCommand("banlist", new CommandBanList(this));
-        jarvis.commandManager.registerCommand("bantime", new CommandBanTime(this));
-        jarvis.commandManager.registerCommand("clear", new CommandClear(this));
-        jarvis.commandManager.registerCommand("mute", new CommandMute(this));
-        jarvis.commandManager.registerCommand("mutelist", new CommandMuteList(this));
-        jarvis.commandManager.registerCommand("mutetime", new CommandMuteTime(this));
-        jarvis.commandManager.registerCommand("unban", new CommandUnban(this));
-        jarvis.commandManager.registerCommand("unmute", new CommandUnmute(this));
+        registerCommand("ban", new CommandBan(this));
+        registerCommand("banlist", new CommandBanList(this));
+        registerCommand("bantime", new CommandBanTime(this));
+        registerCommand("clear", new CommandClear(this));
+        registerCommand("mute", new CommandMute(this));
+        registerCommand("mutelist", new CommandMuteList(this));
+        registerCommand("mutetime", new CommandMuteTime(this));
+        registerCommand("unban", new CommandUnban(this));
+        registerCommand("unmute", new CommandUnmute(this));
     }
 
     @Override
     public void finishStart() {
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS mutes(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "invoker bigint(20)," +
+                "duration bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS bans(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "invoker bigint(20)," +
+                "duration bigint(20) NOT NULL," +
+                "PRIMARY KEY (id));");
+
         muteManager.setupAll();
         banManager.setup();
     }

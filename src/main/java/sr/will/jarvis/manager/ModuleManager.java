@@ -39,14 +39,14 @@ public class ModuleManager {
     }
 
     public void registerModules() {
-        registerModule("admin", new ModuleAdmin(jarvis));
-        registerModule("assistance", new ModuleAssistance(jarvis));
-        registerModule("chatbot", new ModuleChatBot(jarvis));
-        registerModule("customcommands", new ModuleCustomCommands(jarvis));
-        registerModule("flair", new ModuleFlair(jarvis));
-        registerModule("levels", new ModuleLevels(jarvis));
-        registerModule("ohno", new ModuleOhNo(jarvis));
-        registerModule("overwatch", new ModuleOverwatch(jarvis));
+        registerModule("admin", new ModuleAdmin());
+        registerModule("assistance", new ModuleAssistance());
+        registerModule("chatbot", new ModuleChatBot());
+        registerModule("customcommands", new ModuleCustomCommands());
+        registerModule("flair", new ModuleFlair());
+        registerModule("levels", new ModuleLevels());
+        registerModule("ohno", new ModuleOhNo());
+        registerModule("overwatch", new ModuleOverwatch());
     }
 
     public void enableModule(long guildId, String module) {

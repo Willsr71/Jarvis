@@ -2,6 +2,8 @@ package sr.will.jarvis.module;
 
 import net.dv8tion.jda.core.Permission;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.event.EventHandler;
 
 import java.util.ArrayList;
 
@@ -42,5 +44,13 @@ public abstract class Module {
 
     public boolean isEnabled(long guildId) {
         return Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, getName().toLowerCase());
+    }
+
+    protected void registerEventHandler(EventHandler handler) {
+        Jarvis.getInstance().eventManager.registerHandler(handler);
+    }
+
+    protected void registerCommand(String commandName, Command command) {
+        Jarvis.getInstance().commandManager.registerCommand(commandName, command);
     }
 }

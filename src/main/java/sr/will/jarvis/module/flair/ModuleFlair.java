@@ -18,9 +18,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class ModuleFlair extends Module {
-    private Jarvis jarvis;
 
-    public ModuleFlair(Jarvis jarvis) {
+    public ModuleFlair() {
         super("Flair",
                 "Offers per-user flairs (roles) with the ability to color and name them freely",
                 new ArrayList<>(Arrays.asList(
@@ -28,21 +27,27 @@ public class ModuleFlair extends Module {
                         Permission.MESSAGE_WRITE
                 )),
                 false);
-        this.jarvis = jarvis;
 
-        jarvis.eventManager.registerHandler(new EventHandlerSmashBot(this));
+        registerEventHandler(new EventHandlerSmashBot(this));
 
-        jarvis.commandManager.registerCommand("flair", new CommandFlair(this));
-        jarvis.commandManager.registerCommand("flairgetcolor", new CommandFlairGetColor(this));
-        jarvis.commandManager.registerCommand("flairimport", new CommandFlairImport(this));
-        jarvis.commandManager.registerCommand("flairlist", new CommandFlairList(this));
-        jarvis.commandManager.registerCommand("flairsetcolor", new CommandFlairSetColor(this));
-        jarvis.commandManager.registerCommand("flairsetname", new CommandFlairSetName(this));
+        registerCommand("flair", new CommandFlair(this));
+        registerCommand("flairgetcolor", new CommandFlairGetColor(this));
+        registerCommand("flairimport", new CommandFlairImport(this));
+        registerCommand("flairlist", new CommandFlairList(this));
+        registerCommand("flairsetcolor", new CommandFlairSetColor(this));
+        registerCommand("flairsetname", new CommandFlairSetName(this));
     }
 
     @Override
     public void finishStart() {
-
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS flairs(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "user bigint(20) NOT NULL," +
+                "role bigint(20)," +
+                "name varchar(255) NOT NULL," +
+                "color char(7)," +
+                "PRIMARY KEY (id));");
     }
 
     @Override

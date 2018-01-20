@@ -22,11 +22,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ModuleOverwatch extends Module {
-    public static String BATTLETAG_REGEX = "(?i).{3,12}[\\#\\-][0-9]{4,5}";
-    public static ArrayList<String> tiers = new ArrayList<>(Arrays.asList("bronze", "silver", "gold", "platinum", "diamond", "master", "grandmaster"));
-    private Jarvis jarvis;
+    private static String BATTLETAG_REGEX = "(?i).{3,12}[\\#\\-][0-9]{4,5}";
+    private static ArrayList<String> tiers = new ArrayList<>(Arrays.asList("bronze", "silver", "gold", "platinum", "diamond", "master", "grandmaster"));
 
-    public ModuleOverwatch(Jarvis jarvis) {
+    public ModuleOverwatch() {
         super(
                 "Overwatch",
                 "Overwatch related commands",
@@ -36,17 +35,20 @@ public class ModuleOverwatch extends Module {
                 )),
                 false
         );
-        this.jarvis = jarvis;
 
-        jarvis.commandManager.registerCommand("battletagadd", new CommandBattleTagAdd(this));
-        jarvis.commandManager.registerCommand("battletagremove", new CommandBattleTagRemove(this));
-        jarvis.commandManager.registerCommand("owheroes", new CommandOWHeroes(this));
-        jarvis.commandManager.registerCommand("owstats", new CommandOWStats(this));
+        registerCommand("battletagadd", new CommandBattleTagAdd(this));
+        registerCommand("battletagremove", new CommandBattleTagRemove(this));
+        registerCommand("owheroes", new CommandOWHeroes(this));
+        registerCommand("owstats", new CommandOWStats(this));
     }
 
     @Override
     public void finishStart() {
-
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS overwatch_accounts(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "user bigint(20) NOT NULL," +
+                "battletag char(20) NOT NULL," +
+                "PRIMARY KEY (id));");
     }
 
     @Override
@@ -73,16 +75,16 @@ public class ModuleOverwatch extends Module {
     }
 
     public void addBattletag(long userId, String battletag) {
-        jarvis.database.execute("INSERT INTO overwatch_accounts (user, battletag) VALUES (?, ?);", userId, battletag);
+        Jarvis.getDatabase().execute("INSERT INTO overwatch_accounts (user, battletag) VALUES (?, ?);", userId, battletag);
     }
 
     public void removeBattletag(long userid) {
-        jarvis.database.execute("DELETE FROM overwatch_accounts WHERE (user = ?);", userid);
+        Jarvis.getDatabase().execute("DELETE FROM overwatch_accounts WHERE (user = ?);", userid);
     }
 
     public String getBattletag(long userId) {
         try {
-            ResultSet result = jarvis.database.executeQuery("SELECT battletag FROM overwatch_accounts WHERE (user = ?);", userId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT battletag FROM overwatch_accounts WHERE (user = ?);", userId);
             if (result.first()) {
                 return result.getString("battletag");
             }
