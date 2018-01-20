@@ -18,7 +18,7 @@ public class ModuleCustomCommands extends Module {
 
     public ModuleCustomCommands() {
         super(
-                "customcommands",
+                "CustomCommands",
                 "Custom commands and responses",
                 new ArrayList<>(Arrays.asList(
                         Permission.MESSAGE_READ,

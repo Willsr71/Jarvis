@@ -3,7 +3,6 @@ package sr.will.jarvis;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.noxal.common.config.JSONConfigManager;
 import net.noxal.common.sql.Database;
 import sr.will.jarvis.config.Config;
@@ -55,7 +54,7 @@ public class Jarvis {
                     .setAutoReconnect(true)
                     .addEventListener(eventManager)
                     .buildAsync();
-        } catch (LoginException | RateLimitedException e) {
+        } catch (LoginException e) {
             e.printStackTrace();
         }
     }

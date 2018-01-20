@@ -20,7 +20,8 @@ import java.util.HashMap;
 public class ModuleFlair extends Module {
 
     public ModuleFlair() {
-        super("Flair",
+        super(
+                "Flair",
                 "Offers per-user flairs (roles) with the ability to color and name them freely",
                 new ArrayList<>(Arrays.asList(
                         Permission.MESSAGE_READ,

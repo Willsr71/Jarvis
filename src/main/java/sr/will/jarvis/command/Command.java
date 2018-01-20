@@ -101,11 +101,11 @@ public abstract class Command {
     public static int getMaxApplicableReactionCount(List<MessageReaction> reactions, List<String> applicableReactions) {
         int maxReactions = 0;
         for (MessageReaction reaction : reactions) {
-            if (reaction.getEmote().isEmote()) {
+            if (reaction.getReactionEmote().isEmote()) {
                 continue;
             }
 
-            if (!applicableReactions.contains(reaction.getEmote().getName())) {
+            if (!applicableReactions.contains(reaction.getReactionEmote().getName())) {
                 continue;
             }
 

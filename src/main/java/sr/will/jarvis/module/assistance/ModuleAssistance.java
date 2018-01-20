@@ -21,7 +21,7 @@ public class ModuleAssistance extends Module {
 
     public ModuleAssistance() {
         super(
-                "assistance",
+                "Assistance",
                 "Basic assitance commands such as remindme, define, and google",
                 new ArrayList<>(Arrays.asList(
                         Permission.MESSAGE_READ,
