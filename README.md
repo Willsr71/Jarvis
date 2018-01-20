@@ -111,6 +111,12 @@ Overwatch related commands
 |battletagadd \<battletag\> \[user mention&#124;user id\]|None|Adds the battletag to the specified discord account to allow for mentioning|
 |battletagremove|None|Removes the battletag from the sender's discord account|
 
+Console Commands
+================
+|Command|Usage|
+|---|---|
+|stop|Stops the bot|
+
 Usage
 =====
 1. Download the jar from [https://ci.noxal.net/job/Jarvis/](https://ci.noxal.net/job/Jarvis/) or compile it

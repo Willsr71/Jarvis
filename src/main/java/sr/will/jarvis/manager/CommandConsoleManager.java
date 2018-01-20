@@ -1,0 +1,52 @@
+package sr.will.jarvis.manager;
+
+import net.noxal.common.util.Logger;
+import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.commandconsole.CommandConsole;
+import sr.will.jarvis.commandconsole.CommandConsoleStop;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+public class CommandConsoleManager {
+    private Jarvis jarvis;
+
+    private HashMap<String, CommandConsole> commands = new HashMap<>();
+
+    public CommandConsoleManager(Jarvis jarvis) {
+        this.jarvis = jarvis;
+    }
+
+    public void registerCommand(String name, CommandConsole command) {
+        commands.put(name, command);
+    }
+
+    public void registerCommands() {
+        registerCommand("stop", new CommandConsoleStop(jarvis));
+    }
+
+    public void executeCommand(String string) {
+        if (string.equals("")) {
+            Logger.nothing();
+            return;
+        }
+
+        string = string.toLowerCase();
+        List<String> parts = Arrays.asList(string.split(" "));
+
+        String command = parts.get(0);
+        String[] args = parts.subList(1, parts.size()).toArray(new String[parts.size() - 1]);
+
+        executeCommand(command, args);
+    }
+
+    public void executeCommand(String command, String... args) {
+        if (commands.containsKey(command)) {
+            commands.get(command).execute(args);
+            return;
+        }
+
+        Logger.info("Command does not exist.");
+    }
+}
