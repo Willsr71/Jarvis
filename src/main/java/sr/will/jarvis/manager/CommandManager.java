@@ -49,14 +49,11 @@ public class CommandManager {
     }
 
     public void registerCommands() {
-        registerCommand("define", new CommandDefine(jarvis));
-        registerCommand("google", new CommandGoogle(jarvis));
         registerCommand("help", new CommandHelp(jarvis));
         registerCommand("invite", new CommandInvite(jarvis));
         registerCommand("moduledisable", new CommandModuleDisable(jarvis));
         registerCommand("moduleenable", new CommandModuleEnable(jarvis));
         registerCommand("modules", new CommandModules(jarvis));
-        registerCommand("remindme", new CommandRemindme(jarvis));
         registerCommand("restart", new CommandRestart(jarvis));
         registerCommand("source", new CommandSource());
         registerCommand("stats", new CommandStats(jarvis));

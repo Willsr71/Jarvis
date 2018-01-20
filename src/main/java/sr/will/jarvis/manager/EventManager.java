@@ -52,20 +52,11 @@ public class EventManager implements EventListener {
     }
 
     private void processEvent(Event event) {
-        System.out.println("======================");
         for (EventPriority priority : EventPriority.values()) {
-            System.out.println("PRIORITY: " + priority.name());
             for (EventHandler eventHandler : getEventHandlersByPriority(priority)) {
-                String name = "Jarvis";
-                if (eventHandler.getModule() != null) {
-                    name = eventHandler.getModule().getName();
-                }
-                System.out.println("HANDLER MODULE: " + name);
-
                 eventHandler.onEvent(event);
             }
         }
-        System.out.println("======================");
     }
 
     @Override

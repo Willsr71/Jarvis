@@ -1,21 +1,22 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.assistance.command;
 
 import com.google.gson.Gson;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.assistance.ModuleAssistance;
 import sr.will.jarvis.rest.urbandictionary.Definition;
 
 import java.awt.*;
 
 public class CommandDefine extends Command {
-    private Jarvis jarvis;
+    private ModuleAssistance module;
 
-    public CommandDefine(Jarvis jarvis) {
+    public CommandDefine(ModuleAssistance module) {
         super("define", "define <word>", "Displays the first Urban Dictionary result of a word", null);
-        this.jarvis = jarvis;
+        this.module = module;
     }
 
     @Override

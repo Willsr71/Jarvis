@@ -1,15 +1,16 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.assistance.command;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.noxal.common.util.DateUtils;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.assistance.ModuleAssistance;
 
 public class CommandRemindme extends Command {
-    private Jarvis jarvis;
+    private ModuleAssistance module;
 
-    public CommandRemindme(Jarvis jarvis) {
+    public CommandRemindme(ModuleAssistance module) {
         super("remindme", "remindme <delay> <text>", "Metions the sender after the specified delay time", null);
-        this.jarvis = jarvis;
+        this.module = module;
     }
 
     @Override
@@ -22,7 +23,7 @@ public class CommandRemindme extends Command {
         long duration = 0;
         try {
             duration = DateUtils.parseDateDiff(args[0], true);
-            jarvis.reminderManager.addReminder(message.getAuthor().getIdLong(), message.getChannel().getIdLong(), duration, condenseArgs(args, 1));
+            module.addReminder(message.getAuthor().getIdLong(), message.getChannel().getIdLong(), duration, condenseArgs(args, 1));
         } catch (Exception e) {
             sendFailureMessage(message, "Invalid time");
             return;

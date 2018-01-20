@@ -26,7 +26,7 @@ public class ModuleCustomCommands extends Module {
                         Permission.MESSAGE_WRITE,
                         Permission.MESSAGE_ADD_REACTION
                 )),
-                false
+                true
         );
         this.jarvis = jarvis;
 

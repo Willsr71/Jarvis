@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.Permission;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.admin.ModuleAdmin;
+import sr.will.jarvis.module.assistance.ModuleAssistance;
 import sr.will.jarvis.module.chatbot.ModuleChatBot;
 import sr.will.jarvis.module.customcommands.ModuleCustomCommands;
 import sr.will.jarvis.module.flair.ModuleFlair;
@@ -14,7 +15,6 @@ import sr.will.jarvis.module.overwatch.ModuleOverwatch;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +40,7 @@ public class ModuleManager {
 
     public void registerModules() {
         registerModule("admin", new ModuleAdmin(jarvis));
+        registerModule("assistance", new ModuleAssistance(jarvis));
         registerModule("chatbot", new ModuleChatBot(jarvis));
         registerModule("customcommands", new ModuleCustomCommands(jarvis));
         registerModule("flair", new ModuleFlair(jarvis));
@@ -87,9 +88,14 @@ public class ModuleManager {
     }
 
     public ArrayList<String> getDefaultModules() {
-        return new ArrayList<>(Arrays.asList(
-                "admin",
-                "customcommands"
-        ));
+        ArrayList<String> defaultModules = new ArrayList<>();
+
+        for (String module : getModules()) {
+            if (getModule(module).isDefaultEnabled()) {
+                defaultModules.add(module);
+            }
+        }
+
+        return defaultModules;
     }
 }

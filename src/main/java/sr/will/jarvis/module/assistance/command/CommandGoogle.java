@@ -1,14 +1,15 @@
-package sr.will.jarvis.command;
+package sr.will.jarvis.module.assistance.command;
 
 import net.dv8tion.jda.core.entities.Message;
-import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.command.Command;
+import sr.will.jarvis.module.assistance.ModuleAssistance;
 
 public class CommandGoogle extends Command {
-    private Jarvis jarvis;
+    private ModuleAssistance module;
 
-    public CommandGoogle(Jarvis jarvis) {
+    public CommandGoogle(ModuleAssistance module) {
         super("google", "google <search string>", "Displays a lmgtfy.com link of the search string", null);
-        this.jarvis = jarvis;
+        this.module = module;
     }
 
     public void execute(Message message, String... args) {

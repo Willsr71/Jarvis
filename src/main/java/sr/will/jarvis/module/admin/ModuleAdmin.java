@@ -30,7 +30,7 @@ public class ModuleAdmin extends Module {
                         Permission.MESSAGE_MANAGE,
                         Permission.MESSAGE_ADD_REACTION
                 )),
-                false
+                true
         );
         this.jarvis = jarvis;
 

@@ -1,24 +1,45 @@
-package sr.will.jarvis.manager;
+package sr.will.jarvis.module.assistance;
 
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.module.Module;
+import sr.will.jarvis.module.assistance.command.CommandDefine;
+import sr.will.jarvis.module.assistance.command.CommandGoogle;
+import sr.will.jarvis.module.assistance.command.CommandRemindme;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.lang.Thread.sleep;
 
-public class ReminderManager {
+public class ModuleAssistance extends Module {
     private Jarvis jarvis;
     private ArrayList<Thread> reminderThreads = new ArrayList<>();
 
-    public ReminderManager(Jarvis jarvis) {
+    public ModuleAssistance(Jarvis jarvis) {
+        super(
+                "assistance",
+                "Basic assitance commands such as remindme, define, and google",
+                new ArrayList<>(Arrays.asList(
+                        Permission.MESSAGE_READ,
+                        Permission.MESSAGE_WRITE,
+                        Permission.MESSAGE_ADD_REACTION
+                )),
+                true
+        );
         this.jarvis = jarvis;
+
+        jarvis.commandManager.registerCommand("define", new CommandDefine(this));
+        jarvis.commandManager.registerCommand("google", new CommandGoogle(this));
+        jarvis.commandManager.registerCommand("remindme", new CommandRemindme(this));
     }
 
-    public void startReminders() {
+    @Override
+    public void finishStart() {
         try {
             ResultSet result = jarvis.database.executeQuery("SELECT user, channel, time, message FROM scheduled_messages;");
             while (result.next()) {
@@ -27,6 +48,19 @@ public class ReminderManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void stop() {
+        while (reminderThreads.size() > 0) {
+            reminderThreads.get(0).interrupt();
+            reminderThreads.remove(0);
+        }
+    }
+
+    @Override
+    public void reload() {
+
     }
 
     public void addReminder(long userId, long channelId, long time, String message) {
@@ -79,16 +113,5 @@ public class ReminderManager {
         Thread thread = new Thread(runnable);
         thread.start();
         reminderThreads.add(thread);
-    }
-
-    public void setup() {
-        startReminders();
-    }
-
-    public void stop() {
-        while (reminderThreads.size() > 0) {
-            reminderThreads.get(0).interrupt();
-            reminderThreads.remove(0);
-        }
     }
 }
