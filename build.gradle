@@ -21,7 +21,8 @@ def projectUrl = "https://github.com/Willsr71/Jarvis"
 def projectAuthor = "Willsr71"
 def projectSite = "https://will.sr"
 
-def commonDep = "net.noxal:common:1.5-41"
+def commonDep = "net.noxal:common:1.5-42"
+def jdaDep = "net.dv8tion:JDA:3.5.0_327"
 
 def jarName = "${projectId}-${project.version.toString()}.jar"
 
@@ -34,8 +35,9 @@ repositories {
 
 dependencies {
     compile commonDep
+    compile jdaDep
+    compile "org.slf4j:slf4j-simple:1.7.25"
     compile "mysql:mysql-connector-java:5.1.42"
-    compile "net.dv8tion:JDA:3.5.0_327"
     compile "com.mashape.unirest:unirest-java:1.4.9"
     compile "ca.pjer:chatter-bot-api:1.4.7"
 }
@@ -52,4 +54,11 @@ shadowJar {
     archiveName jarName
 }
 
-build.finalizedBy(shadowJar)
+build {
+    dependsOn clean
+    dependsOn jar
+    dependsOn shadowJar
+
+    jar.mustRunAfter clean
+    shadowJar.mustRunAfter jar
+}
