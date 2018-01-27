@@ -6,19 +6,14 @@ import sr.will.jarvis.command.Command;
 import sr.will.jarvis.event.EventHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class Module {
-    private String name;
-    private String description;
-    private ArrayList<Permission> neededPermissions;
-    private boolean defaultEnabled;
+    private ModuleDescription moduleDescription;
+    private ArrayList<Permission> neededPermissions = new ArrayList<>();
+    private boolean defaultEnabled = false;
 
-    protected Module(String name, String description, ArrayList<Permission> neededPermissions, boolean defaultEnabled) {
-        this.name = name;
-        this.description = description;
-        this.neededPermissions = neededPermissions;
-        this.defaultEnabled = defaultEnabled;
-    }
+    public abstract void initialize();
 
     public abstract void finishStart();
 
@@ -26,16 +21,25 @@ public abstract class Module {
 
     public abstract void reload();
 
-    public String getName() {
-        return name;
+    @Deprecated
+    public void setDescription(String name, String description) {
+        this.moduleDescription = new ModuleDescription(name, null, null, description, null, null);
     }
 
-    public String getDescription() {
-        return description;
+    public ModuleDescription getDescription() {
+        return moduleDescription;
+    }
+
+    public void setNeededPermissions(Permission... neededPermissions) {
+        this.neededPermissions = new ArrayList<>(Arrays.asList(neededPermissions));
     }
 
     public ArrayList<Permission> getNeededPermissions() {
         return neededPermissions;
+    }
+
+    public void setDefaultEnabled(boolean defaultEnabled) {
+        this.defaultEnabled = defaultEnabled;
     }
 
     public boolean isDefaultEnabled() {
@@ -43,7 +47,7 @@ public abstract class Module {
     }
 
     public boolean isEnabled(long guildId) {
-        return Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, getName().toLowerCase());
+        return Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, moduleDescription.getName().toLowerCase());
     }
 
     protected void registerEventHandler(EventHandler handler) {

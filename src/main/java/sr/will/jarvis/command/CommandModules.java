@@ -30,7 +30,7 @@ public class CommandModules extends Command {
         StringBuilder stringBuilder = new StringBuilder();
         for (String moduleName : modules) {
             Module module = jarvis.moduleManager.getModule(moduleName);
-            stringBuilder.append('`').append(module.getName()).append(getFiller(maxLen - module.getName().length())).append('`');
+            stringBuilder.append('`').append(module.getDescription().getName()).append(getFiller(maxLen - module.getDescription().getName().length())).append('`');
             stringBuilder.append(' ');
             stringBuilder.append('`').append((module.isEnabled(message.getGuild().getIdLong()) ? "Enabled.." : "Disabled.")).append('`');
             stringBuilder.append(' ');

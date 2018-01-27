@@ -36,7 +36,7 @@ public class CommandHelp extends Command {
 
             message.getChannel().sendMessage(
                     new EmbedBuilder()
-                            .setTitle(module.getName(), null)
+                            .setTitle(module.getDescription().getName(), null)
                             .setColor(Color.GREEN)
                             .setDescription(getCommandGroupString(jarvis.commandManager.getCommandsByModule(module)))
                             .build()).queue();

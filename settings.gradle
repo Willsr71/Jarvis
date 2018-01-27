@@ -1,1 +1,18 @@
 rootProject.name = "Jarvis"
+include 'modules:admin'
+findProject(':modules:admin')?.name = 'admin'
+include 'modules:assistance'
+findProject(':modules:assistance')?.name = 'assistance'
+include 'modules:chatbot'
+findProject(':modules:chatbot')?.name = 'chatbot'
+include 'modules:customcommands'
+findProject(':modules:customcommands')?.name = 'customcommands'
+include 'modules:flair'
+findProject(':modules:flair')?.name = 'flair'
+include 'modules:levels'
+findProject(':modules:levels')?.name = 'levels'
+include 'modules:ohno'
+findProject(':modules:ohno')?.name = 'ohno'
+include 'modules:overwatch'
+findProject(':modules:overwatch')?.name = 'overwatch'
+

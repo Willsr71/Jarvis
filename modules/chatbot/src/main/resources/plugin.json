@@ -1,0 +1,8 @@
+{
+  "name": "@name@",
+  "main": "sr.will.jarvis.modules.chatbot.ModuleChatBot",
+  "version": "@version@",
+  "description": "@description@",
+  "author": "@author@",
+  "website": "@website@"
+}

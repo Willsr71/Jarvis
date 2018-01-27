@@ -1,0 +1,8 @@
+{
+  "name": "@name@",
+  "main": "sr.will.jarvis.modules.admin.ModuleAdmin",
+  "version": "@version@",
+  "description": "@description@",
+  "author": "@author@",
+  "website": "@website@"
+}

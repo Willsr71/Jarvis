@@ -53,6 +53,8 @@ public class Jarvis {
         moduleManager = new ModuleManager(this);
         moduleManager.registerModules();
 
+        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).initialize()));
+
         database = new Database();
 
         reload();

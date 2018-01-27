@@ -3,14 +3,6 @@ package sr.will.jarvis.manager;
 import net.dv8tion.jda.core.Permission;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
-import sr.will.jarvis.module.admin.ModuleAdmin;
-import sr.will.jarvis.module.assistance.ModuleAssistance;
-import sr.will.jarvis.module.chatbot.ModuleChatBot;
-import sr.will.jarvis.module.customcommands.ModuleCustomCommands;
-import sr.will.jarvis.module.flair.ModuleFlair;
-import sr.will.jarvis.module.levels.ModuleLevels;
-import sr.will.jarvis.module.ohno.ModuleOhNo;
-import sr.will.jarvis.module.overwatch.ModuleOverwatch;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,14 +31,7 @@ public class ModuleManager {
     }
 
     public void registerModules() {
-        registerModule("admin", new ModuleAdmin());
-        registerModule("assistance", new ModuleAssistance());
-        registerModule("chatbot", new ModuleChatBot());
-        registerModule("customcommands", new ModuleCustomCommands());
-        registerModule("flair", new ModuleFlair());
-        registerModule("levels", new ModuleLevels());
-        registerModule("ohno", new ModuleOhNo());
-        registerModule("overwatch", new ModuleOverwatch());
+
     }
 
     public void enableModule(long guildId, String module) {

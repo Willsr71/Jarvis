@@ -30,6 +30,6 @@ public class CommandModuleDisable extends Command {
         }
 
         sendSuccessEmote(message);
-        jarvis.moduleManager.disableModule(message.getGuild().getIdLong(), module.getName());
+        jarvis.moduleManager.disableModule(message.getGuild().getIdLong(), module.getDescription().getName());
     }
 }
