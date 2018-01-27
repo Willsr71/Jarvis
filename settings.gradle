@@ -1,4 +1,5 @@
 rootProject.name = "Jarvis"
+include 'modules'
 include 'modules:admin'
 findProject(':modules:admin')?.name = 'admin'
 include 'modules:assistance'

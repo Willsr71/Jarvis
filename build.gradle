@@ -62,32 +62,3 @@ build {
     jar.mustRunAfter clean
     shadowJar.mustRunAfter jar
 }
-
-subprojects {
-    buildscript {
-        repositories {
-            jcenter()
-        }
-    }
-
-    apply plugin: "java"
-    apply plugin: "idea"
-
-    repositories {
-        jcenter()
-
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url "https://repo.noxal.net/artifactory/gradle-dev-local/" }
-    }
-
-    dependencies {
-        compile rootProject
-    }
-
-    build {
-        dependsOn clean
-        dependsOn jar
-
-        jar.mustRunAfter clean
-    }
-}
