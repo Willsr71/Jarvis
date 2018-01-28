@@ -1,10 +1,21 @@
-def name = "ChatBot"
-group "sr.will.jarvis.modules"
-version rootProject.version
-def description = "An interactive chat bot and commands"
+project.group = "sr.will.jarvis.modules"
+project.version = rootProject.version
+project.description = "An interactive chat bot and commands"
 def projectUrl = "https://github.com/Willsr71/Jarvis"
 def projectAuthor = "Willsr71"
 def projectSite = "https://will.sr"
+
+processResources {
+    filter {
+        String line ->
+            line.replaceAll("@name@", project.name)
+                    .replaceAll("@version@", project.version.toString())
+                    .replaceAll("@description@", project.description)
+                    .replaceAll("@url@", projectUrl)
+                    .replaceAll("@author@", projectAuthor)
+                    .replaceAll("@website@", projectSite)
+    }
+}
 
 apply plugin: "com.github.johnrengelman.shadow"
 
@@ -17,19 +28,7 @@ shadowJar {
         include(dependency("ca.pjer:chatter-bot-api:1.4.7"))
     }
 
-    archiveName "${name.toLowerCase()}-${version.toString()}.jar"
-}
-
-processResources {
-    filter {
-        String line ->
-            line.replaceAll("@name@", name)
-                    .replaceAll("@version@", version.toString())
-                    .replaceAll("@description@", description)
-                    .replaceAll("@url@", projectUrl)
-                    .replaceAll("@author@", projectAuthor)
-                    .replaceAll("@website@", projectSite)
-    }
+    archiveName "${project.name}-${version.toString()}.jar"
 }
 
 build {
