@@ -31,11 +31,11 @@ public class ModuleManager {
     }
 
     public void registerModule(String name, Module module) {
-        modules.put(name, module);
+        modules.put(name.toLowerCase(), module);
     }
 
     public void unregisterModule(String name) {
-        modules.remove(name);
+        modules.remove(name.toLowerCase());
     }
 
     public ArrayList<String> getModules() {
@@ -43,7 +43,7 @@ public class ModuleManager {
     }
 
     public Module getModule(String name) {
-        return modules.get(name);
+        return modules.get(name.toLowerCase());
     }
 
     public void enableModule(long guildId, String module) {
@@ -62,6 +62,10 @@ public class ModuleManager {
         }
 
         return false;
+    }
+
+    public boolean isModuleLoaded(String name) {
+        return modules.keySet().contains(name.toLowerCase());
     }
 
     public boolean isModuleEnabled(long guildId, String module) {
@@ -172,6 +176,8 @@ public class ModuleManager {
 
             module.setDescription(null);
             module = null;
+
+            System.gc();
 
             System.out.println("Unloaded plugin " + name);
         } catch (Exception e) {

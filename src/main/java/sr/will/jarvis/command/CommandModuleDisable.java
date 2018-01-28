@@ -22,10 +22,15 @@ public class CommandModuleDisable extends Command {
             return;
         }
 
-        Module module = jarvis.moduleManager.getModule(args[0].toLowerCase());
+        Module module = jarvis.moduleManager.getModule(args[0]);
 
         if (module == null) {
             sendFailureMessage(message, "Invalid module");
+            return;
+        }
+
+        if (!module.isEnabled(message.getGuild().getIdLong())) {
+            sendFailureMessage(message, "Module is already disabled");
             return;
         }
 

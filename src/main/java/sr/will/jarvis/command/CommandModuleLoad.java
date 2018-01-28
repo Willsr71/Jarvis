@@ -36,6 +36,12 @@ public class CommandModuleLoad extends Command {
 
         try {
             ModuleDescription description = jarvis.moduleManager.getModuleDescription(file);
+
+            if (jarvis.moduleManager.isModuleLoaded(description.getName())) {
+                sendFailureMessage(message, "Module is already loaded");
+                return;
+            }
+
             jarvis.moduleManager.loadModule(description);
             sendSuccessMessage(message, "Loaded plugin " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor(), false);
         } catch (Exception e) {
