@@ -18,7 +18,6 @@ import java.util.HashMap;
 public class ModuleFlair extends Module {
 
     public void initialize() {
-        setDescription("Flair", "Offers per-user flairs (roles) with the ability to color and name them freely");
         setNeededPermissions(
                 Permission.MESSAGE_READ,
                 Permission.MESSAGE_WRITE

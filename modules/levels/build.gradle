@@ -1,7 +1,7 @@
-def projectId = "ModuleLevels"
+def name = "Levels"
 group "sr.will.jarvis.modules"
 version rootProject.version
-description "Levels plugin and commands"
+def description = "Levels plugin and commands"
 def projectUrl = "https://github.com/Willsr71/Jarvis"
 def projectAuthor = "Willsr71"
 def projectSite = "https://will.sr"
@@ -10,7 +10,6 @@ processResources {
     filter {
         String line ->
             line.replaceAll("@name@", name)
-                    .replaceAll("@id@", projectId)
                     .replaceAll("@version@", version.toString())
                     .replaceAll("@description@", description)
                     .replaceAll("@url@", projectUrl)

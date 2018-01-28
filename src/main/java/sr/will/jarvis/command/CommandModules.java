@@ -34,7 +34,7 @@ public class CommandModules extends Command {
             stringBuilder.append(' ');
             stringBuilder.append('`').append((module.isEnabled(message.getGuild().getIdLong()) ? "Enabled.." : "Disabled.")).append('`');
             stringBuilder.append(' ');
-            stringBuilder.append(module.getDescription());
+            stringBuilder.append(module.getDescription().getDescription());
             stringBuilder.append('\n');
         }
 

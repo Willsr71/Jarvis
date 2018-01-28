@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class ModuleCustomCommands extends Module {
 
     public void initialize() {
-        setDescription("CustomCommands", "Custom commands and responses");
         setNeededPermissions(
                 Permission.MESSAGE_READ,
                 Permission.MESSAGE_WRITE,

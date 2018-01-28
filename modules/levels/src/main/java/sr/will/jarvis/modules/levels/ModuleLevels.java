@@ -18,7 +18,6 @@ public class ModuleLevels extends Module {
     private ArrayList<RecentMessage> recentMessages = new ArrayList<>();
 
     public void initialize() {
-        setDescription("Levels", "Levels plugin and commands");
         setNeededPermissions(
                 Permission.MESSAGE_READ,
                 Permission.MESSAGE_WRITE

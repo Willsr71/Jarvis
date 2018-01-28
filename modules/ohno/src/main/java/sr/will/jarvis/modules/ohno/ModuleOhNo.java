@@ -21,7 +21,6 @@ import java.util.List;
 public class ModuleOhNo extends Module {
 
     public void initialize() {
-        setDescription("OhNo", "Responds with an \"oh no\" image whenever a user says \"oh no\"");
         setNeededPermissions(
                 Permission.MESSAGE_READ,
                 Permission.MESSAGE_WRITE

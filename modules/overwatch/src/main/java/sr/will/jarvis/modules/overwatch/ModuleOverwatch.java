@@ -26,7 +26,6 @@ public class ModuleOverwatch extends Module {
     private static ArrayList<String> tiers = new ArrayList<>(Arrays.asList("bronze", "silver", "gold", "platinum", "diamond", "master", "grandmaster"));
 
     public void initialize() {
-        setDescription("Overwatch", "Overwatch related commands");
         setNeededPermissions(
                 Permission.MESSAGE_READ,
                 Permission.MESSAGE_WRITE

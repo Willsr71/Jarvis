@@ -13,7 +13,6 @@ public class ModuleAdmin extends Module {
     public MuteManager muteManager;
 
     public void initialize() {
-        setDescription("Admin", "Administrative commands such as ban and mute");
         setNeededPermissions(
                 Permission.MANAGE_ROLES,
                 Permission.MANAGE_CHANNEL,

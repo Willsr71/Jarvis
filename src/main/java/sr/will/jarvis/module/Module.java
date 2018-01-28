@@ -21,9 +21,8 @@ public abstract class Module {
 
     public abstract void reload();
 
-    @Deprecated
-    public void setDescription(String name, String description) {
-        this.moduleDescription = new ModuleDescription(name, null, null, description, null, null);
+    public void setDescription(ModuleDescription moduleDescription) {
+        this.moduleDescription = moduleDescription;
     }
 
     public ModuleDescription getDescription() {

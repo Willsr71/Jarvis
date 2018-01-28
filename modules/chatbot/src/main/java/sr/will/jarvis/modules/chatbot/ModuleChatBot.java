@@ -20,7 +20,6 @@ public class ModuleChatBot extends Module {
     private HashMap<Long, ChatterBotSession> chatterBots = new HashMap<>();
 
     public void initialize() {
-        setDescription("ChatBot", "An interactive chat bot and commands");
         setNeededPermissions(
                 Permission.MESSAGE_READ,
                 Permission.MESSAGE_WRITE

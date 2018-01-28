@@ -19,7 +19,6 @@ public class ModuleAssistance extends Module {
     private ArrayList<Thread> reminderThreads = new ArrayList<>();
 
     public void initialize() {
-        setDescription("Assistance", "Basic assistance such as remindme, define, and google");
         setNeededPermissions(
                 Permission.MESSAGE_READ,
                 Permission.MESSAGE_WRITE,
