@@ -131,6 +131,11 @@ public class ModuleManager {
 
         for (ModuleDescription description : moduleDescriptions) {
             try {
+                if (isModuleLoaded(description.getName())) {
+                    System.out.println("Module " + description.getName() + " is already loaded");
+                    continue;
+                }
+
                 loadModule(description);
             } catch (Exception ignored) {
 

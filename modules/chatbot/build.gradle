@@ -6,6 +6,20 @@ def projectUrl = "https://github.com/Willsr71/Jarvis"
 def projectAuthor = "Willsr71"
 def projectSite = "https://will.sr"
 
+apply plugin: "com.github.johnrengelman.shadow"
+
+dependencies {
+    compile "ca.pjer:chatter-bot-api:1.4.7"
+}
+
+shadowJar {
+    dependencies {
+        include(dependency("ca.pjer:chatter-bot-api:1.4.7"))
+    }
+
+    archiveName "${name}-${version.toString()}.jar"
+}
+
 processResources {
     filter {
         String line ->
@@ -16,4 +30,10 @@ processResources {
                     .replaceAll("@author@", projectAuthor)
                     .replaceAll("@website@", projectSite)
     }
+}
+
+build {
+    dependsOn shadowJar
+
+    shadowJar.mustRunAfter jar
 }
