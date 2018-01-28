@@ -17,7 +17,7 @@ shadowJar {
         include(dependency("ca.pjer:chatter-bot-api:1.4.7"))
     }
 
-    archiveName "${name}-${version.toString()}.jar"
+    archiveName "${name.toLowerCase()}-${version.toString()}.jar"
 }
 
 processResources {
