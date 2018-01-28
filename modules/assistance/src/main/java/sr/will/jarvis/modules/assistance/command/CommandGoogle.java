@@ -8,7 +8,7 @@ public class CommandGoogle extends Command {
     private ModuleAssistance module;
 
     public CommandGoogle(ModuleAssistance module) {
-        super("google", "google <search string>", "Displays a lmgtfy.com link of the search string", null);
+        super("google", "google <search string>", "Displays a lmgtfy.com link of the search string", module);
         this.module = module;
     }
 

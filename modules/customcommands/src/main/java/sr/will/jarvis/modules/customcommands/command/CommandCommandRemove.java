@@ -9,7 +9,7 @@ public class CommandCommandRemove extends Command {
     private ModuleCustomCommands module;
 
     public CommandCommandRemove(ModuleCustomCommands module) {
-        super("commandremove", "commandremove <name>", "Removes a custom command. Guild specific", null);
+        super("commandremove", "commandremove <name>", "Removes a custom command. Guild specific", module);
         this.module = module;
     }
 

@@ -15,7 +15,7 @@ public class CommandDefine extends Command {
     private ModuleAssistance module;
 
     public CommandDefine(ModuleAssistance module) {
-        super("define", "define <word>", "Displays the first Urban Dictionary result of a word", null);
+        super("define", "define <word>", "Displays the first Urban Dictionary result of a word", module);
         this.module = module;
     }
 

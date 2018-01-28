@@ -13,7 +13,7 @@ public class CommandClear extends Command {
     private HashMap<String, Integer> messagesDeleted = new HashMap<>();
 
     public CommandClear(ModuleAdmin module) {
-        super("clear", "clear [amount]", "Deletes the specified number of messages from the current channel. Default is 10", null);
+        super("clear", "clear [amount]", "Deletes the specified number of messages from the current channel. Default is 10", module);
         this.module = module;
     }
 

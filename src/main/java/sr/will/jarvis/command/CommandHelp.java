@@ -34,11 +34,16 @@ public class CommandHelp extends Command {
                 continue;
             }
 
+            ArrayList<String> moduleCommands = jarvis.commandManager.getCommandsByModule(module);
+            if (moduleCommands.size() == 0) {
+                continue;
+            }
+
             message.getChannel().sendMessage(
                     new EmbedBuilder()
                             .setTitle(module.getDescription().getName(), null)
                             .setColor(Color.GREEN)
-                            .setDescription(getCommandGroupString(jarvis.commandManager.getCommandsByModule(module)))
+                            .setDescription(getCommandGroupString(moduleCommands))
                             .build()).queue();
         }
     }

@@ -9,7 +9,7 @@ public class CommandRemindme extends Command {
     private ModuleAssistance module;
 
     public CommandRemindme(ModuleAssistance module) {
-        super("remindme", "remindme <delay> <text>", "Metions the sender after the specified delay time", null);
+        super("remindme", "remindme <delay> <text>", "Metions the sender after the specified delay time", module);
         this.module = module;
     }
 

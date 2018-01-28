@@ -12,7 +12,7 @@ public class CommandCommands extends Command {
     private ModuleCustomCommands module;
 
     public CommandCommands(ModuleCustomCommands module) {
-        super("commands", "commands", "Displays custom commands", null);
+        super("commands", "commands", "Displays custom commands", module);
         this.module = module;
     }
 

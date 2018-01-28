@@ -9,7 +9,7 @@ public class CommandCommandAdd extends Command {
     private ModuleCustomCommands module;
 
     public CommandCommandAdd(ModuleCustomCommands module) {
-        super("commandadd", "commandadd <name> <content>", "Adds a custom command that responds with the response field. Guild specific", null);
+        super("commandadd", "commandadd <name> <content>", "Adds a custom command that responds with the response field. Guild specific", module);
         this.module = module;
     }
 
