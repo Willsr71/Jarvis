@@ -28,6 +28,14 @@ public class CommandManager {
         commands.put(name, command);
     }
 
+    public void unregisterCommand(String name) {
+        commands.remove(name);
+    }
+
+    public void unregisterCommands(Module module) {
+        getCommandsByModule(module).forEach(this::unregisterCommand);
+    }
+
     public ArrayList<String> getCommands() {
         return new ArrayList<>(commands.keySet());
     }
@@ -53,7 +61,9 @@ public class CommandManager {
         registerCommand("invite", new CommandInvite(jarvis));
         registerCommand("moduledisable", new CommandModuleDisable(jarvis));
         registerCommand("moduleenable", new CommandModuleEnable(jarvis));
+        registerCommand("moduleload", new CommandModuleLoad(jarvis));
         registerCommand("modules", new CommandModules(jarvis));
+        registerCommand("moduleunload", new CommandModuleUnload(jarvis));
         registerCommand("restart", new CommandRestart(jarvis));
         registerCommand("source", new CommandSource());
         registerCommand("stats", new CommandStats(jarvis));

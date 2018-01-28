@@ -23,6 +23,14 @@ public class EventManager implements EventListener {
         eventHandlers.add(handler);
     }
 
+    public void unregisterHandler(EventHandler handler) {
+        eventHandlers.remove(handler);
+    }
+
+    public void unregisterHandlers(Module module) {
+        getEventHandlersByModule(module).forEach(this::unregisterHandler);
+    }
+
     public ArrayList<EventHandler> getEventHandlers() {
         return eventHandlers;
     }

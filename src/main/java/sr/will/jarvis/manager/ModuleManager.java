@@ -34,6 +34,10 @@ public class ModuleManager {
         modules.put(name, module);
     }
 
+    public void unregisterModule(String name) {
+        modules.remove(name);
+    }
+
     public ArrayList<String> getModules() {
         return new ArrayList<>(modules.keySet());
     }
@@ -48,6 +52,16 @@ public class ModuleManager {
 
     public void disableModule(long guildId, String module) {
         jarvis.database.execute("DELETE FROM modules WHERE (guild = ? AND module = ?);", guildId, module.toLowerCase());
+    }
+
+    public boolean isModuleLoaded(File file) {
+        for (Module module : modules.values()) {
+            if (module.getDescription().getFile().equals(file)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean isModuleEnabled(long guildId, String module) {
@@ -99,22 +113,30 @@ public class ModuleManager {
         ArrayList<ModuleDescription> moduleDescriptions = new ArrayList<>();
 
         for (File file : moduleFiles) {
-            ModuleDescription description = getModuleDescription(file);
-            if (description == null) {
-                continue;
-            }
+            try {
+                ModuleDescription description = getModuleDescription(file);
+                if (description == null) {
+                    continue;
+                }
 
-            moduleDescriptions.add(description);
+                moduleDescriptions.add(description);
+            } catch (Exception ignored) {
+
+            }
         }
 
         for (ModuleDescription description : moduleDescriptions) {
-            loadModule(description);
+            try {
+                loadModule(description);
+            } catch (Exception ignored) {
+
+            }
         }
 
         System.out.println("Done.");
     }
 
-    public void loadModule(ModuleDescription description) {
+    public void loadModule(ModuleDescription description) throws Exception {
         try {
             URLClassLoader loader = new PluginClassloader(new URL[]{
                     description.getFile().toURI().toURL()
@@ -122,6 +144,7 @@ public class ModuleManager {
             Class<?> main = loader.loadClass(description.getMain());
             Module moduleClass = (Module) main.getDeclaredConstructor().newInstance();
 
+            description.setClassLoader(loader);
             moduleClass.setDescription(description);
             moduleClass.initialize();
             registerModule(description.getName(), moduleClass);
@@ -130,6 +153,31 @@ public class ModuleManager {
         } catch (Exception e) {
             System.out.println("Failed to load plugin " + description.getName());
             e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public void unloadModule(Module module) throws Exception {
+        module.stop();
+
+        Jarvis.getInstance().commandManager.unregisterCommands(module);
+        Jarvis.getInstance().eventManager.unregisterHandlers(module);
+
+        String name = module.getDescription().getName();
+
+        unregisterModule(name);
+
+        try {
+            module.getDescription().getClassLoader().close();
+
+            module.setDescription(null);
+            module = null;
+
+            System.out.println("Unloaded plugin " + name);
+        } catch (Exception e) {
+            System.out.println("Failed to load plugin " + name);
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -157,7 +205,7 @@ public class ModuleManager {
         return moduleFiles;
     }
 
-    public ModuleDescription getModuleDescription(File file) {
+    public ModuleDescription getModuleDescription(File file) throws Exception {
         try (JarFile jar = new JarFile(file)) {
             JarEntry moduleDescription = jar.getJarEntry("plugin.json");
             if (moduleDescription == null) {
@@ -181,10 +229,9 @@ public class ModuleManager {
             description.setFile(file);
             return description;
         } catch (IOException e) {
-            e.printStackTrace();
             Logger.severe("Error loading plugin from " + file.getName());
+            e.printStackTrace();
+            throw e;
         }
-
-        return null;
     }
 }

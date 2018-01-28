@@ -1,10 +1,12 @@
 package sr.will.jarvis.module;
 
 import java.io.File;
+import java.net.URLClassLoader;
 
 public class ModuleDescription {
 
     private File file;
+    private URLClassLoader classLoader;
     private String name;
     private String main;
     private String version;
@@ -28,6 +30,14 @@ public class ModuleDescription {
 
     public File getFile() {
         return file;
+    }
+
+    public void setClassLoader(URLClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
+
+    public URLClassLoader getClassLoader() {
+        return classLoader;
     }
 
     public String getName() {
