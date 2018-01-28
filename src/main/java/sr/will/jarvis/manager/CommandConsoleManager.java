@@ -3,6 +3,7 @@ package sr.will.jarvis.manager;
 import net.noxal.common.util.Logger;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.commandconsole.CommandConsole;
+import sr.will.jarvis.commandconsole.CommandConsolePID;
 import sr.will.jarvis.commandconsole.CommandConsoleStop;
 
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class CommandConsoleManager {
     }
 
     public void registerCommands() {
+        registerCommand("pid", new CommandConsolePID(jarvis));
         registerCommand("stop", new CommandConsoleStop(jarvis));
     }
 

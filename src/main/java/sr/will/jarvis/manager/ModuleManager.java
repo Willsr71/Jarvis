@@ -174,6 +174,7 @@ public class ModuleManager {
         try {
             module.getDescription().getClassLoader().close();
 
+            module.getDescription().setClassLoader(null);
             module.setDescription(null);
             module = null;
 
