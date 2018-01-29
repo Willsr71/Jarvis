@@ -1,19 +1,6 @@
 subprojects {
-    buildscript {
-        repositories {
-            jcenter()
-        }
-    }
-
     apply plugin: "java"
     apply plugin: "idea"
-
-    repositories {
-        jcenter()
-
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url "https://repo.noxal.net/artifactory/gradle-dev-local/" }
-    }
 
     dependencies {
         compile rootProject

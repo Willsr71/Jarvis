@@ -56,7 +56,7 @@ public class CommandLevels extends Command {
                 stringBuilder.append("\n");
             }
 
-            if (realpos % 10 == 0 || pos == leaderboard.size()) {
+            if ((realpos % 10 == 0 || pos == leaderboard.size()) && stringBuilder.length() != 0) {
                 EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
                 embed.setDescription(stringBuilder.toString());
                 message.getChannel().sendMessage(embed.build()).queue();

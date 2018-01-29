@@ -60,3 +60,18 @@ build {
     jar.mustRunAfter clean
     shadowJar.mustRunAfter jar
 }
+
+subprojects {
+    buildscript {
+        repositories {
+            jcenter()
+        }
+    }
+
+    repositories {
+        jcenter()
+
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://repo.noxal.net/artifactory/gradle-dev-local/" }
+    }
+}
