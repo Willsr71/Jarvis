@@ -4,13 +4,17 @@ Jarvis
 ![Java JDK v1.8](https://img.shields.io/badge/Java%20JDK-v1.8-blue.svg)
 ![JDA v3.5.0](https://img.shields.io/badge/JDA-v3.5.0-green.svg)
 
-A multipurpose Discord bot  
+A multipurpose Discord bot   
 [Add this bot to your server](https://discordapp.com/oauth2/authorize?client_id=182630745108512768&scope=bot&permissions=268446806)
 
-Commands
-========
-No module
----------
+[Configuration & Usage](https://github.com/Willsr71/Jarvis/wiki/Configuration-&-Usage)
+
+[Creating plugins](https://github.com/Willsr71/Jarvis/wiki/Plugins)
+
+Included Modules
+================
+Jarvis
+----
 Always active
 
 |Command|Permission|Description|
@@ -20,6 +24,8 @@ Always active
 |modules|None|Displays available modules|
 |moduleenable \<module\>|None|Enables the specified module|
 |moduledisable \<module\>|None|Disables the specified module|
+|moduleload \<module jar\>|Bot Owner|Load a module from a jar|
+|moduleunload \<module\>|Bot Owner|Unload a module|
 |restart \<bot mention\>|Bot Owner|Stops the bot|
 |source|None|Displays a link to this GitHub repository|
 |stats|None|Displays stats about the bot instance|
@@ -116,60 +122,3 @@ Console Commands
 |Command|Usage|
 |---|---|
 |stop|Stops the bot|
-
-Usage
-=====
-1. Download the jar from [https://ci.noxal.net/job/Jarvis/](https://ci.noxal.net/job/Jarvis/) or compile it
-2. Create a `config` directory
-3. Create `jarvis.json` in the config directory
-4. Paste in the example config file and modify it appropriately
-5. Run the command `java -jar jarvis.jar`
-
-Config File
-===========
-```json
-{
-  "discord": {
-    "token": "a98s7ng987wt98c3834fvn98.c2345c.987asfdfpo8yn9op978ty07bntj",
-    "owners": [
-      "112587845968912384"
-    ],
-    "statusMessageInterval": 60,
-    "statusMessages": [
-      "SyntaxError",
-      "NullPointerException",
-      "InterruptedException",
-      "401 Unauthorized",
-      "403 Forbidden",
-      "404 Not Found",
-      "406 Unacceptable",
-      "410 Gone",
-      "418 I'm a teapot",
-      "503 Servers on Fire"
-    ],
-    "pinEmotes": [
-      "\uD83D\uDC4C",
-      "\uD83D\uDCCC",
-      "\uD83D\uDCCD"
-    ]
-  },
-  "sql": {
-    "host": "db.example.com",
-    "database": "database",
-    "user": "user",
-    "password": "password"
-  }
-}
-```
-
-|Field|Description|
-|---|---|
-|discord - token|Discord Auth Token. You can acquire this by going to [discordapp.com/developers/applications/me](https://discordapp.com/developers/applications/me)|
-|discord - owners|Numerical ids of the owners of the bot|
-|discord - statusMessageInterval|Interval in seconds to wait before picking a new status message|
-|discord - statusMessages|Messages used as the "Playing" status of the bot|
-|discord - pinEmotes|Emotes able to be used to autopin messages (SmashBot module)|
-|sql - host|Host of the MySQL database|
-|sql - database|Database to use|
-|sql - user|User to use|
-|sql - password|Password to use|
