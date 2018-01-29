@@ -13,6 +13,7 @@ plugins {
 
 def buildNumber = System.env.BUILD_NUMBER ?: "SNAPSHOT"
 
+def projectId = "jarvis"
 project.group = "sr.will"
 project.version = "1.0-" + buildNumber
 project.description = "A bot for Discord"
@@ -23,7 +24,7 @@ def projectSite = "https://will.sr"
 def commonDep = "net.noxal:common:1.5-42"
 def jdaDep = "net.dv8tion:JDA:3.5.0_327"
 
-def jarName = "${project.name.toLowerCase()}-${project.version.toString()}.jar"
+def jarName = "${projectId}-${project.version.toString()}.jar"
 
 repositories {
     jcenter()
