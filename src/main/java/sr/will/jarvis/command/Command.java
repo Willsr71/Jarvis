@@ -53,6 +53,10 @@ public abstract class Command {
         return module.isEnabled(guildId);
     }
 
+    protected void sendUsage(Message message) {
+        sendFailureMessage(message, getUsage());
+    }
+
     protected void checkUserPermission(Message message, Permission permission) {
         if (!message.getGuild().getMember(message.getAuthor()).hasPermission(permission)) {
             sendFailureMessage(message, "You don't have permission for that (" + permission.getName() + ")");

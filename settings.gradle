@@ -16,3 +16,6 @@ include 'modules:ohno'
 findProject(':modules:ohno')?.name = 'OhNo'
 include 'modules:overwatch'
 findProject(':modules:overwatch')?.name = 'Overwatch'
+include 'modules:verify'
+findProject(':modules:verify')?.name = 'Verify'
+

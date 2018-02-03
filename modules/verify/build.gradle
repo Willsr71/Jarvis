@@ -1,0 +1,18 @@
+project.group = "sr.will.jarvis.modules"
+project.version = rootProject.version
+project.description = "AutoVerification for the VexMaine guild"
+def projectUrl = "https://github.com/Willsr71/Jarvis"
+def projectAuthor = "Willsr71"
+def projectSite = "https://will.sr"
+
+processResources {
+    filter {
+        String line ->
+            line.replaceAll("@name@", project.name)
+                    .replaceAll("@version@", project.version.toString())
+                    .replaceAll("@description@", project.description)
+                    .replaceAll("@url@", projectUrl)
+                    .replaceAll("@author@", projectAuthor)
+                    .replaceAll("@website@", projectSite)
+    }
+}

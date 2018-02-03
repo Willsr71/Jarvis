@@ -38,10 +38,6 @@ public abstract class Module {
         return neededPermissions;
     }
 
-    public ArrayList<Long> getGuildWhitelist() {
-        return guildWhitelist;
-    }
-
     public boolean isGuildWhitelisted(long guildId) {
         if (guildWhitelist.size() == 0) {
             return true;
