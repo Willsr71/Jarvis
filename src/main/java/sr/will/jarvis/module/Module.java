@@ -11,6 +11,7 @@ import java.util.Arrays;
 public abstract class Module {
     private ModuleDescription moduleDescription;
     private ArrayList<Permission> neededPermissions = new ArrayList<>();
+    private ArrayList<Long> guildWhitelist = new ArrayList<>();
     private boolean defaultEnabled = false;
 
     public abstract void initialize();
@@ -35,6 +36,22 @@ public abstract class Module {
 
     public ArrayList<Permission> getNeededPermissions() {
         return neededPermissions;
+    }
+
+    public ArrayList<Long> getGuildWhitelist() {
+        return guildWhitelist;
+    }
+
+    public boolean isGuildWhitelisted(long guildId) {
+        if (guildWhitelist.size() == 0) {
+            return true;
+        }
+
+        return guildWhitelist.contains(guildId);
+    }
+
+    public void setGuildWhitelist(Long... guilds) {
+        guildWhitelist.addAll(Arrays.asList(guilds));
     }
 
     public void setDefaultEnabled(boolean defaultEnabled) {

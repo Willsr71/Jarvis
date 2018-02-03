@@ -22,6 +22,10 @@ public class ModuleFlair extends Module {
                 Permission.MESSAGE_READ,
                 Permission.MESSAGE_WRITE
         );
+        setGuildWhitelist(
+                228571366729842688L,
+                290558097246650369L
+        );
         setDefaultEnabled(false);
 
         registerEventHandler(new EventHandlerSmashBot(this));

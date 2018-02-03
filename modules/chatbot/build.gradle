@@ -24,11 +24,7 @@ dependencies {
 }
 
 shadowJar {
-    dependencies {
-        include(dependency("ca.pjer:chatter-bot-api:1.4.7"))
-    }
-
-    archiveName "${project.name}-${version.toString()}.jar"
+    archiveName "${project.name}-${project.version.toString()}.jar"
 }
 
 build {

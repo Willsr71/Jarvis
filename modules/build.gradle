@@ -3,7 +3,7 @@ subprojects {
     apply plugin: "idea"
 
     dependencies {
-        compile rootProject
+        compileOnly rootProject
     }
 
     build {

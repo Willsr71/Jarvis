@@ -121,4 +121,5 @@ Console Commands
 ================
 |Command|Usage|
 |---|---|
+|pid|Gives the process ID of the bot|
 |stop|Stops the bot|

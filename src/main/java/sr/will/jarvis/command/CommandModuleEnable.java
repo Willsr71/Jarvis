@@ -29,6 +29,11 @@ public class CommandModuleEnable extends Command {
             return;
         }
 
+        if (!module.isGuildWhitelisted(message.getGuild().getIdLong())) {
+            sendFailureMessage(message, "Module is not allowed on this guild");
+            return;
+        }
+
         if (module.isEnabled(message.getGuild().getIdLong())) {
             sendFailureMessage(message, "Module is already enabled");
             return;
