@@ -1,8 +1,0 @@
-{
-  "name": "@name@",
-  "main": "sr.will.jarvis.modules.verify.ModuleVerify",
-  "version": "@version@",
-  "description": "@description@",
-  "author": "@author@",
-  "website": "@website@"
-}
