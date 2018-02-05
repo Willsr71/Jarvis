@@ -8,7 +8,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.modules.levels.ModuleLevels;
-import sr.will.jarvis.rest.mee6.Levels;
+import sr.will.jarvis.modules.levels.rest.mee6.Levels;
 
 import java.util.Date;
 

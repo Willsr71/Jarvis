@@ -1,4 +1,4 @@
-package sr.will.jarvis.rest.owapi;
+package sr.will.jarvis.modules.overwatch.rest.owapi;
 
 import java.util.HashMap;
 

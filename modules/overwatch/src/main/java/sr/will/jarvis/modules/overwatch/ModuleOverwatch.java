@@ -12,7 +12,7 @@ import sr.will.jarvis.modules.overwatch.command.CommandBattleTagAdd;
 import sr.will.jarvis.modules.overwatch.command.CommandBattleTagRemove;
 import sr.will.jarvis.modules.overwatch.command.CommandOWHeroes;
 import sr.will.jarvis.modules.overwatch.command.CommandOWStats;
-import sr.will.jarvis.rest.owapi.UserBlob;
+import sr.will.jarvis.modules.overwatch.rest.owapi.UserBlob;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

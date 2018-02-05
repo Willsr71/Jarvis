@@ -51,17 +51,10 @@ public class CommandClear extends Command {
 
         final int newCurrent = current - x;
 
-        System.out.println("======================");
-        System.out.println("total:   " + total);
-        System.out.println("current: " + newCurrent);
-        System.out.println("x:       " + x);
-
         channel.getHistory().retrievePast(x).queue(messages -> {
             try {
                 channel.deleteMessages(messages).queue(success -> {
                     incrementClearedMessages(channel, total, newCurrent, messages.size());
-                }, failure -> {
-                    System.out.println("well shit.");
                 });
             } catch (IllegalArgumentException e) {
                 if (e.getMessage().startsWith("Message Id provided was older than 2 weeks.")) {
@@ -76,7 +69,6 @@ public class CommandClear extends Command {
     }
 
     public void incrementClearedMessages(TextChannel channel, int total, int current, int amount) {
-        System.out.println(messagesDeleted.toString());
         messagesDeleted.replace(channel.getId(), messagesDeleted.get(channel.getId()) + amount);
 
         if (messagesDeleted.get(channel.getId()) >= total || messagesDeleted.get(channel.getId()) % 100 == 0) {

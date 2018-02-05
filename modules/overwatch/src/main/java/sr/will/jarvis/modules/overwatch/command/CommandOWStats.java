@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.modules.overwatch.ModuleOverwatch;
-import sr.will.jarvis.rest.owapi.UserBlob;
+import sr.will.jarvis.modules.overwatch.rest.owapi.UserBlob;
 
 import java.awt.*;
 import java.util.Date;

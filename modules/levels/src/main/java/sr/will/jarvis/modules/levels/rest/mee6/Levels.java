@@ -1,4 +1,4 @@
-package sr.will.jarvis.rest.mee6;
+package sr.will.jarvis.modules.levels.rest.mee6;
 
 import java.util.ArrayList;
 

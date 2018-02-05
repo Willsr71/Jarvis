@@ -1,4 +1,4 @@
-package sr.will.jarvis.rest.urbandictionary;
+package sr.will.jarvis.modules.assistance.rest.urbandictionary;
 
 import java.util.ArrayList;
 

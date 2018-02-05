@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.modules.assistance.ModuleAssistance;
-import sr.will.jarvis.rest.urbandictionary.Definition;
+import sr.will.jarvis.modules.assistance.rest.urbandictionary.Definition;
 
 import java.awt.*;
 
