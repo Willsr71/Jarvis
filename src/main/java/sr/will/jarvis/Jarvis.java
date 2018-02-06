@@ -7,10 +7,7 @@ import net.noxal.common.config.JSONConfigManager;
 import net.noxal.common.sql.Database;
 import sr.will.jarvis.config.Config;
 import sr.will.jarvis.event.EventHandlerJarvis;
-import sr.will.jarvis.manager.CommandConsoleManager;
-import sr.will.jarvis.manager.CommandManager;
-import sr.will.jarvis.manager.EventManager;
-import sr.will.jarvis.manager.ModuleManager;
+import sr.will.jarvis.manager.*;
 import sr.will.jarvis.service.InputReaderService;
 import sr.will.jarvis.service.StatusService;
 
@@ -23,6 +20,7 @@ public class Jarvis {
     private JSONConfigManager configManager;
     public Config config;
 
+    public ThreadManager threadManager;
     public InputReaderService inputReaderService;
     public CommandConsoleManager consoleManager;
     public Database database;
@@ -41,6 +39,7 @@ public class Jarvis {
 
         configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
 
+        threadManager = new ThreadManager(this);
         consoleManager = new CommandConsoleManager(this);
         consoleManager.registerCommands();
         inputReaderService = new InputReaderService(consoleManager);
@@ -99,6 +98,8 @@ public class Jarvis {
         statusService.interrupt();
         jda.shutdown();
         database.disconnect();
+
+        threadManager.stop();
 
         System.exit(0);
     }
