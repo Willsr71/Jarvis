@@ -88,6 +88,16 @@ Offers per-user flairs (roles) with the ability to color and name them freely
 |flairlist|None|Lists all flairs and the users associated with them|
 |flairimport \[role exclude list\]|Administrator|Adds the user's roles to the flair system|
 
+Info Module ![default](https://img.shields.io/badge/default-yes-green.svg)
+===========
+Informational commands for guilds and users
+
+|Command|Permission|Description|
+|---|---|---|
+|guild|None|Info of a guild|
+|info \[user mention&#124;user id\]|None|Info of a user|
+|roles|None|Get roles of a guild|
+
 Levels Module ![not default](https://img.shields.io/badge/default-no-red.svg)
 -------------
 Levels plugin and commands
@@ -121,5 +131,6 @@ Console Commands
 ================
 |Command|Usage|
 |---|---|
+|debug|Enables or disables debug messages|
 |pid|Gives the process ID of the bot|
 |stop|Stops the bot|

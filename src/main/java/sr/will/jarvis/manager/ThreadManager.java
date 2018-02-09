@@ -8,27 +8,22 @@ import java.util.ArrayList;
 public class ThreadManager {
     public Jarvis jarvis;
 
-    public ArrayList<ThreadBoss> threads = new ArrayList<>();
-    private long threadCounter = 0;
+    public ArrayList<JarvisThread> threads = new ArrayList<>();
 
     public ThreadManager(Jarvis jarvis) {
         this.jarvis = jarvis;
     }
 
-    public void newThread(Module module, String name, Runnable runnable) {
-        Thread thread = new Thread(runnable, name);
-        ThreadBoss boss = new ThreadBoss(module, name, runnable, thread);
-
-        threads.add(boss);
+    public void addThread(JarvisThread thread) {
+        threads.add(thread);
     }
 
-    public void newThread(Module module, Runnable runnable) {
-        newThread(module, "JarvisThread#" + threadCounter, runnable);
-        threadCounter = threadCounter++;
+    public void removeThread(JarvisThread thread) {
+        threads.remove(thread);
     }
 
-    public ArrayList<ThreadBoss> getThreadsByModule(Module module) {
-        ArrayList<ThreadBoss> moduleThreads = new ArrayList<>();
+    public ArrayList<JarvisThread> getThreadsByModule(Module module) {
+        ArrayList<JarvisThread> moduleThreads = new ArrayList<>();
 
         threads.forEach((boss -> {
             if (boss.module == module) {
@@ -40,12 +35,10 @@ public class ThreadManager {
     }
 
     public void stopThreadsByModule(Module module) {
-        getThreadsByModule(module).forEach(ThreadBoss::stop);
+        getThreadsByModule(module).forEach(JarvisThread::kill);
     }
 
     public void stop() {
-        for (ThreadBoss boss : threads) {
-            boss.stop();
-        }
+        threads.forEach(JarvisThread::kill);
     }
 }

@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.manager.JarvisThread;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
 
 import java.awt.*;
@@ -18,11 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
-
 public class MuteManager {
     private ModuleAdmin module;
-    private ArrayList<Thread> unmuteThreads = new ArrayList<>();
 
     public MuteManager(ModuleAdmin module) {
         this.module = module;
@@ -115,12 +113,6 @@ public class MuteManager {
         }
     }
 
-    public void stop() {
-        for (Thread thread : unmuteThreads) {
-            thread.interrupt();
-        }
-    }
-
     public void deleteOldRoles(Guild guild) {
         List<Role> roles = new ArrayList<>();
         roles.addAll(guild.getRolesByName("Jarvis_Mute", true));
@@ -188,35 +180,8 @@ public class MuteManager {
     }
 
     public void startUnmuteThread(final long guildId, final long userId, final long duration) {
-        if (duration == -1) {
-            return;
-        }
-
-        startThread(() -> {
-            try {
-                long sleepTime = duration - System.currentTimeMillis();
-                if (sleepTime <= 0) {
-                    unmute(guildId, userId);
-                    return;
-                }
-
-                System.out.println("Thread " + Thread.currentThread().getId() + " sleeping for " + sleepTime + "ms");
-                sleep(sleepTime);
-                unmute(guildId, userId);
-            } catch (InterruptedException e) {
-                if (Jarvis.getInstance().running) {
-                    e.printStackTrace();
-                    startUnmuteThread(guildId, userId, duration);
-                }
-                System.out.println("Stopping thread " + Thread.currentThread().getId() + "!");
-            }
-            System.out.println("Thread " + Thread.currentThread().getId() + " finished");
-        });
-    }
-
-    public void startThread(Runnable runnable) {
-        Thread thread = new Thread(runnable);
-        thread.start();
-        unmuteThreads.add(thread);
+        new JarvisThread().delay(duration).runnable(() -> {
+            unmute(guildId, userId);
+        }).start();
     }
 }
