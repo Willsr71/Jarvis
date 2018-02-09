@@ -4,19 +4,16 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.manager.JarvisThread;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
 
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import static java.lang.Thread.sleep;
 
 public class BanManager {
     private ModuleAdmin module;
-    private ArrayList<Thread> unbanThreads = new ArrayList<>();
 
     public BanManager(ModuleAdmin module) {
         this.module = module;
@@ -98,12 +95,6 @@ public class BanManager {
         }
     }
 
-    public void stop() {
-        for (Thread thread : unbanThreads) {
-            thread.interrupt();
-        }
-    }
-
     public void processBannedMembers(Guild guild) {
         HashMap<Long, Long> bans = getBans(guild.getIdLong());
 
@@ -132,35 +123,8 @@ public class BanManager {
     }
 
     public void startUnbanThread(final long guildId, final long userId, final long duration) {
-        if (duration == -1) {
-            return;
-        }
-
-        startThread(() -> {
-            try {
-                long sleepTime = duration - System.currentTimeMillis();
-                if (sleepTime <= 0) {
-                    unban(guildId, userId);
-                    return;
-                }
-
-                System.out.println("Thread " + Thread.currentThread().getId() + " sleeping for " + sleepTime + "ms");
-                sleep(sleepTime);
-                unban(guildId, userId);
-            } catch (InterruptedException e) {
-                if (Jarvis.getInstance().running) {
-                    e.printStackTrace();
-                    startUnbanThread(guildId, userId, duration);
-                }
-                System.out.println("Stopping thread " + Thread.currentThread().getId() + "!");
-            }
-            System.out.println("Thread " + Thread.currentThread().getId() + " finished");
-        });
-    }
-
-    public void startThread(Runnable runnable) {
-        Thread thread = new Thread(runnable);
-        thread.start();
-        unbanThreads.add(thread);
+        new JarvisThread().delay(duration).runnable(() -> {
+            unban(guildId, userId);
+        }).start();
     }
 }

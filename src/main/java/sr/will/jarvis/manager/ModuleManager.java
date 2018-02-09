@@ -171,6 +171,7 @@ public class ModuleManager {
 
         Jarvis.getInstance().commandManager.unregisterCommands(module);
         Jarvis.getInstance().eventManager.unregisterHandlers(module);
+        Jarvis.getInstance().threadManager.stopThreadsByModule(module);
 
         String name = module.getDescription().getName();
 

@@ -62,8 +62,7 @@ public class ModuleAdmin extends Module {
     }
 
     public void stop() {
-        banManager.stop();
-        muteManager.stop();
+
     }
 
     public void reload() {

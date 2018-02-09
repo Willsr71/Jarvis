@@ -45,14 +45,6 @@ public abstract class Command {
         return module;
     }
 
-    public boolean isModuleEnabled(long guildId) {
-        if (module == null) {
-            return true;
-        }
-
-        return module.isEnabled(guildId);
-    }
-
     protected void sendUsage(Message message) {
         sendFailureMessage(message, getUsage());
     }
@@ -128,6 +120,26 @@ public abstract class Command {
         }
 
         return stringBuilder.toString();
+    }
+
+    public static String getRolesAsString(List<Role> roles) {
+        StringBuilder roleList = new StringBuilder();
+        for (Role role : roles) {
+            roleList.append(role.getName()).append(", ");
+        }
+        roleList.setLength(roleList.length() - 2);
+
+        return roleList.toString();
+    }
+
+    public static String getGuildsAsString(List<Guild> guilds) {
+        StringBuilder guildList = new StringBuilder();
+        for (Guild guild : guilds) {
+            guildList.append(guild.getName()).append(", ");
+        }
+        guildList.setLength(guildList.length() - 2);
+
+        return guildList.toString();
     }
 
     public static String condenseArgs(String joiner, String... args) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Config {
     public Discord discord = new Discord();
     public Sql sql = new Sql();
+    public boolean debug;
 
     public class Discord {
         public String token;
