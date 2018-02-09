@@ -12,12 +12,31 @@ public class CommandHelp extends Command {
     private Jarvis jarvis;
 
     public CommandHelp(Jarvis jarvis) {
-        super("help", "help", "Displays commands and custom commands", null);
+        super("help", "help [module]", "Displays commands and custom commands", null);
         this.jarvis = jarvis;
     }
 
     @Override
     public void execute(Message message, String... args) {
+        if (args.length == 0) {
+            sendModules(message);
+        } else {
+            sendModule(message, args[0]);
+        }
+    }
+
+    private void sendModules(Message message) {
+        StringBuilder moduleString = new StringBuilder();
+        for (String name : jarvis.moduleManager.getModules()) {
+            Module module = jarvis.moduleManager.getModule(name);
+
+            if (!module.isEnabled(message.getGuild().getIdLong())) {
+                continue;
+            }
+
+            moduleString.append("\n").append(module.getDescription().getName());
+        }
+
         // Moduleless commands
         message.getChannel().sendMessage(
                 new EmbedBuilder()
@@ -26,26 +45,36 @@ public class CommandHelp extends Command {
                         .setDescription(getCommandGroupString(jarvis.commandManager.getCommandsByModule(null)))
                         .build()).queue();
 
-        // All the other modules
-        for (String moduleName : jarvis.moduleManager.getModules()) {
-            Module module = jarvis.moduleManager.getModule(moduleName);
+        moduleString.append("\n\nUse `!help [module name]` to get commands for that module");
+        message.getChannel().sendMessage(
+                new EmbedBuilder()
+                        .setTitle("Enabled Modules")
+                        .setColor(Color.GREEN)
+                        .setDescription(moduleString.toString())
+                        .build()).queue();
+    }
 
-            if (!module.isEnabled(message.getGuild().getIdLong())) {
-                continue;
-            }
+    private void sendModule(Message message, String name) {
+        Module module = jarvis.moduleManager.getModule(name);
 
-            ArrayList<String> moduleCommands = jarvis.commandManager.getCommandsByModule(module);
-            if (moduleCommands.size() == 0) {
-                continue;
-            }
-
-            message.getChannel().sendMessage(
-                    new EmbedBuilder()
-                            .setTitle(module.getDescription().getName(), null)
-                            .setColor(Color.GREEN)
-                            .setDescription(getCommandGroupString(moduleCommands))
-                            .build()).queue();
+        if (module == null) {
+            sendFailureMessage(message, "Module does not exist");
+            return;
         }
+
+        ArrayList<String> moduleCommands = jarvis.commandManager.getCommandsByModule(module);
+
+        if (moduleCommands.size() == 0) {
+            sendSuccessMessage(message, "Module does not have any commands", false);
+            return;
+        }
+
+        message.getChannel().sendMessage(
+                new EmbedBuilder()
+                        .setTitle(module.getDescription().getName(), null)
+                        .setColor(Color.GREEN)
+                        .setDescription(getCommandGroupString(moduleCommands))
+                        .build()).queue();
     }
 
     private String getCommandGroupString(ArrayList<String> commands) {

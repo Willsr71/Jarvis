@@ -35,9 +35,9 @@ public class CommandModules extends Command {
                 continue;
             }
 
-            stringBuilder.append('`').append(module.getDescription().getName()).append(getFiller(maxLen - module.getDescription().getName().length())).append('`');
+            stringBuilder.append(module.isEnabled(message.getGuild().getIdLong()) ? ":white_check_mark:" : ":x:");
             stringBuilder.append(' ');
-            stringBuilder.append('`').append((module.isEnabled(message.getGuild().getIdLong()) ? "Enabled.." : "Disabled.")).append('`');
+            stringBuilder.append('`').append(module.getDescription().getName()).append(getFiller(maxLen - module.getDescription().getName().length())).append('`');
             stringBuilder.append(' ');
             stringBuilder.append(module.getDescription().getDescription());
             stringBuilder.append('\n');
