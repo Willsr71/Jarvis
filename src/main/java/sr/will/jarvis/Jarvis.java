@@ -81,13 +81,13 @@ public class Jarvis {
     }
 
     public void finishStartup() {
-        new JarvisThread()
+        new JarvisThread(null, () -> {
+            int rand = ThreadLocalRandom.current().nextInt(0, config.discord.statusMessages.size());
+            Jarvis.getJda().getPresence().setGame(Game.playing(config.discord.statusMessages.get(rand)));
+        })
+                .name("StatusChanger")
                 .repeat(true, config.discord.statusMessageInterval * 1000)
-                .name("GameThread")
-                .runnable(() -> {
-                    int rand = ThreadLocalRandom.current().nextInt(0, config.discord.statusMessages.size());
-                    Jarvis.getJda().getPresence().setGame(Game.playing(config.discord.statusMessages.get(rand)));
-                }).start();
+                .start();
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).finishStart()));
 

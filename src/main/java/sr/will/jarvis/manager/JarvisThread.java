@@ -4,29 +4,21 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 
 public class JarvisThread extends Thread {
-    public Module module = null;
+    public Module module;
     private Runnable runnable;
     private long delay = 0;
     private boolean repeating = false;
     private long repeatDelay = 0;
     private boolean running = true;
 
-    public JarvisThread() {
+    public JarvisThread(Module module, Runnable runnable) {
+        this.module = module;
+        this.runnable = runnable;
         Jarvis.getInstance().threadManager.addThread(this);
     }
 
-    public JarvisThread module(Module module) {
-        this.module = module;
-        return this;
-    }
-
     public JarvisThread name(String name) {
-        setName(name);
-        return this;
-    }
-
-    public JarvisThread runnable(Runnable runnable) {
-        this.runnable = runnable;
+        setName(getName() + "-" + name);
         return this;
     }
 

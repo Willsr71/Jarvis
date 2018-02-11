@@ -7,7 +7,6 @@ import sr.will.jarvis.modules.overwatch.ModuleOverwatch;
 import sr.will.jarvis.modules.overwatch.rest.owapi.UserBlob;
 
 import java.awt.*;
-import java.util.Date;
 
 public class CommandOWStats extends Command {
     private ModuleOverwatch module;
@@ -21,7 +20,7 @@ public class CommandOWStats extends Command {
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
 
-        long startTime = new Date().getTime();
+        long startTime = System.currentTimeMillis();
 
         UserBlob userBlob = module.getUserBlob(message, args);
         if (userBlob == null) {
@@ -39,7 +38,7 @@ public class CommandOWStats extends Command {
                 .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay, 3), true)
                 .addField("Top heroes (Comp)", (userBlob.getRegion().heroes.playtime.competitive == null) ? "N/A" : module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive, 3), true)
                 .setThumbnail(overallStats.avatar)
-                .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
+                .setFooter("Returned in " + (System.currentTimeMillis() - startTime) + "ms", null);
         message.getChannel().sendMessage(embed.build()).queue();
     }
 }

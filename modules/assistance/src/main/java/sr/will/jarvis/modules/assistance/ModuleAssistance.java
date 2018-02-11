@@ -4,16 +4,16 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.manager.JarvisThread;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.modules.assistance.command.CommandDefine;
+import sr.will.jarvis.modules.assistance.command.CommandEval;
 import sr.will.jarvis.modules.assistance.command.CommandGoogle;
 import sr.will.jarvis.modules.assistance.command.CommandRemindme;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static java.lang.Thread.sleep;
 
 public class ModuleAssistance extends Module {
     private ArrayList<Thread> reminderThreads = new ArrayList<>();
@@ -27,6 +27,7 @@ public class ModuleAssistance extends Module {
         setDefaultEnabled(true);
 
         registerCommand("define", new CommandDefine(this));
+        registerCommand("eval", new CommandEval(this));
         registerCommand("google", new CommandGoogle(this));
         registerCommand("remindme", new CommandRemindme(this));
     }
@@ -81,35 +82,6 @@ public class ModuleAssistance extends Module {
     }
 
     public void startReminderThread(final long userId, final long channelId, final long time, final String message) {
-        if (time == -1) {
-            return;
-        }
-
-        startThread(() -> {
-            try {
-                long sleepTime = time - System.currentTimeMillis();
-                if (sleepTime <= 0) {
-                    remind(userId, channelId, message);
-                    return;
-                }
-
-                System.out.println("Thread " + Thread.currentThread().getId() + " sleeping for " + sleepTime + "ms");
-                sleep(sleepTime);
-                remind(userId, channelId, message);
-            } catch (InterruptedException e) {
-                if (Jarvis.getInstance().running) {
-                    e.printStackTrace();
-                    startReminderThread(userId, channelId, time, message);
-                }
-                System.out.println("Stopping thread " + Thread.currentThread().getId() + "!");
-            }
-            System.out.println("Thread " + Thread.currentThread().getId() + " finished");
-        });
-    }
-
-    public void startThread(Runnable runnable) {
-        Thread thread = new Thread(runnable);
-        thread.start();
-        reminderThreads.add(thread);
+        new JarvisThread(this, () -> remind(userId, channelId, message)).delay(time).name("Reminder").start();
     }
 }

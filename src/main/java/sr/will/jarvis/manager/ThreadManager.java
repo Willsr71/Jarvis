@@ -25,9 +25,9 @@ public class ThreadManager {
     public ArrayList<JarvisThread> getThreadsByModule(Module module) {
         ArrayList<JarvisThread> moduleThreads = new ArrayList<>();
 
-        threads.forEach((boss -> {
-            if (boss.module == module) {
-                moduleThreads.add(boss);
+        threads.forEach((thread -> {
+            if (thread.module == module) {
+                moduleThreads.add(thread);
             }
         }));
 

@@ -69,18 +69,6 @@ public class EventManager implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-        Thread thread = new Thread(() -> processEvent(event));
-
-        /*
-        long startTime = new Date().getTime();
-        System.out.println("Thread " + thread.getId() + " started (event)");
-        */
-
-        thread.start();
-
-        /*
-        long time = new Date().getTime() - startTime;
-        System.out.println("Thread " + thread.getId() + " finished (event) (" + time + "ms)");
-        */
+        new JarvisThread(null, () -> processEvent(event)).name("Event-" + event.getClass().getSimpleName()).start();
     }
 }

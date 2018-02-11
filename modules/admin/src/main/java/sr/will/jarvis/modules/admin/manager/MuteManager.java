@@ -180,8 +180,6 @@ public class MuteManager {
     }
 
     public void startUnmuteThread(final long guildId, final long userId, final long duration) {
-        new JarvisThread().delay(duration).runnable(() -> {
-            unmute(guildId, userId);
-        }).start();
+        new JarvisThread(module, () -> unmute(guildId, userId)).delay(duration).name("Mute").start();
     }
 }

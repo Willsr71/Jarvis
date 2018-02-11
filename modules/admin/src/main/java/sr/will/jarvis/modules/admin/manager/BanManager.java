@@ -123,8 +123,6 @@ public class BanManager {
     }
 
     public void startUnbanThread(final long guildId, final long userId, final long duration) {
-        new JarvisThread().delay(duration).runnable(() -> {
-            unban(guildId, userId);
-        }).start();
+        new JarvisThread(module, () -> unban(guildId, userId)).delay(duration).name("Ban").start();
     }
 }

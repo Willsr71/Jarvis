@@ -7,6 +7,7 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.exception.BotPermissionException;
 import sr.will.jarvis.exception.ModuleNotEnabledException;
 import sr.will.jarvis.exception.UserPermissionException;
+import sr.will.jarvis.manager.JarvisThread;
 import sr.will.jarvis.module.Module;
 
 import java.awt.*;
@@ -203,6 +204,10 @@ public abstract class Command {
         message.addReaction("\uD83D\uDC4C").queue();
     }
 
+    public static void sendFailureEmote(Message message) {
+        message.addReaction("\u274C").queue();
+    }
+
     public static void sendSuccessMessage(TextChannel channel, String string, boolean delete, Message... messagesToDelete) {
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Success!", null)
@@ -210,23 +215,20 @@ public abstract class Command {
                 .setDescription(string);
 
         if (delete) {
-            channel.sendMessage(embed.build()).queue(success -> {
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(3 * 1000);
-                    } catch (InterruptedException e) {
-                    }
+            channel.sendMessage(embed.build()).queue(success -> new JarvisThread(null, () -> {
+                        ArrayList<Message> messages = new ArrayList<>(Arrays.asList(messagesToDelete));
+                        messages.add(success);
 
-                    ArrayList<Message> messages = new ArrayList<>(Arrays.asList(messagesToDelete));
-                    messages.add(success);
-
-                    if (messages.size() == 1) {
-                        messages.get(0).delete().queue();
-                    } else {
-                        channel.deleteMessages(messages).queue();
-                    }
-                }).start();
-            });
+                        if (messages.size() == 1) {
+                            messages.get(0).delete().queue();
+                        } else {
+                            channel.deleteMessages(messages).queue();
+                        }
+                    })
+                            .delay(3 * 1000)
+                            .name("SuccessMessageMessageDeletion")
+                            .start()
+            );
         } else {
             channel.sendMessage(embed.build()).queue();
         }
