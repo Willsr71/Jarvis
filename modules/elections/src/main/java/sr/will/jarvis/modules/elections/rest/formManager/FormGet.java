@@ -6,7 +6,7 @@ public class FormGet {
     public ArrayList<Response> userResponses;
 
     public class Response {
-        public String username;
+        public String discriminator;
         public ArrayList<String> votes;
     }
 }

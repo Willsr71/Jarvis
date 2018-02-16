@@ -5,8 +5,7 @@ import sr.will.jarvis.Jarvis;
 
 public class Registrant {
     public long userId;
-    public int votes;
-    public int position;
+    public int votes = 0;
 
     public Registrant(long userId) {
         this.userId = userId;
@@ -18,9 +17,5 @@ public class Registrant {
 
     public void addVote() {
         votes += 1;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 }

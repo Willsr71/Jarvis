@@ -1,12 +1,6 @@
 package sr.will.jarvis.modules.elections;
 
-import com.google.gson.Gson;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.modules.elections.rest.formManager.FormCreate;
 import sr.will.jarvis.modules.elections.rest.formManager.FormGet;
 
 import java.util.ArrayList;
@@ -14,13 +8,13 @@ import java.util.Comparator;
 
 public class Election {
     private ModuleElections module;
-    public long guildId;
-    public String name;
-    public int dayOfMonth;
-    public long votingPeriod;
-    public ElectionState electionState;
-    public String formId;
-    public ArrayList<Registrant> registrants;
+    private long guildId;
+    private String name;
+    private int dayOfMonth;
+    private long votingPeriod;
+    private ElectionState electionState;
+    private String formId;
+    private ArrayList<Registrant> registrants;
 
     public Election(ModuleElections module, long guildId, String name, int dayOfMonth, long votingPeriod, ElectionState electionState, String formId, ArrayList<Registrant> registrants) {
         this.module = module;
@@ -33,30 +27,20 @@ public class Election {
         this.registrants = registrants;
     }
 
-    public void createPoll() throws UnirestException {
-        Gson gson = new Gson();
-        String string = Unirest.get(ModuleElections.formManagerUrl + "?action=create&name=" + name + "&choices=" + module.getRegistrantsAsString(registrants)).asString().getBody();
-        FormCreate formCreate = gson.fromJson(string, FormCreate.class);
-        this.formId = formCreate.form_id;
+    public long getGuildId() {
+        return guildId;
     }
 
-    public FormGet getResponses() {
-        try {
-            Gson gson = new Gson();
-            String string = Unirest.get(ModuleElections.formManagerUrl + "?formId=" + formId).asString().getBody();
-            return gson.fromJson(string, FormGet.class);
-        } catch (UnirestException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public String getName() {
+        return name;
     }
 
     public void countVotes() {
-        FormGet responses = getResponses();
+        FormGet responses = module.getResponses(formId);
 
         for (FormGet.Response response : responses.userResponses) {
-            if (!userExistsOnGuild(response.username)) {
-                System.out.println("User " + response.username + " thrown out, does no exist on guild");
+            if (!module.userExistsOnGuild(guildId, response.discriminator)) {
+                System.out.println("User " + response.discriminator + " thrown out, does no exist on guild");
                 continue;
             }
 
@@ -81,21 +65,31 @@ public class Election {
         return null;
     }
 
-    public boolean userExistsOnGuild(String username) {
-        Guild guild = Jarvis.getJda().getGuildById(guildId);
-        for (Member member : guild.getMembers()) {
-            if (member.getUser().getDiscriminator().equals(username)) {
-                return true;
+    public Registrant getRegistrantById(long userId) {
+        for (Registrant registrant : registrants) {
+            if (registrant.getUser().getIdLong() == userId) {
+                return registrant;
             }
         }
 
-        return false;
+        return null;
     }
 
-    public enum ElectionState {
-        SCHEDULED,
-        REGISTRATION,
-        VOTING,
-        FINISHED;
+    public void updateRegistrantsList() {
+        Jarvis.getDatabase().execute("UPDATE elections SET registrants = ? WHERE (guild = ? AND name = ?);", module.getRegistrantsAsIdString(registrants), guildId, name);
+    }
+
+    public void addRegistrant(long userId) {
+        registrants.add(new Registrant(userId));
+        updateRegistrantsList();
+    }
+
+    public void removeRegistrant(long userId) {
+        registrants.remove(getRegistrantById(userId));
+        updateRegistrantsList();
+    }
+
+    public ArrayList<Registrant> getRegistrants() {
+        return registrants;
     }
 }
