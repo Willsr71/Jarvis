@@ -2,6 +2,7 @@ package sr.will.jarvis.manager;
 
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
+import sr.will.jarvis.thread.JarvisThread;
 
 import java.util.ArrayList;
 

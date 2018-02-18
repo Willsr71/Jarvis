@@ -1,4 +1,4 @@
-package sr.will.jarvis.modules.elections;
+package sr.will.jarvis.modules.elections.entity;
 
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;

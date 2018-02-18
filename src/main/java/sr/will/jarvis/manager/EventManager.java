@@ -6,6 +6,7 @@ import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.event.EventHandler;
 import sr.will.jarvis.event.EventPriority;
 import sr.will.jarvis.module.Module;
+import sr.will.jarvis.thread.JarvisThread;
 
 import java.util.ArrayList;
 
@@ -69,6 +70,6 @@ public class EventManager implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-        new JarvisThread(null, () -> processEvent(event)).name("Event-" + event.getClass().getSimpleName()).start();
+        new JarvisThread(null, () -> processEvent(event)).name("Event-" + event.getClass().getSimpleName()).silent(true).start();
     }
 }

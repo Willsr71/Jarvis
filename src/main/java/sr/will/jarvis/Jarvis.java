@@ -10,6 +10,7 @@ import sr.will.jarvis.config.Config;
 import sr.will.jarvis.event.EventHandlerJarvis;
 import sr.will.jarvis.manager.*;
 import sr.will.jarvis.service.InputReaderService;
+import sr.will.jarvis.thread.JarvisThread;
 
 import javax.security.auth.login.LoginException;
 import java.util.Date;
@@ -99,8 +100,8 @@ public class Jarvis {
 
         running = false;
 
-        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).stop()));
         threadManager.stop();
+        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).stop()));
 
         jda.shutdown();
         database.disconnect();
