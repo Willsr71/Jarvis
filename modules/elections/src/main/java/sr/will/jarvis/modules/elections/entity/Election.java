@@ -1,8 +1,11 @@
 package sr.will.jarvis.modules.elections.entity;
 
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.modules.elections.ModuleElections;
+import sr.will.jarvis.modules.elections.rest.formManager.FormClose;
 import sr.will.jarvis.modules.elections.rest.formManager.FormCreate;
 import sr.will.jarvis.modules.elections.rest.formManager.FormGet;
 import sr.will.jarvis.thread.JarvisThread;
@@ -12,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class Election {
@@ -53,26 +57,36 @@ public class Election {
     }
 
     public void startElection() {
-        new JarvisThread(module, this::endElection).delay(votingPeriod).name("Election" + name + "-election").start();
+        if (electionState == ElectionState.VOTING) {
+            System.out.println("already voting");
+            return;
+        }
+
         electionState = ElectionState.VOTING;
+        new JarvisThread(module, this::endElection).delay(votingPeriod).name("Election" + name + "-election").start();
 
         ZonedDateTime dateTime = ZonedDateTime.now();
         String dateString = dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.US) + " " + dateTime.getYear();
+        String electionName = dateString + " " + name;
 
-        if (registrants.size() <= 2) {
-            Jarvis.getJda().getTextChannelById(channelId).sendMessage(dateString + " " + name + " Election cancelled, only " + registrants.size() + " registrants.").queue();
+        if (registrants.size() == 0) {
+            Jarvis.getJda().getTextChannelById(channelId).sendMessage(electionName + " Election cancelled, only " + registrants.size() + " registrants.").queue();
             endElection();
             return;
         }
 
-        FormCreate formCreate = module.createPoll(name, registrants);
+        FormCreate formCreate = module.createPoll(electionName, registrants);
         formId = formCreate.form_id;
+        module.updateFormId(guildId, name, formId);
 
-        Jarvis.getJda().getTextChannelById(channelId).sendMessage(dateString + " " + name + " Election: " + formCreate.form_url).queue();
+        Jarvis.getJda().getTextChannelById(channelId).sendMessage("Election " + electionName + " is starting! To vote, just click the link that " + Jarvis.getJda().getSelfUser().getAsMention() + " sent you!").queue();
+        distributePoll(electionName, formCreate.form_prefill);
     }
 
     public void endElection() {
         electionState = ElectionState.SCHEDULED;
+
+        FormClose formClose = module.closePoll(formId);
 
         ArrayList<Registrant> leaderboard = getLeaderboard();
         StringBuilder builder = new StringBuilder();
@@ -85,38 +99,85 @@ public class Election {
         Jarvis.getJda().getTextChannelById(channelId).sendMessage(new EmbedBuilder().setTitle("Results").setColor(Color.GREEN).setDescription(builder).build()).queue();
     }
 
+    public void distributePoll(String electionName, String formPrefill) {
+        Guild guild = Jarvis.getJda().getGuildById(guildId);
+
+        for (Member member : guild.getMembers()) {
+            if (member.getUser().getIdLong() == Jarvis.getJda().getSelfUser().getIdLong()) {
+                continue;
+            }
+
+            /* TEMP
+            if (member.getUser().getIdLong() != 112587845968912384L) {
+                continue;
+            }*/
+
+            member.getUser().openPrivateChannel().queue((privateChannel) -> {
+                String authToken = module.getAuthToken(guildId, member.getUser().getIdLong(), name);
+                privateChannel.sendMessage(new EmbedBuilder().setColor(Color.GREEN)
+                        .setTitle(electionName + " Election")
+                        .setThumbnail(guild.getIconUrl())
+                        .setFooter("Your token: " + authToken, null)
+                        .setDescription(formPrefill
+                                .replace("DISCORD_DISCRIMINATOR", module.URLEncode(module.getDiscriminator(member.getUser())))
+                                .replace("DISCORD_AUTH_TOKEN", authToken))
+                        .build()).queue();
+            });
+        }
+    }
+
     public void countVotes() {
         if (formId == null) {
             return;
         }
 
         FormGet responses = module.getResponses(formId);
+        Guild guild = Jarvis.getJda().getGuildById(guildId);
 
-        for (FormGet.Response response : responses.userResponses) {
-            if (!module.userExistsOnGuild(guildId, response.discriminator)) {
-                System.out.println("User " + response.discriminator + " thrown out, does no exist on guild");
+        HashMap<String, Member> memberTags = new HashMap<>();
+        guild.getMembers().forEach((member -> memberTags.put(module.getDiscriminator(member.getUser()), member)));
+
+        for (FormGet.Response response : responses.responses) {
+            System.out.println(response.discriminator);
+            if (!memberTags.containsKey(response.discriminator)) {
+                System.out.println("User " + response.discriminator + " thrown out, does not exist on guild");
                 continue;
             }
 
-            response.votes.forEach((discriminator) -> getRegistrantByDiscriminator(discriminator).addVote());
+            if (!response.auth_token.equals(module.getAuthToken(guildId, memberTags.get(response.discriminator).getUser().getIdLong(), name))) {
+                System.out.println("Tokens for user " + response.discriminator + " do not match");
+                continue;
+            }
+
+            response.votes.forEach(this::addVoteByDiscrimimntor);
         }
     }
 
     public ArrayList<Registrant> getLeaderboard() {
         countVotes();
 
-        registrants.sort(Comparator.comparingInt(a -> a.votes));
+        registrants.sort(Comparator.comparingInt(Registrant::getVotes).reversed());
         return registrants;
     }
 
     public Registrant getRegistrantByDiscriminator(String discriminator) {
         for (Registrant registrant : registrants) {
-            if (registrant.getUser().getDiscriminator().equals(discriminator)) {
+            if (module.getDiscriminator(registrant.getUser()).equals(discriminator)) {
                 return registrant;
             }
         }
 
         return null;
+    }
+
+    public void addVoteByDiscrimimntor(String discriminator) {
+        Registrant registrant = getRegistrantByDiscriminator(discriminator);
+        if (registrant == null) {
+            System.out.println("registrant is null!?");
+            return;
+        }
+
+        registrant.addVote();
     }
 
     public Registrant getRegistrantById(long userId) {

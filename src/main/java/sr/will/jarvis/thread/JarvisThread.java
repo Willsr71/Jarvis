@@ -24,7 +24,7 @@ public class JarvisThread extends Thread {
         return this;
     }
 
-    public JarvisThread executeAt(long time) {
+    public JarvisThread executeAt(long executeAt) {
         this.executeAt = executeAt;
         return this;
     }
@@ -45,49 +45,46 @@ public class JarvisThread extends Thread {
         return this;
     }
 
-    private synchronized void log(String message) {
+    private void log(String message) {
         if (silent) {
             return;
         }
 
-        Jarvis.debug(message);
+        Jarvis.debug(getName() + " " + message);
     }
 
-    private synchronized void waitForDelay(long delay) throws InterruptedException {
-        if (delay == 0) {
+    private void waitForDelay(long delay) throws InterruptedException {
+        if (delay <= 0) {
             return;
         }
 
-        log(getName() + " waiting for " + delay + "ms");
-        wait(delay);
-        log(getName() + " finished waiting");
+        log("waiting for " + delay + "ms");
+        sleep(delay);
+        log("finished waiting");
     }
 
     public void run() {
-        log(getName() + " running!");
+        log("running!");
         int loops = 0;
         while (true) {
             try {
                 // Initial execute at and delay
                 if (loops == 0) {
                     // Execute at
-                    long sleepTime = executeAt - System.currentTimeMillis();
-                    if (sleepTime > 0) {
-                        waitForDelay(sleepTime);
-                    }
+                    waitForDelay(executeAt - System.currentTimeMillis());
 
                     // Delay
                     waitForDelay(delay);
                 }
             } catch (InterruptedException e) {
                 if (!running) {
-                    log(getName() + " interrupted");
+                    log("interrupted");
                     return;
                 }
             }
 
             // Run the content
-            log(getName() + " executing!");
+            log("executing!");
             runnable.run();
 
             try {
@@ -99,19 +96,19 @@ public class JarvisThread extends Thread {
                 waitForDelay(repeatDelay);
             } catch (InterruptedException e) {
                 if (!running) {
-                    log(getName() + " interrupted");
+                    log("interrupted");
                     return;
                 }
             }
             loops += 1;
         }
 
-        log(getName() + " finished");
+        log("finished");
         Jarvis.getInstance().threadManager.removeThread(this);
     }
 
-    public synchronized void kill() {
+    public void kill() {
         running = false;
-        notify();
+        interrupt();
     }
 }

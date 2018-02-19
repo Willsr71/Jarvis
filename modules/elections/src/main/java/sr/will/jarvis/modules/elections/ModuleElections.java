@@ -6,24 +6,26 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
-import sr.will.jarvis.modules.elections.command.CommandElection;
-import sr.will.jarvis.modules.elections.command.CommandElectionAdd;
-import sr.will.jarvis.modules.elections.command.CommandElectionRemove;
-import sr.will.jarvis.modules.elections.command.CommandElectionStart;
+import sr.will.jarvis.modules.elections.command.*;
 import sr.will.jarvis.modules.elections.entity.Election;
 import sr.will.jarvis.modules.elections.entity.ElectionState;
 import sr.will.jarvis.modules.elections.entity.Registrant;
+import sr.will.jarvis.modules.elections.rest.formManager.FormClose;
 import sr.will.jarvis.modules.elections.rest.formManager.FormCreate;
 import sr.will.jarvis.modules.elections.rest.formManager.FormGet;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Random;
 
 public class ModuleElections extends Module {
     public static final String formManagerUrl = "https://script.google.com/macros/s/AKfycbz7zqjzcXGGx9Q7UQTKpZnfLN7iql5V4_cs2VLsL1L_le81Zuk/exec";
@@ -43,8 +45,10 @@ public class ModuleElections extends Module {
 
         registerCommand("election", new CommandElection(this));
         registerCommand("electionadd", new CommandElectionAdd(this));
+        registerCommand("electionregister", new CommandElectionRegister(this));
         registerCommand("electionremove", new CommandElectionRemove(this));
         registerCommand("electionstart", new CommandElectionStart(this));
+        registerCommand("electionstop", new CommandElectionStop(this));
     }
 
     public void finishStart() {
@@ -129,7 +133,13 @@ public class ModuleElections extends Module {
     }
 
     public FormCreate createPoll(String name, ArrayList<Registrant> registrants) {
-        String requestString = formManagerUrl + "?action=create&name=" + name + "&choices=" + getRegistrantsAsString(registrants);
+        try {
+            name = URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String requestString = formManagerUrl + "?action=create&name=" + name + getRegistrantsAsChoiceString(registrants);
+
         Jarvis.debug(requestString);
         try {
             String string = Unirest.get(requestString).asString().getBody();
@@ -138,6 +148,18 @@ public class ModuleElections extends Module {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    public FormClose closePoll(String formId) {
+        String requestString = formManagerUrl + "?action=close&formId=" + formId;
+        Jarvis.debug(requestString);
+        try {
+            String string = Unirest.get(requestString).asString().getBody();
+            return gson.fromJson(string, FormClose.class);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -153,16 +175,39 @@ public class ModuleElections extends Module {
         return null;
     }
 
-    public String getRegistrantsAsString(ArrayList<Registrant> registrants) {
+    public String URLEncode(String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return string;
+    }
+
+    public String getAuthToken(long guildId, long userId, String electionName) {
+        // Very secure token generation we got here
+        Random random = new Random(guildId + userId + electionName.chars().sum());
+        return Long.toHexString(random.nextLong());
+    }
+
+    public String getDiscriminator(User user) {
+        return user.getName() + "#" + user.getDiscriminator();
+    }
+
+    public String getRegistrantsAsChoiceString(ArrayList<Registrant> registrants) {
         if (registrants.size() == 0) {
             return "";
         }
 
         StringBuilder string = new StringBuilder();
         for (Registrant registrant : registrants) {
-            string.append(registrant.getUser().getDiscriminator()).append(",");
+            string.append("&choice=");
+            try {
+                string.append(URLEncoder.encode(getDiscriminator(registrant.getUser()), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
-        string.setLength(string.length() - 1);
 
         return string.toString();
     }

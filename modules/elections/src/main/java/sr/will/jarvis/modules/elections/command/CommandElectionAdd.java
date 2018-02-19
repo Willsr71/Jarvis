@@ -30,7 +30,7 @@ public class CommandElectionAdd extends Command {
         int dayOfMonth = Integer.parseInt(args[1]);
         long votingPeriod = 0;
         try {
-            votingPeriod = DateUtils.parseDateDiffAbsolute(args[2], true).getTimeInMillis();
+            votingPeriod = DateUtils.parseDateDiffAbsolute(args[2], true);
         } catch (Exception e) {
             e.printStackTrace();
             sendFailureMessage(message, "Invalid voting period");

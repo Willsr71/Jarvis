@@ -18,4 +18,8 @@ public class Registrant {
     public void addVote() {
         votes += 1;
     }
+
+    public int getVotes() {
+        return votes;
+    }
 }
