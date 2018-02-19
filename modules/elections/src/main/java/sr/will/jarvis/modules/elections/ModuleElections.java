@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
@@ -49,6 +47,7 @@ public class ModuleElections extends Module {
         registerCommand("electionremove", new CommandElectionRemove(this));
         registerCommand("electionstart", new CommandElectionStart(this));
         registerCommand("electionstop", new CommandElectionStop(this));
+        registerCommand("electionvote", new CommandElectionVote(this));
     }
 
     public void finishStart() {
@@ -61,11 +60,12 @@ public class ModuleElections extends Module {
                 "voting_period bigint(20) NOT NULL," +
                 "election_state varchar(16) NOT NULL," +
                 "form_id char(44)," +
+                "form_prefill varchar(1024)," +
                 "registrants text NOT NULL," +
                 "PRIMARY KEY (id));");
 
         try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT guild, name, channel, day_of_month, voting_period, election_state, form_id, registrants from elections;");
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT guild, name, channel, day_of_month, voting_period, election_state, form_id, form_prefill, registrants from elections;");
             while (result.next()) {
                 elections.add(new Election(
                         this,
@@ -76,6 +76,7 @@ public class ModuleElections extends Module {
                         result.getLong("voting_period"),
                         ElectionState.valueOf(result.getString("election_state")),
                         result.getString("form_id"),
+                        result.getString("form_prefill"),
                         getRegistrantsFromIdString(result.getString("registrants"))
                 ));
             }
@@ -105,11 +106,11 @@ public class ModuleElections extends Module {
     }
 
     public void updateElectionState(long guildId, String name, ElectionState electionState) {
-        Jarvis.getDatabase().execute("UPDATE elections SET election_state = ? WHERE (guild = ? AND name = ?);", electionState, guildId, name);
+        Jarvis.getDatabase().execute("UPDATE elections SET election_state = ? WHERE (guild = ? AND name = ?);", electionState.toString(), guildId, name);
     }
 
-    public void updateFormId(long guildId, String name, String formId) {
-        Jarvis.getDatabase().execute("UPDATE elections SET form_id = ? WHERE (guild = ? AND name = ?);", formId, guildId, name);
+    public void updateFormInfo(long guildId, String name, String formId, String formPrefill) {
+        Jarvis.getDatabase().execute("UPDATE elections SET form_id = ?, form_prefill = ? WHERE (guild = ? AND name = ?);", formId, formPrefill, guildId, name);
     }
 
     public void updateRegistrants(long guildId, String name, ArrayList<Registrant> registrants) {
@@ -133,12 +134,7 @@ public class ModuleElections extends Module {
     }
 
     public FormCreate createPoll(String name, ArrayList<Registrant> registrants) {
-        try {
-            name = URLEncoder.encode(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String requestString = formManagerUrl + "?action=create&name=" + name + getRegistrantsAsChoiceString(registrants);
+        String requestString = formManagerUrl + "?action=create&name=" + URLEncode(name) + getRegistrantsAsChoiceString(registrants);
 
         Jarvis.debug(requestString);
         try {
@@ -201,12 +197,7 @@ public class ModuleElections extends Module {
 
         StringBuilder string = new StringBuilder();
         for (Registrant registrant : registrants) {
-            string.append("&choice=");
-            try {
-                string.append(URLEncoder.encode(getDiscriminator(registrant.getUser()), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            string.append("&choice=").append(URLEncode(getDiscriminator(registrant.getUser())));
         }
 
         return string.toString();
@@ -237,17 +228,6 @@ public class ModuleElections extends Module {
         }
 
         return registrants;
-    }
-
-    public boolean userExistsOnGuild(long guildId, String discriminator) {
-        Guild guild = Jarvis.getJda().getGuildById(guildId);
-        for (Member member : guild.getMembers()) {
-            if (member.getUser().getDiscriminator().equals(discriminator)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public long getTomorrow() {

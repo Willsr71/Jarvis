@@ -3,6 +3,7 @@ package sr.will.jarvis.modules.elections.entity;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.PrivateChannel;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.modules.elections.ModuleElections;
 import sr.will.jarvis.modules.elections.rest.formManager.FormClose;
@@ -27,9 +28,10 @@ public class Election {
     public long votingPeriod;
     public ElectionState electionState;
     public String formId;
+    public String formPrefill;
     private ArrayList<Registrant> registrants;
 
-    public Election(ModuleElections module, long guildId, String name, long channelId, int dayOfMonth, long votingPeriod, ElectionState electionState, String formId, ArrayList<Registrant> registrants) {
+    public Election(ModuleElections module, long guildId, String name, long channelId, int dayOfMonth, long votingPeriod, ElectionState electionState, String formId, String formPrefill, ArrayList<Registrant> registrants) {
         this.module = module;
         this.guildId = guildId;
         this.name = name;
@@ -38,6 +40,7 @@ public class Election {
         this.votingPeriod = votingPeriod;
         this.electionState = electionState;
         this.formId = formId;
+        this.formPrefill = formPrefill;
         this.registrants = registrants;
 
         new JarvisThread(module, this::checkShouldStart).executeAt(module.getTomorrow()).repeat(true, 24 * 60 * 60 * 1000).name("Election-" + name).start();
@@ -45,7 +48,7 @@ public class Election {
     }
 
     public Election(ModuleElections module, long guildId, String name, long channelId, int dayOfMonth, long votingPeriod) {
-        this(module, guildId, name, channelId, dayOfMonth, votingPeriod, ElectionState.SCHEDULED, null, new ArrayList<>());
+        this(module, guildId, name, channelId, dayOfMonth, votingPeriod, ElectionState.SCHEDULED, null, null, new ArrayList<>());
     }
 
     public void checkShouldStart() {
@@ -63,11 +66,10 @@ public class Election {
         }
 
         electionState = ElectionState.VOTING;
+        module.updateElectionState(guildId, name, electionState);
         new JarvisThread(module, this::endElection).delay(votingPeriod).name("Election" + name + "-election").start();
 
-        ZonedDateTime dateTime = ZonedDateTime.now();
-        String dateString = dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.US) + " " + dateTime.getYear();
-        String electionName = dateString + " " + name;
+        String electionName = getElectionName();
 
         if (registrants.size() == 0) {
             Jarvis.getJda().getTextChannelById(channelId).sendMessage(electionName + " Election cancelled, only " + registrants.size() + " registrants.").queue();
@@ -77,16 +79,20 @@ public class Election {
 
         FormCreate formCreate = module.createPoll(electionName, registrants);
         formId = formCreate.form_id;
-        module.updateFormId(guildId, name, formId);
+        formPrefill = formCreate.form_prefill;
+        module.updateFormInfo(guildId, name, formId, formPrefill);
 
         Jarvis.getJda().getTextChannelById(channelId).sendMessage("Election " + electionName + " is starting! To vote, just click the link that " + Jarvis.getJda().getSelfUser().getAsMention() + " sent you!").queue();
-        distributePoll(electionName, formCreate.form_prefill);
+        distributePoll();
     }
 
     public void endElection() {
         electionState = ElectionState.SCHEDULED;
+        module.updateElectionState(guildId, name, electionState);
 
-        FormClose formClose = module.closePoll(formId);
+        if (formId != null) {
+            FormClose formClose = module.closePoll(formId);
+        }
 
         ArrayList<Registrant> leaderboard = getLeaderboard();
         StringBuilder builder = new StringBuilder();
@@ -99,7 +105,7 @@ public class Election {
         Jarvis.getJda().getTextChannelById(channelId).sendMessage(new EmbedBuilder().setTitle("Results").setColor(Color.GREEN).setDescription(builder).build()).queue();
     }
 
-    public void distributePoll(String electionName, String formPrefill) {
+    public void distributePoll() {
         Guild guild = Jarvis.getJda().getGuildById(guildId);
 
         for (Member member : guild.getMembers()) {
@@ -107,23 +113,24 @@ public class Election {
                 continue;
             }
 
-            /* TEMP
             if (member.getUser().getIdLong() != 112587845968912384L) {
                 continue;
-            }*/
+            }
 
-            member.getUser().openPrivateChannel().queue((privateChannel) -> {
-                String authToken = module.getAuthToken(guildId, member.getUser().getIdLong(), name);
-                privateChannel.sendMessage(new EmbedBuilder().setColor(Color.GREEN)
-                        .setTitle(electionName + " Election")
-                        .setThumbnail(guild.getIconUrl())
-                        .setFooter("Your token: " + authToken, null)
-                        .setDescription(formPrefill
-                                .replace("DISCORD_DISCRIMINATOR", module.URLEncode(module.getDiscriminator(member.getUser())))
-                                .replace("DISCORD_AUTH_TOKEN", authToken))
-                        .build()).queue();
-            });
+            member.getUser().openPrivateChannel().queue(this::sendVoteDm);
         }
+    }
+
+    public void sendVoteDm(PrivateChannel privateChannel) {
+        String authToken = module.getAuthToken(guildId, privateChannel.getUser().getIdLong(), name);
+        privateChannel.sendMessage(new EmbedBuilder().setColor(Color.GREEN)
+                .setTitle(getElectionName() + " Election")
+                .setThumbnail(Jarvis.getJda().getGuildById(guildId).getIconUrl())
+                .setFooter("Your token: " + authToken, null)
+                .setDescription(formPrefill
+                        .replace("DISCORD_DISCRIMINATOR", module.URLEncode(module.getDiscriminator(privateChannel.getUser())))
+                        .replace("DISCORD_AUTH_TOKEN", authToken))
+                .build()).queue();
     }
 
     public void countVotes() {
@@ -151,6 +158,12 @@ public class Election {
 
             response.votes.forEach(this::addVoteByDiscrimimntor);
         }
+    }
+
+    public String getElectionName() {
+        ZonedDateTime dateTime = ZonedDateTime.now();
+        String dateString = dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.US) + " " + dateTime.getYear();
+        return dateString + " " + name;
     }
 
     public ArrayList<Registrant> getLeaderboard() {
@@ -190,18 +203,14 @@ public class Election {
         return null;
     }
 
-    public void updateRegistrantsList() {
-        Jarvis.getDatabase().execute("UPDATE elections SET registrants = ? WHERE (guild = ? AND name = ?);", module.getRegistrantsAsIdString(registrants), guildId, name);
-    }
-
     public void addRegistrant(long userId) {
         registrants.add(new Registrant(userId));
-        updateRegistrantsList();
+        module.updateRegistrants(guildId, name, registrants);
     }
 
     public void removeRegistrant(long userId) {
         registrants.remove(getRegistrantById(userId));
-        updateRegistrantsList();
+        module.updateRegistrants(guildId, name, registrants);
     }
 
     public ArrayList<Registrant> getRegistrants() {
