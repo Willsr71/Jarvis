@@ -56,6 +56,8 @@ public class ModuleElections extends Module {
                 "guild bigint(20) NOT NULL," +
                 "name varchar(255) NOT NULL," +
                 "channel bigint(20) NOT NULL," +
+                "role bigint(20) NOT NULL," +
+                "winner_count int NOT NULL," +
                 "day_of_month bigint(20) NOT NULL," +
                 "voting_period bigint(20) NOT NULL," +
                 "election_state varchar(16) NOT NULL," +
@@ -65,13 +67,15 @@ public class ModuleElections extends Module {
                 "PRIMARY KEY (id));");
 
         try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT guild, name, channel, day_of_month, voting_period, election_state, form_id, form_prefill, registrants from elections;");
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT guild, name, channel, role, winner_count, day_of_month, voting_period, election_state, form_id, form_prefill, registrants from elections;");
             while (result.next()) {
                 elections.add(new Election(
                         this,
                         result.getLong("guild"),
                         result.getString("name"),
                         result.getLong("channel"),
+                        result.getLong("role"),
+                        result.getInt("winner_count"),
                         result.getInt("day_of_month"),
                         result.getLong("voting_period"),
                         ElectionState.valueOf(result.getString("election_state")),
@@ -80,7 +84,6 @@ public class ModuleElections extends Module {
                         getRegistrantsFromIdString(result.getString("registrants"))
                 ));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -96,8 +99,8 @@ public class ModuleElections extends Module {
 
     public void addElection(Election election) {
         elections.add(election);
-        Jarvis.getDatabase().execute("INSERT INTO elections (guild, name, channel, day_of_month, voting_period, election_state, form_id, registrants) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-                election.guildId, election.name, election.channelId, election.dayOfMonth, election.votingPeriod, election.electionState.toString(), election.formId, getRegistrantsAsIdString(election.getRegistrants()));
+        Jarvis.getDatabase().execute("INSERT INTO elections (guild, name, channel, role, winner_count, day_of_month, voting_period, election_state, form_id, registrants) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                election.guildId, election.name, election.channelId, election.roleId, election.winnerCount, election.dayOfMonth, election.votingPeriod, election.electionState.toString(), election.formId, getRegistrantsAsIdString(election.getRegistrants()));
     }
 
     public void removeElection(Election election) {

@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.PrivateChannel;
+import net.dv8tion.jda.core.entities.Role;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.modules.elections.ModuleElections;
 import sr.will.jarvis.modules.elections.rest.formManager.FormClose;
@@ -24,6 +25,8 @@ public class Election {
     public long guildId;
     public String name;
     public long channelId;
+    public long roleId;
+    public int winnerCount;
     public int dayOfMonth;
     public long votingPeriod;
     public ElectionState electionState;
@@ -31,11 +34,13 @@ public class Election {
     public String formPrefill;
     private ArrayList<Registrant> registrants;
 
-    public Election(ModuleElections module, long guildId, String name, long channelId, int dayOfMonth, long votingPeriod, ElectionState electionState, String formId, String formPrefill, ArrayList<Registrant> registrants) {
+    public Election(ModuleElections module, long guildId, String name, long channelId, long roleId, int winnerCount, int dayOfMonth, long votingPeriod, ElectionState electionState, String formId, String formPrefill, ArrayList<Registrant> registrants) {
         this.module = module;
         this.guildId = guildId;
         this.name = name;
         this.channelId = channelId;
+        this.roleId = roleId;
+        this.winnerCount = winnerCount;
         this.dayOfMonth = dayOfMonth;
         this.votingPeriod = votingPeriod;
         this.electionState = electionState;
@@ -47,8 +52,8 @@ public class Election {
         checkShouldStart();
     }
 
-    public Election(ModuleElections module, long guildId, String name, long channelId, int dayOfMonth, long votingPeriod) {
-        this(module, guildId, name, channelId, dayOfMonth, votingPeriod, ElectionState.SCHEDULED, null, null, new ArrayList<>());
+    public Election(ModuleElections module, long guildId, String name, long channelId, long roleId, int winnerCount, int dayOfMonth, long votingPeriod) {
+        this(module, guildId, name, channelId, roleId, winnerCount, dayOfMonth, votingPeriod, ElectionState.SCHEDULED, null, null, new ArrayList<>());
     }
 
     public void checkShouldStart() {
@@ -95,11 +100,15 @@ public class Election {
         }
 
         ArrayList<Registrant> leaderboard = getLeaderboard();
+
+        clearWinnerRole();
+        applyWinnerRole(leaderboard);
+
         StringBuilder builder = new StringBuilder();
 
         for (int x = 0; x < leaderboard.size() && x < 5; x += 1) {
             Registrant registrant = leaderboard.get(x);
-            builder.append(registrant.getUser().getName()).append(" (").append(registrant.votes).append(")\n");
+            builder.append(registrant.getUser().getAsMention()).append(" (").append(registrant.votes).append(")\n");
         }
 
         Jarvis.getJda().getTextChannelById(channelId).sendMessage(new EmbedBuilder().setTitle("Results").setColor(Color.GREEN).setDescription(builder).build()).queue();
@@ -143,6 +152,7 @@ public class Election {
 
         HashMap<String, Member> memberTags = new HashMap<>();
         guild.getMembers().forEach((member -> memberTags.put(module.getDiscriminator(member.getUser()), member)));
+        HashMap<String, ArrayList<String>> finalVotes = new HashMap<>();
 
         for (FormGet.Response response : responses.responses) {
             System.out.println(response.discriminator);
@@ -156,7 +166,30 @@ public class Election {
                 continue;
             }
 
-            response.votes.forEach(this::addVoteByDiscrimimntor);
+            if (finalVotes.containsKey(response.discriminator)) {
+                System.out.println("Overriding vote from user " + response.discriminator);
+                finalVotes.remove(response.discriminator);
+            }
+            finalVotes.put(response.discriminator, response.votes);
+        }
+
+        finalVotes.values().forEach((votes) -> votes.forEach(this::addVoteByDiscrimimntor));
+    }
+
+    public void applyWinnerRole(ArrayList<Registrant> winners) {
+        Guild guild = Jarvis.getJda().getGuildById(guildId);
+        Role role = guild.getRoleById(roleId);
+        for (int x = 0; x < winners.size() && x <= winnerCount; x += 1) {
+            Member member = guild.getMember(winners.get(x).getUser());
+            guild.getController().addSingleRoleToMember(member, role).queue();
+        }
+    }
+
+    public void clearWinnerRole() {
+        Guild guild = Jarvis.getJda().getGuildById(guildId);
+        Role role = guild.getRoleById(roleId);
+        for (Member member : guild.getMembersWithRoles(role)) {
+            guild.getController().removeSingleRoleFromMember(member, role).queue();
         }
     }
 
