@@ -4,12 +4,12 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.manager.JarvisThread;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.modules.assistance.command.CommandDefine;
 import sr.will.jarvis.modules.assistance.command.CommandEval;
 import sr.will.jarvis.modules.assistance.command.CommandGoogle;
 import sr.will.jarvis.modules.assistance.command.CommandRemindme;
+import sr.will.jarvis.thread.JarvisThread;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,6 +82,6 @@ public class ModuleAssistance extends Module {
     }
 
     public void startReminderThread(final long userId, final long channelId, final long time, final String message) {
-        new JarvisThread(this, () -> remind(userId, channelId, message)).delay(time).name("Reminder").start();
+        new JarvisThread(this, () -> remind(userId, channelId, message)).executeAt(time).name("Reminder").start();
     }
 }

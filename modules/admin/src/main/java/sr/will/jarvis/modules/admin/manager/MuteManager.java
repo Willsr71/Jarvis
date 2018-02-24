@@ -9,8 +9,8 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.manager.JarvisThread;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
+import sr.will.jarvis.thread.JarvisThread;
 
 import java.awt.*;
 import java.sql.ResultSet;
@@ -180,6 +180,6 @@ public class MuteManager {
     }
 
     public void startUnmuteThread(final long guildId, final long userId, final long duration) {
-        new JarvisThread(module, () -> unmute(guildId, userId)).delay(duration).name("Mute").start();
+        new JarvisThread(module, () -> unmute(guildId, userId)).executeAt(duration).name("Mute").start();
     }
 }

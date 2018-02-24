@@ -1,5 +1,6 @@
 package sr.will.jarvis.modules.levels.event;
 
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import sr.will.jarvis.event.EventHandler;
@@ -22,7 +23,7 @@ public class EventHandlerLevels extends EventHandler {
     }
 
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) {
+        if (event.getAuthor().isBot() || event.getChannelType() != ChannelType.TEXT) {
             return;
         }
 

@@ -10,6 +10,7 @@ import sr.will.jarvis.config.Config;
 import sr.will.jarvis.event.EventHandlerJarvis;
 import sr.will.jarvis.manager.*;
 import sr.will.jarvis.service.InputReaderService;
+import sr.will.jarvis.thread.JarvisThread;
 
 import javax.security.auth.login.LoginException;
 import java.util.Date;
@@ -87,6 +88,7 @@ public class Jarvis {
         })
                 .name("StatusChanger")
                 .repeat(true, config.discord.statusMessageInterval * 1000)
+                .silent(true)
                 .start();
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).finishStart()));
@@ -99,8 +101,8 @@ public class Jarvis {
 
         running = false;
 
-        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).stop()));
         threadManager.stop();
+        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).stop()));
 
         jda.shutdown();
         database.disconnect();
@@ -117,22 +119,13 @@ public class Jarvis {
         database.setCredentials(config.sql.host, config.sql.database, config.sql.user, config.sql.password);
         database.reconnect();
 
-        deployDatabase();
-
-        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).reload()));
-    }
-
-    public void deployDatabase() {
-        System.out.println("Deploying database....");
-
-        // Create various tables if they do not exist
         database.execute("CREATE TABLE IF NOT EXISTS modules(" +
                 "id int NOT NULL AUTO_INCREMENT," +
                 "guild bigint(20) NOT NULL," +
                 "module varchar(64) NOT NULL," +
                 "PRIMARY KEY (id));");
 
-        System.out.println("Done.");
+        moduleManager.getModules().forEach((s -> moduleManager.getModule(s).reload()));
     }
 
     public static void debug(String message) {

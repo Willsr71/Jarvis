@@ -4,8 +4,8 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.manager.JarvisThread;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
+import sr.will.jarvis.thread.JarvisThread;
 
 import java.awt.*;
 import java.sql.ResultSet;
@@ -123,6 +123,6 @@ public class BanManager {
     }
 
     public void startUnbanThread(final long guildId, final long userId, final long duration) {
-        new JarvisThread(module, () -> unban(guildId, userId)).delay(duration).name("Ban").start();
+        new JarvisThread(module, () -> unban(guildId, userId)).executeAt(duration).name("Ban").start();
     }
 }

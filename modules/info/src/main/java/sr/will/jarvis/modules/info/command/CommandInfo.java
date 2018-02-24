@@ -33,7 +33,7 @@ public class CommandInfo extends Command {
         embed.addField("**> User Information**",
                 "\n> Account Creation: " + user.getCreationTime().format(module.dateTimeFormatter) +
                         "\n> Status: " + member.getOnlineStatus().name() +
-                        "\n> Playing: " + member.getGame().getName(),
+                        "\n> Playing: " + (member.getGame() == null ? "Nothing" : member.getGame().getName()),
                 true);
         embed.addField("**> Member Information**",
                 "\n> Joined Guild: " + member.getJoinDate().format(module.dateTimeFormatter) +

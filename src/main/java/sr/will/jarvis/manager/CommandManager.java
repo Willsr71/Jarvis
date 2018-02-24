@@ -86,6 +86,8 @@ public class CommandManager {
 
     private void executeCommand(String command, Message message, String... args) {
         if (commands.containsKey(command)) {
+            Jarvis.debug(String.format("%s | %s | %s | %s", message.getGuild().getId(), message.getAuthor().getId(), command, Arrays.toString(args)));
+
             try {
                 commands.get(command).execute(message, args);
             } catch (BotPermissionException | UserPermissionException | ModuleNotEnabledException e) {
@@ -94,8 +96,6 @@ public class CommandManager {
                 message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error!", null).setColor(Color.RED).setDescription(e.toString()).build()).queue();
                 e.printStackTrace();
             }
-
-            System.out.println(String.format("%s | %s | %s | %s", message.getGuild().getId(), message.getAuthor().getId(), command, Arrays.toString(args)));
         }
     }
 }

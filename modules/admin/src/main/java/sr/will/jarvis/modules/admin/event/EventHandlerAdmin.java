@@ -1,6 +1,7 @@
 package sr.will.jarvis.modules.admin.event;
 
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
@@ -29,6 +30,10 @@ public class EventHandlerAdmin extends EventHandler {
     }
 
     private void onMessageReceived(MessageReceivedEvent event) {
+        if (event.getChannelType() != ChannelType.TEXT) {
+            return;
+        }
+
         if (module.muteManager.isMuted(event.getGuild().getIdLong(), event.getAuthor().getIdLong())) {
             event.getMessage().delete().queue();
             System.out.println("deleting message");
