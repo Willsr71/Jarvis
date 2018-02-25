@@ -27,6 +27,11 @@ public class CommandFlairSetName extends Command {
         String name = condenseArgs(args);
         Member member = message.getMember();
 
+        if (name.length() == 0 || name.length() > 32) {
+            sendFailureMessage(message, "Flair must be between 1 and 32 characters (That was " + name.length() + ")");
+            return;
+        }
+
         module.setFlairName(member, name);
         sendSuccessEmote(message);
     }
