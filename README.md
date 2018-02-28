@@ -53,7 +53,9 @@ Basic assitance commands such as remindme, define, and google
 |Command|Permission|Description|
 |---|---|---|
 |define \<word\>|None|Displays the first Urban Dictionary result of a word|
+|eval \<javascript\>|Bot Owner|Evals the specified javascript|
 |google \<search string\>|None|Displays a lmgtfy.com link of the search string|
+|regex \<find\> \<replace\> \<text\>|None|Use regex to find and replace on the specified text|
 |remindme \<delay\> \<message\>|None|Reminds the user of the specified message after the specified time|
 
 ChatBot Module ![not default](https://img.shields.io/badge/default-no-red.svg)
@@ -75,6 +77,20 @@ Custom commands and responses.
 |commandremove \<name\>|Manage Messages|Removes a custom command. Guild specific|
 |commands|None|Displays all custom commands|
 
+Election Module ![not default](https://img.shields.io/badge/default-no-red.svg)
+---------------
+Adds the ability to have monthly mod/admin elections in discord
+
+|Command|Permission|Description|
+|---|---|---|
+|election|None|Lists elections on the guild|
+|electionadd \<name\> \<day of month\> \<voting period\> \<winner count\> \<winner role\> \<announcement channel\>|Administrator|Create an election|
+|electionregister \<name\>|None|Register or unregister for the specified election|
+|electionremove \<name\>|None|Delete the specified elecion|
+|electionstart \<name\>|Administrator|Manually start the specified election|
+|electionstop \<name\>|Administrator|Manually stop the specified election|
+|electionvote \<name\>|None|Send a vote link to the sender|
+
 Flair Module ![not default](https://img.shields.io/badge/default-no-red.svg)
 ------------
 Offers per-user flairs (roles) with the ability to color and name them freely
@@ -89,7 +105,7 @@ Offers per-user flairs (roles) with the ability to color and name them freely
 |flairimport \[role exclude list\]|Administrator|Adds the user's roles to the flair system|
 
 Info Module ![default](https://img.shields.io/badge/default-yes-green.svg)
-===========
+-----------
 Informational commands for guilds and users
 
 |Command|Permission|Description|
