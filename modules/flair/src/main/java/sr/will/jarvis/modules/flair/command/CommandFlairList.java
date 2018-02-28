@@ -2,6 +2,7 @@ package sr.will.jarvis.modules.flair.command;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.modules.flair.ModuleFlair;
@@ -32,7 +33,12 @@ public class CommandFlairList extends Command {
         int maxLen = 0;
 
         for (long memberId : memberFlairs.keySet()) {
-            String name = Jarvis.getJda().getUserById(memberId).getName();
+            User user = Jarvis.getJda().getUserById(memberId);
+            String name = "User not accessible";
+            if (user != null) {
+                name = user.getName();
+            }
+
             maxLen = Math.max(name.length(), maxLen);
         }
 

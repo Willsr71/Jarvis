@@ -5,10 +5,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
-import sr.will.jarvis.modules.assistance.command.CommandDefine;
-import sr.will.jarvis.modules.assistance.command.CommandEval;
-import sr.will.jarvis.modules.assistance.command.CommandGoogle;
-import sr.will.jarvis.modules.assistance.command.CommandRemindme;
+import sr.will.jarvis.modules.assistance.command.*;
 import sr.will.jarvis.thread.JarvisThread;
 
 import java.sql.ResultSet;
@@ -29,6 +26,7 @@ public class ModuleAssistance extends Module {
         registerCommand("define", new CommandDefine(this));
         registerCommand("eval", new CommandEval(this));
         registerCommand("google", new CommandGoogle(this));
+        registerCommand("regex", new CommandRegex(this));
         registerCommand("remindme", new CommandRemindme(this));
     }
 
