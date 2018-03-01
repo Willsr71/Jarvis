@@ -122,10 +122,6 @@ public class Election {
                 continue;
             }
 
-            if (member.getUser().getIdLong() != 112587845968912384L) {
-                continue;
-            }
-
             member.getUser().openPrivateChannel().queue(this::sendVoteDm);
         }
     }

@@ -48,6 +48,7 @@ public class ModuleElections extends Module {
         registerCommand("electionstart", new CommandElectionStart(this));
         registerCommand("electionstop", new CommandElectionStop(this));
         registerCommand("electionvote", new CommandElectionVote(this));
+        registerCommand("electionvoteall", new CommandElectionVoteAll(this));
     }
 
     public void finishStart() {
