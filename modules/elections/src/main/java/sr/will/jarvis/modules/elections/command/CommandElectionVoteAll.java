@@ -1,22 +1,24 @@
 package sr.will.jarvis.modules.elections.command;
 
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.modules.elections.ModuleElections;
 import sr.will.jarvis.modules.elections.entity.Election;
 import sr.will.jarvis.modules.elections.entity.ElectionState;
 
-public class CommandElectionVote extends Command {
+public class CommandElectionVoteAll extends Command {
     private ModuleElections module;
 
-    public CommandElectionVote(ModuleElections module) {
-        super("electionvote", "electionvote <name>", "Send a link for voting", module);
+    public CommandElectionVoteAll(ModuleElections module) {
+        super("electionvoteall", "electionvoteall <name>", "Send a link for voting to everyone on the guild", module);
         this.module = module;
     }
 
     @Override
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
+        checkUserPermission(message, Permission.ADMINISTRATOR);
 
         if (args.length != 1) {
             sendUsage(message);
@@ -36,7 +38,7 @@ public class CommandElectionVote extends Command {
             return;
         }
 
-        message.getMember().getUser().openPrivateChannel().queue((election::sendVoteDm));
+        election.distributePoll();
         sendSuccessEmote(message);
     }
 }
