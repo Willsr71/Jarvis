@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.modules.overwatch.ModuleOverwatch;
-import sr.will.jarvis.modules.overwatch.rest.owapi.UserBlob;
+import sr.will.jarvis.modules.overwatch.rest.ovrstat.UserInfo;
 
 import java.awt.*;
 
@@ -22,22 +22,19 @@ public class CommandOWStats extends Command {
 
         long startTime = System.currentTimeMillis();
 
-        UserBlob userBlob = module.getUserBlob(message, args);
-        if (userBlob == null) {
+        UserInfo userInfo = module.getUserInfo(message, args);
+        if (userInfo == null) {
             return;
         }
 
-        UserBlob.Region.Stats.Mode.OverallStats overallStats = userBlob.getRegion().stats.quickplay.overall_stats;
-        String userUrl = "https://playoverwatch.com/en-us/career/pc/us/" + userBlob.battletag;
-
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setAuthor(userBlob.battletag, userUrl, module.getTierImage(overallStats.tier))
-                .addField("Level", ((overallStats.prestige * 100) + overallStats.level) + "", true)
-                .addField("SR", overallStats.comprank + "", true)
-                .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay, 3), true)
-                .addField("Top heroes (Comp)", (userBlob.getRegion().heroes.playtime.competitive == null) ? "N/A" : module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive, 3), true)
-                .setThumbnail(overallStats.avatar)
+                .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl, userInfo.ratingIcon)
+                .addField("Level", ((userInfo.prestige * 100) + userInfo.level) + "", true)
+                .addField("SR", userInfo.rating + "", true)
+                .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes, 3), true)
+                .addField("Top heroes (Comp)", module.getTopHeroesAsString(userInfo.competitiveStats.topHeroes, 3), true)
+                .setThumbnail(userInfo.icon)
                 .setFooter("Returned in " + (System.currentTimeMillis() - startTime) + "ms", null);
         message.getChannel().sendMessage(embed.build()).queue();
     }

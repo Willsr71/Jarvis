@@ -12,14 +12,13 @@ import sr.will.jarvis.modules.overwatch.command.CommandBattleTagAdd;
 import sr.will.jarvis.modules.overwatch.command.CommandBattleTagRemove;
 import sr.will.jarvis.modules.overwatch.command.CommandOWHeroes;
 import sr.will.jarvis.modules.overwatch.command.CommandOWStats;
-import sr.will.jarvis.modules.overwatch.rest.owapi.UserBlob;
+import sr.will.jarvis.modules.overwatch.rest.ovrstat.UserInfo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ModuleOverwatch extends Module {
     private static String BATTLETAG_REGEX = "(?i).{3,12}[\\#\\-][0-9]{4,5}";
@@ -59,12 +58,20 @@ public class ModuleOverwatch extends Module {
         return matcher.find();
     }
 
-    public UserBlob getUserBlob(String battletag) throws UnirestException {
+    public UserInfo getUserInfo(String battletag) throws UnirestException {
         Gson gson = new Gson();
-        String string = Unirest.get("https://owapi.net/api/v3/u/" + battletag.replace("#", "-") + "/blob").asString().getBody();
-        UserBlob userBlob = gson.fromJson(string, UserBlob.class);
-        userBlob.battletag = battletag;
-        return userBlob;
+        String string = Unirest.get("https://ovrstat.com/stats/pc/us/" + battletag).asString().getBody();
+        UserInfo userInfo = gson.fromJson(string, UserInfo.class);
+
+        // Additional information
+        userInfo.battletag = userInfo.name + battletag.split("-")[1];
+        userInfo.playOverwatchUrl = "https://playoverwatch.com/en-us/career/pc/us/" + userInfo.battletag;
+
+        // Add hero name to hero object
+        userInfo.quickPlayStats.topHeroes.forEach((name, hero) -> hero.name = name);
+        userInfo.competitiveStats.topHeroes.forEach((name, hero) -> hero.name = name);
+
+        return userInfo;
     }
 
     public void addBattletag(long userId, String battletag) {
@@ -88,46 +95,22 @@ public class ModuleOverwatch extends Module {
         return null;
     }
 
-    public String getTierImage(String tier) {
-        for (int x = 0; x < tiers.size(); x += 1) {
-            if (tiers.get(x).equals(tier)) {
-                return "https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-" + (x + 1) + ".png";
-            }
-        }
-
-        return "https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-1.png";
+    public ArrayList<UserInfo.Stats.TopHero> sortHeroesByTime(ArrayList<UserInfo.Stats.TopHero> heroes) {
+        heroes.sort(Comparator.comparingInt(o -> o.timePlayedInSeconds));
+        Collections.reverse(heroes);
+        return heroes;
     }
 
-    public HashMap<String, Double> sortHeroesByTime(HashMap<String, Double> heroes) {
-        return heroes.entrySet()
-                .stream()
-                .sorted(HashMap.Entry.comparingByValue(Collections.reverseOrder()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
-                ));
-    }
-
-    public String getTopHeroesAsString(HashMap<String, Double> heroes, int size) {
-        HashMap<String, Double> topHeroes = sortHeroesByTime(heroes);
+    public String getTopHeroesAsString(HashMap<String, UserInfo.Stats.TopHero> heroes, int size) {
+        ArrayList<UserInfo.Stats.TopHero> topHeroes = sortHeroesByTime(new ArrayList<>(heroes.values()));
         StringBuilder topHeroesBuilder = new StringBuilder();
         int x = 0;
-        for (String hero : topHeroes.keySet()) {
-            double heroTime = topHeroes.get(hero);
-
-            if (heroTime == 0) {
+        for (UserInfo.Stats.TopHero hero : topHeroes) {
+            if (hero.timePlayedInSeconds == 0) {
                 continue;
             }
 
-            topHeroesBuilder.append(Command.capitalizeProperly(hero)).append(" (");
-            if (Math.round(heroTime) == heroTime) {
-                topHeroesBuilder.append(Math.round(heroTime)).append(" hrs)");
-            } else {
-                topHeroesBuilder.append(Math.round(heroTime * 60)).append(" mins)");
-            }
-
+            topHeroesBuilder.append(Command.capitalizeProperly(hero.name)).append(" (").append(hero.timePlayed).append(")");
             x += 1;
             if (x >= size) {
                 break;
@@ -139,12 +122,12 @@ public class ModuleOverwatch extends Module {
         return topHeroesBuilder.toString();
     }
 
-    public String getTopHeroesAsString(HashMap<String, Double> heroes) {
+    public String getTopHeroesAsString(HashMap<String, UserInfo.Stats.TopHero> heroes) {
         return getTopHeroesAsString(heroes, heroes.size());
     }
 
-    public UserBlob getUserBlob(Message message, String... args) {
-        String battletag = null;
+    public UserInfo getUserInfo(Message message, String... args) {
+        String battletag;
 
         if (args.length != 0) {
             if (isValidBattleTag(args[0])) {
@@ -164,20 +147,20 @@ public class ModuleOverwatch extends Module {
             return null;
         }
 
-        UserBlob userBlob;
+        UserInfo userInfo;
         try {
-            userBlob = getUserBlob(battletag);
+            userInfo = getUserInfo(battletag);
         } catch (UnirestException e) {
             e.printStackTrace();
             Command.sendFailureMessage(message, "An error occurred");
             return null;
         }
 
-        if (userBlob.error != null) {
-            Command.sendFailureMessage(message, Command.capitalizeProperly(userBlob.msg));
+        if (userInfo.status != 0) {
+            Command.sendFailureMessage(message, userInfo.message);
             return null;
         }
 
-        return userBlob;
+        return userInfo;
     }
 }

@@ -21,8 +21,8 @@ def projectUrl = "https://github.com/Willsr71/Jarvis"
 def projectAuthor = "Willsr71"
 def projectSite = "https://will.sr"
 
-def commonDep = "net.noxal:common:1.5-45"
-def jdaDep = "net.dv8tion:JDA:3.5.0_327"
+def commonDep = "net.noxal:common:1.5-47"
+def jdaDep = "net.dv8tion:JDA:3.5.1_339"
 
 def jarName = "${projectId}-${project.version.toString()}.jar"
 
@@ -30,14 +30,14 @@ repositories {
     jcenter()
 
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url "https://repo.noxal.net/artifactory/gradle-dev-local/" }
+    maven { url "https://repo.noxal.net/" }
 }
 
 dependencies {
     compile commonDep
     compile jdaDep
     compile "org.slf4j:slf4j-simple:1.7.25"
-    compile "mysql:mysql-connector-java:5.1.42"
+    compile "mysql:mysql-connector-java:5.1.45"
     compile "com.mashape.unirest:unirest-java:1.4.9"
 }
 
@@ -73,6 +73,6 @@ subprojects {
         jcenter()
 
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url "https://repo.noxal.net/artifactory/gradle-dev-local/" }
+        maven { url "https://repo.noxal.net/" }
     }
 }

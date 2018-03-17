@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.modules.overwatch.ModuleOverwatch;
-import sr.will.jarvis.modules.overwatch.rest.owapi.UserBlob;
+import sr.will.jarvis.modules.overwatch.rest.ovrstat.UserInfo;
 
 import java.awt.*;
 import java.util.Date;
@@ -23,20 +23,17 @@ public class CommandOWHeroes extends Command {
 
         long startTime = new Date().getTime();
 
-        UserBlob userBlob = module.getUserBlob(message, args);
-        if (userBlob == null) {
+        UserInfo userInfo = module.getUserInfo(message, args);
+        if (userInfo == null) {
             return;
         }
 
-        UserBlob.Region.Stats.Mode.OverallStats overallStats = userBlob.getRegion().stats.quickplay.overall_stats;
-        String userUrl = "https://playoverwatch.com/en-us/career/pc/us/" + userBlob.battletag;
-
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.GREEN)
-                .setAuthor(userBlob.battletag, userUrl, module.getTierImage(overallStats.tier))
-                .addField("Top heroes (QP)", module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.quickplay), true)
-                .addField("Top heroes (Comp)", (userBlob.getRegion().heroes.playtime.competitive == null) ? "N/A" : module.getTopHeroesAsString(userBlob.getRegion().heroes.playtime.competitive), true)
-                .setThumbnail(overallStats.avatar)
+                .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl, userInfo.ratingIcon)
+                .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes), true)
+                .addField("Top heroes (Comp)", module.getTopHeroesAsString(userInfo.competitiveStats.topHeroes), true)
+                .setThumbnail(userInfo.icon)
                 .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
         message.getChannel().sendMessage(embed.build()).queue();
     }

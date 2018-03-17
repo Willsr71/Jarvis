@@ -169,7 +169,7 @@ public class Election {
             finalVotes.put(response.discriminator, response.votes);
         }
 
-        finalVotes.values().forEach((votes) -> votes.forEach(this::addVoteByDiscrimimntor));
+        finalVotes.values().forEach((votes) -> votes.forEach(this::addVoteByDiscriminator));
     }
 
     public void applyWinnerRole(ArrayList<Registrant> winners) {
@@ -212,7 +212,7 @@ public class Election {
         return null;
     }
 
-    public void addVoteByDiscrimimntor(String discriminator) {
+    public void addVoteByDiscriminator(String discriminator) {
         Registrant registrant = getRegistrantByDiscriminator(discriminator);
         if (registrant == null) {
             System.out.println("registrant is null!?");
