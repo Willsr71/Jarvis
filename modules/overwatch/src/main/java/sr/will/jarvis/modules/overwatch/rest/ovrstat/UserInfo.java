@@ -43,9 +43,17 @@ public class UserInfo {
             public HashMap<String, Double> average;
             public HashMap<String, Object> best;
             public HashMap<String, Object> combat;
-            public HashMap<String, Object> game;
+            public Game game;
             public HashMap<String, Integer> matchAwards;
             public HashMap<String, Integer> miscellaneous;
+
+            public class Game {
+                public int gamesLost;
+                public int gamesPlayed;
+                public int gamesTied;
+                public int gamesWon;
+                public String timePlayed;
+            }
         }
     }
 }

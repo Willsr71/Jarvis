@@ -64,7 +64,7 @@ public class ModuleOverwatch extends Module {
         UserInfo userInfo = gson.fromJson(string, UserInfo.class);
 
         // Additional information
-        userInfo.battletag = userInfo.name + battletag.split("-")[1];
+        userInfo.battletag = userInfo.name + "-" + battletag.split("-")[1];
         userInfo.playOverwatchUrl = "https://playoverwatch.com/en-us/career/pc/us/" + userInfo.battletag;
 
         // Add hero name to hero object
