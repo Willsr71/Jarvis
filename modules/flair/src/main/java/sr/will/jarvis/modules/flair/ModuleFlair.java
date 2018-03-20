@@ -24,7 +24,8 @@ public class ModuleFlair extends Module {
         );
         setGuildWhitelist(
                 228571366729842688L,
-                290558097246650369L
+                290558097246650369L,
+                263504633077432321L
         );
         setDefaultEnabled(false);
 

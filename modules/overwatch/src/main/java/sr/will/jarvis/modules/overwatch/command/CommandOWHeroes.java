@@ -28,13 +28,21 @@ public class CommandOWHeroes extends Command {
             return;
         }
 
-        EmbedBuilder embed = new EmbedBuilder()
-                .setColor(Color.GREEN)
-                .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl, userInfo.ratingIcon)
-                .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes), true)
-                .addField("Top heroes (Comp)", module.getTopHeroesAsString(userInfo.competitiveStats.topHeroes), true)
-                .setThumbnail(userInfo.icon)
-                .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
+        EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
+        if (userInfo.rating != 0) {
+            embed
+                    .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl, userInfo.ratingIcon)
+                    .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes), true)
+                    .addField("Top heroes (Comp)", module.getTopHeroesAsString(userInfo.competitiveStats.topHeroes), true)
+                    .setThumbnail(userInfo.icon)
+                    .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
+        } else {
+            embed
+                    .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl)
+                    .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes), true)
+                    .setThumbnail(userInfo.icon)
+                    .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
+        }
         message.getChannel().sendMessage(embed.build()).queue();
     }
 }
