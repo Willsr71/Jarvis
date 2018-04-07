@@ -123,6 +123,11 @@ public class MuteManager {
     }
 
     public void createMuteRole(Guild guild) {
+        if (!guild.getMember(Jarvis.getJda().getSelfUser()).hasPermission(Permission.MANAGE_ROLES)) {
+            System.out.println("No permission " + Permission.MANAGE_ROLES.getName() + " in guild " + guild.getName() + ", cannot create mute role.");
+            return;
+        }
+
         guild.getController().createRole().setName("Jarvis_Mute").setColor(0x000001).setPermissions(Permission.MESSAGE_READ).queue(role -> {
             addMuteRoleToChannels(guild, role);
             processMutedMembers(guild, role);
@@ -133,6 +138,11 @@ public class MuteManager {
         List<TextChannel> channels = guild.getTextChannels();
 
         for (TextChannel channel : channels) {
+            if (!guild.getMember(Jarvis.getJda().getSelfUser()).hasPermission(channel, Permission.MANAGE_ROLES)) {
+                System.out.println("No permission " + Permission.MANAGE_PERMISSIONS.getName() + " in guild " + guild.getName() + ", channel " + channel.getName() + ", cannot add role to channel.");
+                continue;
+            }
+
             channel.createPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION).queue();
         }
     }

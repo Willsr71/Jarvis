@@ -2,6 +2,7 @@ package sr.will.jarvis.manager;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.*;
 import sr.will.jarvis.exception.BotPermissionException;
@@ -92,6 +93,9 @@ public class CommandManager {
                 commands.get(command).execute(message, args);
             } catch (BotPermissionException | UserPermissionException | ModuleNotEnabledException e) {
                 System.out.println(e.getMessage());
+            } catch (InsufficientPermissionException e) {
+                System.out.println("Insufficient permission " + e.getPermission().getName() + " in guild " + message.getGuild().getName());
+                e.printStackTrace();
             } catch (Exception e) {
                 message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error!", null).setColor(Color.RED).setDescription(e.toString()).build()).queue();
                 e.printStackTrace();
