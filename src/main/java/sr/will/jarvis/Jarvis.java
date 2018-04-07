@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
+import net.noxal.bstats.standalone.Metrics;
 import net.noxal.common.config.JSONConfigManager;
 import net.noxal.common.sql.Database;
 import sr.will.jarvis.config.Config;
@@ -13,7 +14,12 @@ import sr.will.jarvis.service.InputReaderService;
 import sr.will.jarvis.thread.JarvisThread;
 
 import javax.security.auth.login.LoginException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Jarvis {
@@ -33,7 +39,6 @@ public class Jarvis {
 
     public final long startTime = new Date().getTime();
     public boolean running = true;
-    public boolean debug = false;
     public int messagesReceived = 0;
 
     public Jarvis() {
@@ -67,6 +72,28 @@ public class Jarvis {
         } catch (LoginException e) {
             e.printStackTrace();
         }
+
+        // Metrics
+        Metrics metrics = new Metrics("Jarvis", config.serverUUID, true, true, true);
+        metrics.addCustomChart(new Metrics.SingleLineChart("servers", () -> Jarvis.getJda().getGuilds().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Jarvis.getJda().getUsers().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("text_channels", () -> Jarvis.getJda().getTextChannels().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("voice_channels", () -> Jarvis.getJda().getVoiceChannels().size()));
+        metrics.addCustomChart(new Metrics.AdvancedBarChart("modules", () -> {
+            Map<String, int[]> map = new HashMap<>();
+            try {
+                ResultSet result = database.executeQuery("SELECT module, COUNT(1) FROM `modules` GROUP BY module;");
+                while (result.next()) {
+                    String name = result.getString("module");
+                    int enabledCount = result.getInt(1);
+                    int disabledCount = Jarvis.getJda().getGuilds().size() - enabledCount;
+                    map.put(name, new int[]{enabledCount, disabledCount});
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return map;
+        }));
     }
 
     public static Jarvis getInstance() {
@@ -114,8 +141,12 @@ public class Jarvis {
         configManager.reloadConfig();
         config = (Config) configManager.getConfig();
 
-        debug = config.debug;
+        if (config.serverUUID.equals("")) {
+            config.serverUUID = UUID.randomUUID().toString();
+            configManager.saveConfig();
+        }
 
+        database.setDebug(config.debug);
         database.setCredentials(config.sql.host, config.sql.database, config.sql.user, config.sql.password);
         database.reconnect();
 
@@ -129,7 +160,7 @@ public class Jarvis {
     }
 
     public static void debug(String message) {
-        if (Jarvis.getInstance().debug) {
+        if (Jarvis.getInstance().config.debug) {
             System.out.println("[DEBUG] " + message);
         }
     }

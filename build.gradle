@@ -21,7 +21,7 @@ def projectUrl = "https://github.com/Willsr71/Jarvis"
 def projectAuthor = "Willsr71"
 def projectSite = "https://will.sr"
 
-def commonDep = "net.noxal:common:1.5-47"
+def commonDep = "net.noxal:common:1.5-50"
 def jdaDep = "net.dv8tion:JDA:3.5.1_339"
 
 def jarName = "${projectId}-${project.version.toString()}.jar"

@@ -10,7 +10,8 @@ public class CommandConsoleDebug extends CommandConsole {
     }
 
     public void execute(String... args) {
-        jarvis.debug = !jarvis.debug;
-        System.out.println("Debug set to " + jarvis.debug);
+        jarvis.config.debug = !jarvis.config.debug;
+        jarvis.database.setDebug(jarvis.config.debug);
+        System.out.println("Debug set to " + jarvis.config.debug);
     }
 }
