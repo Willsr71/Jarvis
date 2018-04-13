@@ -14,11 +14,7 @@ import sr.will.jarvis.service.InputReaderService;
 import sr.will.jarvis.thread.JarvisThread;
 
 import javax.security.auth.login.LoginException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -79,13 +75,14 @@ public class Jarvis {
         metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Jarvis.getJda().getUsers().size()));
         metrics.addCustomChart(new Metrics.SingleLineChart("text_channels", () -> Jarvis.getJda().getTextChannels().size()));
         metrics.addCustomChart(new Metrics.SingleLineChart("voice_channels", () -> Jarvis.getJda().getVoiceChannels().size()));
+        /*
         metrics.addCustomChart(new Metrics.AdvancedBarChart("modules", () -> {
             Map<String, int[]> map = new HashMap<>();
             try {
                 ResultSet result = database.executeQuery("SELECT module, COUNT(1) FROM `modules` GROUP BY module;");
                 while (result.next()) {
                     String name = result.getString("module");
-                    int enabledCount = result.getInt(1);
+                    int enabledCount = result.getInt(2);
                     int disabledCount = Jarvis.getJda().getGuilds().size() - enabledCount;
                     map.put(name, new int[]{enabledCount, disabledCount});
                 }
@@ -94,6 +91,7 @@ public class Jarvis {
             }
             return map;
         }));
+        */
     }
 
     public static Jarvis getInstance() {
