@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.manager.Stats;
 
 public class EventHandlerJarvis extends EventHandler {
     private Jarvis jarvis;
@@ -17,6 +18,8 @@ public class EventHandlerJarvis extends EventHandler {
 
     @Override
     public void onEvent(Event event) {
+        Stats.processEvent(event);
+
         if (event instanceof MessageReceivedEvent) {
             onMessageReceived((MessageReceivedEvent) event);
         } else if (event instanceof ReadyEvent) {
@@ -30,8 +33,6 @@ public class EventHandlerJarvis extends EventHandler {
         if (event.getChannel().getType() != ChannelType.TEXT) {
             return;
         }
-
-        jarvis.messagesReceived += 1;
 
         if (event.getAuthor().isBot()) {
             return;
