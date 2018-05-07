@@ -16,7 +16,6 @@ public class UserInfo {
     public Stats competitiveStats;
 
     public String message;
-    public int status;
 
     public String battletag;
     public String playOverwatchUrl;

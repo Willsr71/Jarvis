@@ -16,6 +16,7 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -127,7 +128,7 @@ public class MuteManager {
         }
 
         for (Role role : roles) {
-            role.delete().queue();
+            role.delete().reason("Jarvis Mute Role - Deleting old Role").queue();
         }
     }
 
@@ -147,6 +148,12 @@ public class MuteManager {
     public void createMuteRole(Guild guild) {
         long muteRole = getMuteRole(guild.getIdLong());
 
+        // If role does not exist on the guild any more, remove it from the database
+        if (muteRole != 0 && guild.getRoleById(muteRole) == null) {
+            Jarvis.getDatabase().execute("DELETE FROM mute_roles WHERE (guild = ? AND role = ?);", guild.getIdLong(), muteRole);
+            muteRole = 0;
+        }
+
         // If the role already exists, don't create another one
         if (muteRole != 0) {
             addMuteRoleToChannels(guild, guild.getRoleById(muteRole));
@@ -159,8 +166,11 @@ public class MuteManager {
             return;
         }
 
-        guild.getController().createRole().setName("Jarvis_Mute").setColor(0x000001).setPermissions(Permission.MESSAGE_READ).queue(role -> {
+        guild.getController().createRole().setName("Jarvis_Mute").setColor(0x000001).setPermissions(Permission.MESSAGE_READ).reason("Jarvis Mute Role - Creating").queue(role -> {
             Jarvis.getDatabase().execute("INSERT INTO mute_roles (guild, role) VALUES (?, ?);", guild.getIdLong(), role.getIdLong());
+
+            System.out.println(role.getIdLong());
+
             addMuteRoleToChannels(guild, role);
             processMutedMembers(guild, role);
         });
@@ -175,7 +185,11 @@ public class MuteManager {
                 continue;
             }
 
-            channel.putPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION).queue();
+            if (channel.getPermissionOverride(role) == null) {
+                channel.createPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION).reason("Jarvis Mute Role - Creating permission override").queue();
+            } else if (!channel.getPermissionOverride(role).getDenied().containsAll(Arrays.asList(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION))) {
+                channel.getPermissionOverride(role).getManager().deny(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION).reason("Jarvis Mute Role - Permissions not set correctly, fixing").queue();
+            }
         }
     }
 

@@ -50,7 +50,7 @@ public class CommandBattleTagAdd extends Command {
             return;
         }
 
-        if (userInfo.status != 0) {
+        if (userInfo.message != null) {
             sendFailureMessage(message, capitalizeProperly(userInfo.message));
             return;
         }

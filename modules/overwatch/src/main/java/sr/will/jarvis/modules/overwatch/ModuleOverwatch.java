@@ -68,8 +68,12 @@ public class ModuleOverwatch extends Module {
         userInfo.playOverwatchUrl = "https://playoverwatch.com/en-us/career/pc/us/" + userInfo.battletag;
 
         // Add hero name to hero object
-        userInfo.quickPlayStats.topHeroes.forEach((name, hero) -> hero.name = name);
-        userInfo.competitiveStats.topHeroes.forEach((name, hero) -> hero.name = name);
+        if (userInfo.quickPlayStats != null) {
+            userInfo.quickPlayStats.topHeroes.forEach((name, hero) -> hero.name = name);
+        }
+        if (userInfo.competitiveStats != null) {
+            userInfo.competitiveStats.topHeroes.forEach((name, hero) -> hero.name = name);
+        }
 
         return userInfo;
     }
@@ -156,7 +160,7 @@ public class ModuleOverwatch extends Module {
             return null;
         }
 
-        if (userInfo.status != 0) {
+        if (userInfo.message != null) {
             Command.sendFailureMessage(message, userInfo.message);
             return null;
         }
