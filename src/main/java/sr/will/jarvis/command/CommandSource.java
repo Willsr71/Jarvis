@@ -10,6 +10,6 @@ public class CommandSource extends Command {
 
     @Override
     public void execute(Message message, String... args) {
-        sendSuccessMessage(message, "https://github.com/Willsr71/Jarvis", false);
+        sendSuccessMessage(message, "https://github.com/Willsr71/Jarvis");
     }
 }

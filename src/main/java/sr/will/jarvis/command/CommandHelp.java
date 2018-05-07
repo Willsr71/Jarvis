@@ -65,7 +65,7 @@ public class CommandHelp extends Command {
         ArrayList<String> moduleCommands = jarvis.commandManager.getCommandsByModule(module);
 
         if (moduleCommands.size() == 0) {
-            sendSuccessMessage(message, "Module does not have any commands", false);
+            sendSuccessMessage(message, "Module does not have any commands");
             return;
         }
 

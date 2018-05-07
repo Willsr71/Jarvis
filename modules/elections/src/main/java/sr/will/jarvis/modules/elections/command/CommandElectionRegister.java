@@ -39,10 +39,10 @@ public class CommandElectionRegister extends Command {
         long userId = message.getAuthor().getIdLong();
         if (election.getRegistrantById(userId) == null) {
             election.addRegistrant(userId);
-            sendSuccessMessage(message, "You are now registered in the " + election.name + " election", false);
+            sendSuccessMessage(message, "You are now registered in the " + election.name + " election");
         } else {
             election.removeRegistrant(userId);
-            sendSuccessMessage(message, "You are no longer registered in the " + election.name + " election", false);
+            sendSuccessMessage(message, "You are no longer registered in the " + election.name + " election");
         }
     }
 }

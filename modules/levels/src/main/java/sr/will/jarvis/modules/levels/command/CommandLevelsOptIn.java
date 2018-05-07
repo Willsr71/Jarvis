@@ -29,6 +29,6 @@ public class CommandLevelsOptIn extends Command {
         }
 
         module.setUserXp(guildId, userId, -module.getUserXp(guildId, userId));
-        sendSuccessMessage(message, "You are now opted into leveling", false);
+        sendSuccessMessage(message, "You are now opted into leveling");
     }
 }

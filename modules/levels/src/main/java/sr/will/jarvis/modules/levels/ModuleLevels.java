@@ -52,17 +52,6 @@ public class ModuleLevels extends Module {
                 "id int NOT NULL AUTO_INCREMENT," +
                 "channel bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
-        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS message_data(" +
-                "id int NOT NULL AUTO_INCREMENT," +
-                "guild bigint(20) NOT NULL," +
-                "channel bigint(20) NOT NULL," +
-                "user bigint(20) NOT NULL," +
-                "timestamp bigint(20) NOT NULL," +
-                "message_length int NOT NULL," +
-                "message_length_average int NOT NULL," +
-                "time_from_last bigint(20) NOT NULL," +
-                "xp_gained int NOT NULL," +
-                "PRIMARY KEY (id));");
     }
 
     public void stop() {
@@ -229,7 +218,6 @@ public class ModuleLevels extends Module {
         //System.out.println("gained: " + xpGained);
 
         Jarvis.getDatabase().execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", xpGained, guildId, userId);
-        Jarvis.getDatabase().execute("INSERT INTO message_data (guild, channel, user, timestamp, message_length, message_length_average, time_from_last, xp_gained) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", guildId, channelId, userId, timestamp, messageLength, messageLengthAverage, timeFromLast, xpGained);
 
         if (getLevelFromXp(xp + xpGained) > getLevelFromXp(xp) && !channelSilenced(message.getChannel().getIdLong())) {
             message.getChannel().sendMessage("Congratulations! " + message.getJDA().getUserById(userId).getAsMention() + " has reached level " + getLevelFromXp(xp + xpGained)).queue();

@@ -26,10 +26,10 @@ public class CommandLevelsSilenceChannel extends Command {
 
         if (module.channelSilenced(channel.getIdLong())) {
             module.unsilenceChannel(channel.getIdLong());
-            sendSuccessMessage(message, "Channel " + channel.getName() + " has been unsilenced", false);
+            sendSuccessMessage(message, "Channel " + channel.getName() + " has been unsilenced");
         } else {
             module.silenceChannel(channel.getIdLong());
-            sendSuccessMessage(message, "Channel " + channel.getName() + " has been silenced", false);
+            sendSuccessMessage(message, "Channel " + channel.getName() + " has been silenced");
         }
     }
 }

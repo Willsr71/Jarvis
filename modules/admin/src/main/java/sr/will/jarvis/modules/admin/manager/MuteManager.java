@@ -113,22 +113,54 @@ public class MuteManager {
         }
     }
 
+    // Delete roles that have not been added to the database
     public void deleteOldRoles(Guild guild) {
         List<Role> roles = new ArrayList<>();
         roles.addAll(guild.getRolesByName("Jarvis_Mute", true));
         roles.addAll(guild.getRolesByName("new role", true));
+
+        // Do not delete role that is in the db
+        long muteRole = getMuteRole(guild.getIdLong());
+        if (muteRole != 0) {
+            // Role to be deleted exists in db, ignoring
+            roles.remove(guild.getRoleById(muteRole));
+        }
+
         for (Role role : roles) {
             role.delete().queue();
         }
     }
 
+    public long getMuteRole(long guildId) {
+        try {
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT role FROM mute_roles WHERE guild = ?;", guildId);
+            if (result.first()) {
+                return result.getLong("role");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
     public void createMuteRole(Guild guild) {
+        long muteRole = getMuteRole(guild.getIdLong());
+
+        // If the role already exists, don't create another one
+        if (muteRole != 0) {
+            addMuteRoleToChannels(guild, guild.getRoleById(muteRole));
+            processMutedMembers(guild, guild.getRoleById(muteRole));
+            return;
+        }
+
         if (!guild.getMember(Jarvis.getJda().getSelfUser()).hasPermission(Permission.MANAGE_ROLES)) {
             System.out.println("No permission " + Permission.MANAGE_ROLES.getName() + " in guild " + guild.getName() + ", cannot create mute role.");
             return;
         }
 
         guild.getController().createRole().setName("Jarvis_Mute").setColor(0x000001).setPermissions(Permission.MESSAGE_READ).queue(role -> {
+            Jarvis.getDatabase().execute("INSERT INTO mute_roles (guild, role) VALUES (?, ?);", guild.getIdLong(), role.getIdLong());
             addMuteRoleToChannels(guild, role);
             processMutedMembers(guild, role);
         });
@@ -143,7 +175,7 @@ public class MuteManager {
                 continue;
             }
 
-            channel.createPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION).queue();
+            channel.putPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION).queue();
         }
     }
 
@@ -174,7 +206,7 @@ public class MuteManager {
     public void setMuted(long guildId, long userId, boolean applied) {
         Guild guild = Jarvis.getJda().getGuildById(guildId);
 
-        setMuted(guild, guild.getMemberById(userId), guild.getRolesByName("Jarvis_Mute", true).get(0), applied);
+        setMuted(guild, guild.getMemberById(userId), guild.getRoleById(getMuteRole(guildId)), applied);
     }
 
     public void setMuted(Guild guild, Member member, Role role, boolean applied) {

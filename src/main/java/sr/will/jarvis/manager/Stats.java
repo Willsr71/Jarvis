@@ -11,6 +11,8 @@ import sr.will.jarvis.thread.JarvisThread;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Stats {
     public static final long startTime = System.currentTimeMillis();
@@ -21,6 +23,12 @@ public class Stats {
     public static void processEvent(Event event) {
         new JarvisThread(null, () -> {
             eventsProcessed += 1;
+
+            // Don't log certain events
+            if (Jarvis.getInstance().config.stats.ignoredEvents.contains(event.getClass().getSimpleName())) {
+                return;
+            }
+
             Jarvis.getDatabase().execute(
                     "INSERT INTO events (timestamp, type) VALUES (?, ?);",
                     System.currentTimeMillis(),
@@ -59,12 +67,13 @@ public class Stats {
         }).silent(true).start();
     }
 
-    public static int getDataInTime(String field, long seconds) {
-        long millis = seconds * 1000;
-        long time = System.currentTimeMillis() - millis;
+    private static long getStatsIntervalInPast() {
+        return System.currentTimeMillis() - (Jarvis.getInstance().config.stats.interval * 60 * 1000);
+    }
 
+    public static int getDataInStatsInterval(String field) {
         try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT COUNT(1) FROM " + field + " WHERE timestamp > ?", time);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT COUNT(1) FROM " + field + " WHERE timestamp > ?;", getStatsIntervalInPast());
             result.first();
             return result.getInt(1);
         } catch (SQLException e) {
@@ -76,14 +85,27 @@ public class Stats {
 
     public static void setupMetrics() {
         // Metrics
-        Metrics metrics = new Metrics("Jarvis", Jarvis.getInstance().config.serverUUID, true, true, true);
+        Metrics metrics = new Metrics("Jarvis", Jarvis.getInstance().config.serverUUID, true, false, false);
         metrics.addCustomChart(new Metrics.SingleLineChart("servers", () -> Jarvis.getJda().getGuilds().size()));
         metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Jarvis.getJda().getUsers().size()));
         metrics.addCustomChart(new Metrics.SingleLineChart("text_channels", () -> Jarvis.getJda().getTextChannels().size()));
         metrics.addCustomChart(new Metrics.SingleLineChart("voice_channels", () -> Jarvis.getJda().getVoiceChannels().size()));
-        metrics.addCustomChart(new Metrics.SingleLineChart("events_minute", () -> getDataInTime("events", 60 * 30) / 30));
-        metrics.addCustomChart(new Metrics.SingleLineChart("messages_minute", () -> getDataInTime("messages", 60 * 30) / 30));
-        metrics.addCustomChart(new Metrics.SingleLineChart("queries_minute", () -> getDataInTime("queries", 60 * 30) / 30));
+        metrics.addCustomChart(new Metrics.SingleLineChart("events_minute", () -> getDataInStatsInterval("events") / Jarvis.getInstance().config.stats.interval));
+        metrics.addCustomChart(new Metrics.SingleLineChart("messages_minute", () -> getDataInStatsInterval("messages") / Jarvis.getInstance().config.stats.interval));
+        metrics.addCustomChart(new Metrics.SingleLineChart("queries_minute", () -> getDataInStatsInterval("queries") / Jarvis.getInstance().config.stats.interval));
+        metrics.addCustomChart(new Metrics.AdvancedPie("event_types", () -> {
+            Map<String, Integer> map = new HashMap<>();
+            try {
+                ResultSet result = Jarvis.getDatabase().executeQuery("SELECT type, COUNT(1) FROM events WHERE timestamp > ? GROUP BY type;", getStatsIntervalInPast());
+                while (result.next()) {
+                    map.put(result.getString("type"), result.getInt(2));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return map;
+        }));
         /*
         metrics.addCustomChart(new Metrics.AdvancedBarChart("modules", () -> {
             Map<String, int[]> map = new HashMap<>();

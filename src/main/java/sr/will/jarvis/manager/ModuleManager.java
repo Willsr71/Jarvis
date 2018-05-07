@@ -110,6 +110,12 @@ public class ModuleManager {
         return defaultModules;
     }
 
+    public void disableAllModules(long guildId) {
+        for (String module : getDefaultModules()) {
+            disableModule(guildId, module);
+        }
+    }
+
     public void registerModules() {
         System.out.println("Registering modules...");
 

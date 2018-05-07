@@ -30,7 +30,7 @@ public class CommandMuteTime extends Command {
         long duration = module.muteManager.getMuteDuration(message.getGuild().getIdLong(), user.getIdLong());
 
         if (!DateUtils.timestampApplies(duration)) {
-            sendSuccessMessage(message, "User not muted", false);
+            sendSuccessMessage(message, "User not muted");
             return;
         }
 

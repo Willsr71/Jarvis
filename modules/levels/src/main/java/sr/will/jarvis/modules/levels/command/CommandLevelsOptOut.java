@@ -29,6 +29,6 @@ public class CommandLevelsOptOut extends Command {
         }
 
         module.setUserXp(guildId, userId, -module.getUserXp(guildId, userId));
-        sendSuccessMessage(message, "You are now opted out of leveling", false);
+        sendSuccessMessage(message, "You are now opted out of leveling");
     }
 }

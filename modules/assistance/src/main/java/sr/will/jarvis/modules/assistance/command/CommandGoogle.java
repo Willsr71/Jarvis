@@ -19,6 +19,6 @@ public class CommandGoogle extends Command {
         }
         url = url.substring(0, url.length() - 1);
 
-        sendSuccessMessage(message, url, false);
+        sendSuccessMessage(message, url);
     }
 }

@@ -56,6 +56,6 @@ public class CommandElectionAdd extends Command {
                 dayOfMonth,
                 votingPeriod
         ));
-        sendSuccessMessage(message, "Added election **" + name + "** set for day **" + dayOfMonth + "** with a voting period of **" + module.formatVotingPeriod(votingPeriod) + "** (" + votingPeriod + ")", false);
+        sendSuccessMessage(message, "Added election **" + name + "** set for day **" + dayOfMonth + "** with a voting period of **" + module.formatVotingPeriod(votingPeriod) + "** (" + votingPeriod + ")");
     }
 }

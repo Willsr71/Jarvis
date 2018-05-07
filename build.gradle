@@ -22,7 +22,7 @@ def projectAuthor = "Willsr71"
 def projectSite = "https://will.sr"
 
 def commonDep = "net.noxal:common:1.5-51"
-def jdaDep = "net.dv8tion:JDA:3.5.1_339"
+def jdaDep = "net.dv8tion:JDA:3.6.0_354"
 
 def jarName = "${projectId}-${project.version.toString()}.jar"
 

@@ -38,7 +38,7 @@ public class CommandEval extends Command {
         try {
             factory.eval(script);
 
-            sendSuccessMessage(message, writer.toString(), false);
+            sendSuccessMessage(message, writer.toString());
         } catch (ScriptException e) {
             sendFailureMessage(message, e.getMessage());
         }

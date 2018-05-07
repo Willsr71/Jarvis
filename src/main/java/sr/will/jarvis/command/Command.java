@@ -8,7 +8,6 @@ import sr.will.jarvis.exception.BotPermissionException;
 import sr.will.jarvis.exception.ModuleNotEnabledException;
 import sr.will.jarvis.exception.UserPermissionException;
 import sr.will.jarvis.module.Module;
-import sr.will.jarvis.thread.JarvisThread;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -208,42 +207,13 @@ public abstract class Command {
         message.addReaction("\u274C").queue();
     }
 
-    public static void sendSuccessMessage(TextChannel channel, String string, boolean delete, Message... messagesToDelete) {
-        EmbedBuilder embed = new EmbedBuilder()
+    public static void sendSuccessMessage(Message message, String string) {
+        message.getChannel().sendMessage(new EmbedBuilder()
                 .setTitle("Success!", null)
                 .setColor(Color.GREEN)
-                .setDescription(string);
-
-        if (delete) {
-            channel.sendMessage(embed.build()).queue(success -> new JarvisThread(null, () -> {
-                        ArrayList<Message> messages = new ArrayList<>(Arrays.asList(messagesToDelete));
-                        messages.add(success);
-
-                        if (messages.size() == 1) {
-                            messages.get(0).delete().queue();
-                        } else {
-                            channel.deleteMessages(messages).queue();
-                        }
-                    })
-                            .delay(3 * 1000)
-                            .name("SuccessMessageMessageDeletion")
-                            .start()
-            );
-        } else {
-            channel.sendMessage(embed.build()).queue();
-        }
-    }
-
-    public static void sendSuccessMessage(TextChannel channel, String string, Message... messagesToDelete) {
-        sendSuccessMessage(channel, string, true, messagesToDelete);
-    }
-
-    public static void sendSuccessMessage(Message message, String string, boolean delete) {
-        sendSuccessMessage(message.getTextChannel(), string, delete, message);
-    }
-
-    public static void sendSuccessMessage(Message message, String string) {
-        sendSuccessMessage(message, string, true);
+                .setDescription(string)
+                .build()
+        ).queue();
     }
 
     public static void sendFailureMessage(Message message, String string) {

@@ -48,6 +48,6 @@ public class CommandFlairImport extends Command {
             }
         }
 
-        sendSuccessMessage(message, "Imported all roles", false);
+        sendSuccessMessage(message, "Imported all roles");
     }
 }

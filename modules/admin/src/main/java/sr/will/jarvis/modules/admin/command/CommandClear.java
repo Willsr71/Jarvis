@@ -37,7 +37,7 @@ public class CommandClear extends Command {
 
     public void deleteFromChannel(TextChannel channel, int total, int current) {
         if (current <= 0) {
-            sendSuccessMessage(channel, "The last " + total + " messages have been deleted");
+            channel.sendMessage("The last " + total + " messages have been deleted").queue();
             messagesDeleted.remove(channel.getId());
             return;
         }

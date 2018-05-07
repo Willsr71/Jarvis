@@ -66,6 +66,8 @@ public class Jarvis {
         } catch (LoginException e) {
             e.printStackTrace();
         }
+
+        Stats.setupMetrics();
     }
 
     public static Jarvis getInstance() {

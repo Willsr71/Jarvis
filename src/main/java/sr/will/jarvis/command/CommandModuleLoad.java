@@ -43,7 +43,7 @@ public class CommandModuleLoad extends Command {
             }
 
             jarvis.moduleManager.loadModule(description);
-            sendSuccessMessage(message, "Loaded plugin " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor(), false);
+            sendSuccessMessage(message, "Loaded plugin " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
         } catch (Exception e) {
             sendFailureMessage(message, "Failed to load plugin:\n" + e.toString());
         }

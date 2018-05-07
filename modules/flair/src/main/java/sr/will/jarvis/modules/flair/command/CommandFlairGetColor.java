@@ -30,6 +30,6 @@ public class CommandFlairGetColor extends Command {
         Member member = message.getGuild().getMember(user);
         Color color = module.getMemberFlair(member).color;
 
-        sendSuccessMessage(message, module.getHexFromColor(color), false);
+        sendSuccessMessage(message, module.getHexFromColor(color));
     }
 }

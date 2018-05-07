@@ -36,7 +36,7 @@ public class CommandModuleUnload extends Command {
             String name = module.getDescription().getName();
 
             jarvis.moduleManager.unloadModule(module);
-            sendSuccessMessage(message, "Unloaded plugin " + name, false);
+            sendSuccessMessage(message, "Unloaded plugin " + name);
         } catch (Exception e) {
             sendFailureMessage(message, "Failed to unload plugin:\n" + e.toString());
         }

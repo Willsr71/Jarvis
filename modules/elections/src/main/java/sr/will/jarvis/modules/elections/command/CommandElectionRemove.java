@@ -33,6 +33,6 @@ public class CommandElectionRemove extends Command {
 
         Election election = module.getElectionByName(message.getGuild().getIdLong(), name);
         module.removeElection(election);
-        sendSuccessMessage(message, "Removed election " + name, false);
+        sendSuccessMessage(message, "Removed election " + name);
     }
 }

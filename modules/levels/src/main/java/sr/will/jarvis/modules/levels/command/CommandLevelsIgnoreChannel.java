@@ -26,10 +26,10 @@ public class CommandLevelsIgnoreChannel extends Command {
 
         if (module.channelIgnored(channel.getIdLong())) {
             module.unignoreChannel(channel.getIdLong());
-            sendSuccessMessage(message, "Channel " + channel.getName() + " now affects xp gain", false);
+            sendSuccessMessage(message, "Channel " + channel.getName() + " now affects xp gain");
         } else {
             module.ignoreChannel(channel.getIdLong());
-            sendSuccessMessage(message, "Channel " + channel.getName() + " no longer affects xp gain", false);
+            sendSuccessMessage(message, "Channel " + channel.getName() + " no longer affects xp gain");
         }
     }
 }

@@ -48,7 +48,7 @@ public class CommandImportMee6 extends Command {
             }
         }
 
-        sendSuccessMessage(message, "Imported " + levels.players.size() + " players from Mee6", false);
+        sendSuccessMessage(message, "Imported " + levels.players.size() + " players from Mee6");
     }
 
     public Levels getMee6Levels(long guildId) throws UnirestException, JsonSyntaxException {

@@ -56,6 +56,11 @@ public class ModuleAdmin extends Module {
                 "invoker bigint(20)," +
                 "duration bigint(20) NOT NULL," +
                 "PRIMARY KEY (id));");
+        Jarvis.getDatabase().execute("CREATE TABLE IF NOT EXISTS mute_roles(" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "guild bigint(20) NOT NULL," +
+                "role bigint(20)," +
+                "PRIMARY KEY (id));");
 
         muteManager.setupAll();
         banManager.setup();

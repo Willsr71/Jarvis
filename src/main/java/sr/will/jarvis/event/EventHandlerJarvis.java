@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.manager.Stats;
@@ -26,6 +27,8 @@ public class EventHandlerJarvis extends EventHandler {
             onReady((ReadyEvent) event);
         } else if (event instanceof GuildJoinEvent) {
             onGuildJoin((GuildJoinEvent) event);
+        } else if (event instanceof GuildLeaveEvent) {
+            onGuildLeave((GuildLeaveEvent) event);
         }
     }
 
@@ -51,5 +54,11 @@ public class EventHandlerJarvis extends EventHandler {
         System.out.println(String.format("Joined guild %s (%s)", event.getGuild().getName(), event.getGuild().getId()));
 
         jarvis.moduleManager.enableDefaultModules(event.getGuild().getIdLong());
+    }
+
+    private void onGuildLeave(GuildLeaveEvent event) {
+        System.out.println(String.format("Left guild %s (%s)", event.getGuild().getName(), event.getGuild().getId()));
+
+        jarvis.moduleManager.disableAllModules(event.getGuild().getIdLong());
     }
 }

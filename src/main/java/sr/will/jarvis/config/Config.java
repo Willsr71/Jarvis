@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Config {
     public Discord discord = new Discord();
     public Sql sql = new Sql();
+    public Stats stats = new Stats();
     public String serverUUID;
     public boolean debug;
 
@@ -21,5 +22,10 @@ public class Config {
         public String database;
         public String user;
         public String password;
+    }
+
+    public class Stats {
+        public int interval;
+        public ArrayList<String> ignoredEvents;
     }
 }

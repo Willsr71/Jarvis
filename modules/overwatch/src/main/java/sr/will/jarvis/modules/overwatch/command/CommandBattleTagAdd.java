@@ -56,6 +56,6 @@ public class CommandBattleTagAdd extends Command {
         }
 
         module.addBattletag(user.getIdLong(), battletag);
-        sendSuccessMessage(message, "Account " + user.getAsMention() + " linked to battletag " + battletag, false);
+        sendSuccessMessage(message, "Account " + user.getAsMention() + " linked to battletag " + battletag);
     }
 }
