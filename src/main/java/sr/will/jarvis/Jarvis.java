@@ -120,7 +120,7 @@ public class Jarvis {
             configManager.saveConfig();
         }
 
-        database.setDebug(config.debug);
+        database.setDebug(false);
         database.setCredentials(config.sql.host, config.sql.database, config.sql.user, config.sql.password);
         database.reconnect();
 

@@ -243,6 +243,12 @@ public class Election {
     }
 
     public ArrayList<Registrant> getRegistrants() {
+        for (Registrant registrant : registrants) {
+            if (Jarvis.getJda().getGuildById(guildId).getMemberById(registrant.userId) == null) {
+                removeRegistrant(registrant.userId);
+            }
+        }
+
         return registrants;
     }
 }

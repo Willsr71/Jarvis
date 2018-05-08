@@ -54,11 +54,18 @@ public class Stats {
         new JarvisThread(null, () -> {
             queriesProcessed += 1;
 
+            // Ignore if it is a query inserting into the queries table
             String query = Database.getStatementString(statement);
             if (query.startsWith("INSERT INTO queries")) {
                 return;
             }
 
+            // Log queries in console
+            if (Jarvis.getInstance().config.debug) {
+                System.out.println(query);
+            }
+
+            // Log queries in the db
             Jarvis.getDatabase().execute(
                     "INSERT INTO queries (timestamp, query) VALUES (?, ?);",
                     System.currentTimeMillis(),
