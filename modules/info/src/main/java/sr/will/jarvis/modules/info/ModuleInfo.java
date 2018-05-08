@@ -5,6 +5,7 @@ import sr.will.jarvis.module.Module;
 import sr.will.jarvis.modules.info.command.CommandGuild;
 import sr.will.jarvis.modules.info.command.CommandInfo;
 import sr.will.jarvis.modules.info.command.CommandRoles;
+import sr.will.jarvis.modules.info.command.CommandWhatIs;
 
 import java.time.format.DateTimeFormatter;
 
@@ -22,6 +23,7 @@ public class ModuleInfo extends Module {
         registerCommand("guild", new CommandGuild(this));
         registerCommand("info", new CommandInfo(this));
         registerCommand("roles", new CommandRoles(this));
+        registerCommand("?", new CommandWhatIs(this));
     }
 
     public void finishStart() {

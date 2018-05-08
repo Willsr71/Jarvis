@@ -215,7 +215,7 @@ public class ModuleElections extends Module {
 
         StringBuilder string = new StringBuilder();
         for (Registrant registrant : registrants) {
-            string.append(registrant.getUser().getId()).append(",");
+            string.append(registrant.userId).append(",");
         }
         string.setLength(string.length() - 1);
 
