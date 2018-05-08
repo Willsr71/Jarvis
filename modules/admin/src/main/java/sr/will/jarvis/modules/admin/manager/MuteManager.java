@@ -169,8 +169,6 @@ public class MuteManager {
         guild.getController().createRole().setName("Jarvis_Mute").setColor(0x000001).setPermissions(Permission.MESSAGE_READ).reason("Jarvis Mute Role - Creating").queue(role -> {
             Jarvis.getDatabase().execute("INSERT INTO mute_roles (guild, role) VALUES (?, ?);", guild.getIdLong(), role.getIdLong());
 
-            System.out.println(role.getIdLong());
-
             addMuteRoleToChannels(guild, role);
             processMutedMembers(guild, role);
         });
