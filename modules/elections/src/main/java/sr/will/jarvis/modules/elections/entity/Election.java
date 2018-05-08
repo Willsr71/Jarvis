@@ -224,7 +224,7 @@ public class Election {
 
     public Registrant getRegistrantById(long userId) {
         for (Registrant registrant : registrants) {
-            if (registrant.getUser().getIdLong() == userId) {
+            if (registrant.userId == userId) {
                 return registrant;
             }
         }
@@ -237,18 +237,27 @@ public class Election {
         module.updateRegistrants(guildId, name, registrants);
     }
 
-    public void removeRegistrant(long userId) {
-        registrants.remove(getRegistrantById(userId));
+    public void removeRegistrant(Registrant registrant) {
+        registrants.remove(registrant);
         module.updateRegistrants(guildId, name, registrants);
     }
 
-    public ArrayList<Registrant> getRegistrants() {
-        registrants.iterator().forEachRemaining(registrant -> {
-            if (Jarvis.getJda().getGuildById(guildId).getMemberById(registrant.userId) == null) {
-                removeRegistrant(registrant.userId);
-            }
-        });
+    public void removeRegistrant(long userId) {
+        removeRegistrant(getRegistrantById(userId));
+    }
 
+    public void trimRegistrants() {
+        for (int x = 0; x < registrants.size(); x += 1) {
+            Registrant registrant = registrants.get(x);
+            if (Jarvis.getJda().getGuildById(guildId).getMemberById(registrant.userId) == null) {
+                removeRegistrant(registrant);
+                x -= 1;
+            }
+        }
+    }
+
+    public ArrayList<Registrant> getRegistrants() {
+        trimRegistrants();
         return registrants;
     }
 }

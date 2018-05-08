@@ -33,21 +33,21 @@ public class CommandWhatIs extends Command {
         JDA jda = Jarvis.getJda();
 
         if (jda.getUserById(id) != null) {
-            sendSuccessMessage(message, "User: " + jda.getUserById(id).getName());
+            sendSuccessMessage(message, "User: " + jda.getUserById(id).getName() + jda.getUserById(id).getDiscriminator());
         } else if (jda.getGuildById(id) != null) {
             sendSuccessMessage(message, "Guild: " + jda.getGuildById(id).getName());
         } else if (jda.getCategoryById(id) != null) {
-            sendSuccessMessage(message, "Category: " + jda.getCategoryById(id).getName());
+            sendSuccessMessage(message, "Category: " + jda.getCategoryById(id).getName() + " (Guild: " + jda.getCategoryById(id).getGuild().getName() + ")");
         } else if (jda.getEmoteById(id) != null) {
-            sendSuccessMessage(message, "Emote: " + jda.getEmoteById(id).getName());
+            sendSuccessMessage(message, "Emote: " + jda.getEmoteById(id).getName() + " (Guild: " + jda.getEmoteById(id).getGuild().getName() + ")");
         } else if (jda.getRoleById(id) != null) {
-            sendSuccessMessage(message, "Role: " + jda.getRoleById(id).getName());
+            sendSuccessMessage(message, "Role: " + jda.getRoleById(id).getName() + " (Guild: " + jda.getRoleById(id).getGuild().getName() + ")");
         } else if (jda.getPrivateChannelById(id) != null) {
             sendSuccessMessage(message, "Private Channel: " + jda.getPrivateChannelById(id).getName());
         } else if (jda.getTextChannelById(id) != null) {
-            sendSuccessMessage(message, "Text Channel: " + jda.getTextChannelById(id).getName());
+            sendSuccessMessage(message, "Text Channel: " + jda.getTextChannelById(id).getName() + " (Guild: " + jda.getTextChannelById(id).getGuild().getName() + ")");
         } else if (jda.getVoiceChannelById(id) != null) {
-            sendSuccessMessage(message, "Voice Channel: " + jda.getVoiceChannelById(id).getName());
+            sendSuccessMessage(message, "Voice Channel: " + jda.getVoiceChannelById(id).getName() + " (Guild: " + jda.getVoiceChannelById(id).getGuild().getName() + ")");
         } else {
             sendFailureMessage(message, "Unknown ID");
         }
