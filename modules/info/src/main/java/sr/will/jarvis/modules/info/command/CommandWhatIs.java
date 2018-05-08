@@ -33,7 +33,7 @@ public class CommandWhatIs extends Command {
         JDA jda = Jarvis.getJda();
 
         if (jda.getUserById(id) != null) {
-            sendSuccessMessage(message, "User: " + jda.getUserById(id).getName() + jda.getUserById(id).getDiscriminator());
+            sendSuccessMessage(message, "User: " + jda.getUserById(id).getName() + "#" + jda.getUserById(id).getDiscriminator());
         } else if (jda.getGuildById(id) != null) {
             sendSuccessMessage(message, "Guild: " + jda.getGuildById(id).getName());
         } else if (jda.getCategoryById(id) != null) {

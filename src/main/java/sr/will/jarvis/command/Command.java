@@ -123,6 +123,10 @@ public abstract class Command {
     }
 
     public static String getRolesAsString(List<Role> roles) {
+        if (roles.size() == 0) {
+            return "";
+        }
+
         StringBuilder roleList = new StringBuilder();
         for (Role role : roles) {
             roleList.append(role.getName()).append(", ");
