@@ -29,11 +29,13 @@ public class Stats {
                 return;
             }
 
+            /*
             Jarvis.getDatabase().execute(
                     "INSERT INTO events (timestamp, type) VALUES (?, ?);",
                     System.currentTimeMillis(),
                     event.getClass().getSimpleName()
             );
+            */
 
             if (event instanceof MessageReceivedEvent) {
                 messagesProcessed += 1;
@@ -66,11 +68,13 @@ public class Stats {
             }
 
             // Log queries in the db
+            /*
             Jarvis.getDatabase().execute(
                     "INSERT INTO queries (timestamp, query) VALUES (?, ?);",
                     System.currentTimeMillis(),
                     query
             );
+            */
         }).silent(true).start();
     }
 
