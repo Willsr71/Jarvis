@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.manager.Stats;
 import sr.will.jarvis.modules.admin.CachedMute;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
 import sr.will.jarvis.thread.JarvisThread;
@@ -28,6 +29,8 @@ public class MuteManager {
 
     public MuteManager(ModuleAdmin module) {
         this.module = module;
+
+        Stats.addGauge("admin.cached_mutes", () -> cachedMutes.size());
     }
 
     public CachedMute getCachedMute(long guildId, long userId) {

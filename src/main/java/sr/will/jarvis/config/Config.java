@@ -25,7 +25,10 @@ public class Config {
     }
 
     public class Stats {
+        public boolean enabled;
         public int interval;
-        public ArrayList<String> ignoredEvents;
+        public String host;
+        public int port;
+        public String prefix;
     }
 }

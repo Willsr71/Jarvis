@@ -3,43 +3,118 @@ package sr.will.jarvis.manager;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.noxal.bstats.standalone.Metrics;
 import net.noxal.common.sql.Database;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.stats.Stat;
+import sr.will.jarvis.stats.StatsdClient;
 import sr.will.jarvis.thread.JarvisThread;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 public class Stats {
     public static final long startTime = System.currentTimeMillis();
-    public static long eventsProcessed = 0;
-    public static long messagesProcessed = 0;
-    public static long queriesProcessed = 0;
+    private static Stats instance;
 
-    public static void processEvent(Event event) {
-        new JarvisThread(null, () -> {
-            eventsProcessed += 1;
+    private StatsdClient client;
+    private JarvisThread thread;
+    public ArrayList<Stat> stats = new ArrayList<>();
 
-            // Don't log certain events
-            if (Jarvis.getInstance().config.stats.ignoredEvents.contains(event.getClass().getSimpleName())) {
+    public Stats() {
+        instance = this;
+    }
+
+    public void start() {
+        try {
+            System.out.println("Starting metrics!");
+            client = new StatsdClient(Jarvis.getInstance().config.stats.host, Jarvis.getInstance().config.stats.port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        addGauge("threads", Thread::activeCount);
+        addGauge("servers", () -> Jarvis.getJda().getGuilds().size());
+        addGauge("players", () -> Jarvis.getJda().getUsers().size());
+        addGauge("text_channels", () -> Jarvis.getJda().getTextChannels().size());
+        addGauge("voice_channels", () -> Jarvis.getJda().getVoiceChannels().size());
+
+        if (!Jarvis.getInstance().config.stats.enabled) {
+            return;
+        }
+
+        thread = new JarvisThread(null, this::processStats).name("Stats").repeat(true, Jarvis.getInstance().config.stats.interval * 1000).silent(true);
+        thread.start();
+    }
+
+    public void stop() {
+        if (thread != null) {
+            thread.kill();
+        }
+
+        if (client != null) {
+            client.flush();
+        }
+    }
+
+    public void restart() {
+        stop();
+        start();
+    }
+
+    private void processStats() {
+        if (Stats.instance.client == null) {
+            return;
+        }
+
+        for (Stat stat : stats) {
+            String key = Jarvis.getInstance().config.stats.prefix + "." + stat.name;
+            try {
+                client.gauge(key, stat.value.call());
+            } catch (NullPointerException e) {
+                // Nothing
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        client.flush();
+    }
+
+    public static void incrementCounter(String name, int value) {
+        if (Stats.instance.client == null) {
+            return;
+        }
+
+        Stats.instance.client.increment(Jarvis.getInstance().config.stats.prefix + "." + name, value);
+    }
+
+    public static void addGauge(String name, Callable<Integer> value) {
+        Stats.instance.stats.add(new Stat("gauge", name, value));
+    }
+
+    public static void remove(String name, String type) {
+        for (Stat stat : Stats.instance.stats) {
+            if (stat.type.equals(type) && stat.name.equals(name)) {
+                Stats.instance.stats.remove(stat);
                 return;
             }
+        }
+    }
 
-            /*
-            Jarvis.getDatabase().execute(
-                    "INSERT INTO events (timestamp, type) VALUES (?, ?);",
-                    System.currentTimeMillis(),
-                    event.getClass().getSimpleName()
-            );
-            */
+    public void processEvent(Event event) {
+        new JarvisThread(null, () -> {
+            incrementCounter("events_counter", 1);
+            incrementCounter("events." + event.getClass().getSimpleName(), 1);
 
             if (event instanceof MessageReceivedEvent) {
-                messagesProcessed += 1;
                 Message message = ((MessageReceivedEvent) event).getMessage();
+
+                incrementCounter("messages_counter", 1);
+                incrementCounter("messages." + message.getGuild().getName(), 1);
+
+                /*
                 Jarvis.getDatabase().execute(
                         "INSERT INTO messages (guild, channel, user, timestamp, length) VALUES (?, ?, ?, ?, ?);",
                         message.getGuild().getIdLong(),
@@ -48,91 +123,22 @@ public class Stats {
                         message.getCreationTime().toInstant().toEpochMilli(),
                         message.getContentDisplay().length()
                 );
+                */
             }
         }).silent(true).start();
     }
 
-    public static void processQuery(PreparedStatement statement) {
+    public void processQuery(PreparedStatement statement) {
         new JarvisThread(null, () -> {
-            queriesProcessed += 1;
-
-            // Ignore if it is a query inserting into the queries table
             String query = Database.getStatementString(statement);
-            if (query.startsWith("INSERT INTO queries")) {
-                return;
-            }
+
+            incrementCounter("queries_counter", 1);
+            incrementCounter("queries." + query.split(" ")[0], 1);
 
             // Log queries in console
             if (Jarvis.getInstance().config.debug) {
                 System.out.println(query);
             }
-
-            // Log queries in the db
-            /*
-            Jarvis.getDatabase().execute(
-                    "INSERT INTO queries (timestamp, query) VALUES (?, ?);",
-                    System.currentTimeMillis(),
-                    query
-            );
-            */
         }).silent(true).start();
-    }
-
-    private static long getStatsIntervalInPast() {
-        return System.currentTimeMillis() - (Jarvis.getInstance().config.stats.interval * 60 * 1000);
-    }
-
-    public static int getDataInStatsInterval(String field) {
-        try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT COUNT(1) FROM " + field + " WHERE timestamp > ?;", getStatsIntervalInPast());
-            result.first();
-            return result.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return -1;
-    }
-
-    public static void setupMetrics() {
-        // Metrics
-        Metrics metrics = new Metrics("Jarvis", Jarvis.getInstance().config.serverUUID, true, false, false);
-        metrics.addCustomChart(new Metrics.SingleLineChart("servers", () -> Jarvis.getJda().getGuilds().size()));
-        metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Jarvis.getJda().getUsers().size()));
-        metrics.addCustomChart(new Metrics.SingleLineChart("text_channels", () -> Jarvis.getJda().getTextChannels().size()));
-        metrics.addCustomChart(new Metrics.SingleLineChart("voice_channels", () -> Jarvis.getJda().getVoiceChannels().size()));
-        metrics.addCustomChart(new Metrics.SingleLineChart("events_minute", () -> getDataInStatsInterval("events") / Jarvis.getInstance().config.stats.interval));
-        metrics.addCustomChart(new Metrics.SingleLineChart("messages_minute", () -> getDataInStatsInterval("messages") / Jarvis.getInstance().config.stats.interval));
-        metrics.addCustomChart(new Metrics.SingleLineChart("queries_minute", () -> getDataInStatsInterval("queries") / Jarvis.getInstance().config.stats.interval));
-        metrics.addCustomChart(new Metrics.AdvancedPie("event_types", () -> {
-            Map<String, Integer> map = new HashMap<>();
-            try {
-                ResultSet result = Jarvis.getDatabase().executeQuery("SELECT type, COUNT(1) FROM events WHERE timestamp > ? GROUP BY type;", getStatsIntervalInPast());
-                while (result.next()) {
-                    map.put(result.getString("type"), result.getInt(2));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            return map;
-        }));
-        /*
-        metrics.addCustomChart(new Metrics.AdvancedBarChart("modules", () -> {
-            Map<String, int[]> map = new HashMap<>();
-            try {
-                ResultSet result = database.executeQuery("SELECT module, COUNT(1) FROM `modules` GROUP BY module;");
-                while (result.next()) {
-                    String name = result.getString("module");
-                    int enabledCount = result.getInt(2);
-                    int disabledCount = Jarvis.getJda().getGuilds().size() - enabledCount;
-                    map.put(name, new int[]{enabledCount, disabledCount});
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return map;
-        }));
-        */
     }
 }

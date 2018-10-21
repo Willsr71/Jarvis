@@ -27,12 +27,6 @@ public class CommandStats extends Command {
         embed.addField("Text channels", message.getJDA().getTextChannels().size() + "", true);
         embed.addField("Voice channels", message.getJDA().getVoiceChannels().size() + "", true);
         embed.addField("Users", message.getJDA().getUsers().size() + "", true);
-        embed.addField("Events processed", Stats.eventsProcessed + "", true);
-        embed.addField("Messages processed", Stats.messagesProcessed + "", true);
-        embed.addField("Queries processed", Stats.queriesProcessed + "", true);
-        embed.addField("Events/minute", Stats.getDataInStatsInterval("events") / 30 + "", true);
-        embed.addField("Messages/minute", Stats.getDataInStatsInterval("messages") / 30 + "", true);
-        embed.addField("Queries/minute", Stats.getDataInStatsInterval("queries") / 30 + "", true);
         embed.addField("Threads", Thread.activeCount() + "", true);
         embed.addField("Memory", ((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)) + "MB / " + (runtime.maxMemory() / (1024 * 1024)) + "MB", true);
         embed.addField("", "", true);

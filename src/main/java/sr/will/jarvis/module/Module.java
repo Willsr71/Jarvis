@@ -7,11 +7,13 @@ import sr.will.jarvis.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public abstract class Module {
     private ModuleDescription moduleDescription;
     private ArrayList<Permission> neededPermissions = new ArrayList<>();
     private ArrayList<Long> guildWhitelist = new ArrayList<>();
+    public HashMap<Long, Boolean> guildCache = new HashMap<>();
     private boolean defaultEnabled = false;
 
     public abstract void initialize();
@@ -59,7 +61,13 @@ public abstract class Module {
     }
 
     public boolean isEnabled(long guildId) {
-        return Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, moduleDescription.getName().toLowerCase());
+        if (guildCache.get(guildId) != null) {
+            return guildCache.get(guildId);
+        }
+
+        boolean enabled = Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, moduleDescription.getName().toLowerCase());
+        guildCache.put(guildId, enabled);
+        return enabled;
     }
 
     protected void registerEventHandler(EventHandler handler) {

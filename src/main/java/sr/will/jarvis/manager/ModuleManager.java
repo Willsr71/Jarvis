@@ -28,6 +28,8 @@ public class ModuleManager {
 
     public ModuleManager(Jarvis jarvis) {
         this.jarvis = jarvis;
+
+        jarvis.stats.addGauge("modules", () -> modules.size());
     }
 
     public void registerModule(String name, Module module) {
@@ -48,10 +50,12 @@ public class ModuleManager {
 
     public void enableModule(long guildId, String module) {
         jarvis.database.execute("INSERT INTO modules (guild, module) VALUES (?, ?);", guildId, module.toLowerCase());
+        modules.get(module).guildCache.put(guildId, true);
     }
 
     public void disableModule(long guildId, String module) {
         jarvis.database.execute("DELETE FROM modules WHERE (guild = ? AND module = ?);", guildId, module.toLowerCase());
+        modules.get(module).guildCache.put(guildId, false);
     }
 
     public boolean isModuleLoaded(File file) {
@@ -163,6 +167,7 @@ public class ModuleManager {
             moduleClass.setDescription(description);
             moduleClass.initialize();
             registerModule(description.getName(), moduleClass);
+            jarvis.stats.addGauge("module_cache." + description.getName(), () -> moduleClass.guildCache.size());
 
             System.out.println("Loaded plugin " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
         } catch (Exception e) {

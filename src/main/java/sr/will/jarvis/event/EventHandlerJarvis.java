@@ -7,7 +7,6 @@ import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.manager.Stats;
 
 public class EventHandlerJarvis extends EventHandler {
     private Jarvis jarvis;
@@ -19,7 +18,7 @@ public class EventHandlerJarvis extends EventHandler {
 
     @Override
     public void onEvent(Event event) {
-        Stats.processEvent(event);
+        jarvis.stats.processEvent(event);
 
         if (event instanceof MessageReceivedEvent) {
             onMessageReceived((MessageReceivedEvent) event);

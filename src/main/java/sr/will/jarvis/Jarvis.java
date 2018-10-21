@@ -29,15 +29,16 @@ public class Jarvis {
     public EventManager eventManager;
     public CommandManager commandManager;
     public ModuleManager moduleManager;
+    public Stats stats;
     private JDA jda;
 
     public boolean running = true;
 
     public Jarvis() {
         instance = this;
-        new Stats();
 
         configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
+        stats = new Stats();
 
         threadManager = new ThreadManager(this);
         consoleManager = new CommandConsoleManager(this);
@@ -53,7 +54,7 @@ public class Jarvis {
         moduleManager.registerModules();
 
         database = new Database();
-        database.addHook(Stats::processQuery);
+        database.addHook(stats::processQuery);
 
         reload();
 
@@ -66,8 +67,6 @@ public class Jarvis {
         } catch (LoginException e) {
             e.printStackTrace();
         }
-
-        Stats.setupMetrics();
     }
 
     public static Jarvis getInstance() {
@@ -115,6 +114,8 @@ public class Jarvis {
         configManager.reloadConfig();
         config = (Config) configManager.getConfig();
 
+        stats.restart();
+
         if (config.serverUUID.equals("")) {
             config.serverUUID = UUID.randomUUID().toString();
             configManager.saveConfig();
@@ -129,11 +130,6 @@ public class Jarvis {
                 "guild bigint(20) NOT NULL," +
                 "module varchar(64) NOT NULL," +
                 "PRIMARY KEY (id));");
-        database.execute("CREATE TABLE IF NOT EXISTS events(" +
-                "id int NOT NULL AUTO_INCREMENT," +
-                "timestamp bigint(20) NOT NULL," +
-                "type varchar(64) NOT NULL," +
-                "PRIMARY KEY(id));");
         database.execute("CREATE TABLE IF NOT EXISTS messages(" +
                 "id int NOT NULL AUTO_INCREMENT," +
                 "guild bigint(20) NOT NULL," +
@@ -141,11 +137,6 @@ public class Jarvis {
                 "user bigint(20) NOT NULL," +
                 "timestamp bigint(20) NOT NULL," +
                 "length int NOT NULL," +
-                "PRIMARY KEY(id));");
-        database.execute("CREATE TABLE IF NOT EXISTS queries(" +
-                "id int NOT NULL AUTO_INCREMENT," +
-                "timestamp bigint(20) NOT NULL," +
-                "query varchar(512) NOT NULL," +
                 "PRIMARY KEY(id));");
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).reload()));
