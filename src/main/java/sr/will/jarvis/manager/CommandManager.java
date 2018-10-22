@@ -88,6 +88,8 @@ public class CommandManager {
     private void executeCommand(String command, Message message, String... args) {
         if (commands.containsKey(command)) {
             Jarvis.debug(String.format("%s | %s | %s | %s", message.getGuild().getId(), message.getAuthor().getId(), command, Arrays.toString(args)));
+            Stats.incrementCounter("commands_counter");
+            Stats.incrementCounter("commands." + command);
 
             try {
                 commands.get(command).execute(message, args);

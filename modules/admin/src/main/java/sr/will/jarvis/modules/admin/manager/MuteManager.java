@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.manager.Stats;
-import sr.will.jarvis.modules.admin.CachedMute;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
 import sr.will.jarvis.thread.JarvisThread;
 
@@ -33,13 +32,36 @@ public class MuteManager {
         Stats.addGauge("admin.cached_mutes", () -> cachedMutes.size());
     }
 
-    public CachedMute getCachedMute(long guildId, long userId) {
+    private CachedMute getCachedMute(long guildId, long userId) {
         for (CachedMute cachedMute : cachedMutes) {
             if (cachedMute.guildId == guildId && cachedMute.userId == userId) {
+                cachedMute.updateLastUsed();
                 return cachedMute;
             }
         }
         return null;
+    }
+
+    private void addCachedMute(long guildId, long userId, long duration) {
+        // If the mute already exists, remove the old one
+        if (getCachedMute(guildId, userId) == null) {
+            removeCachedMute(getCachedMute(guildId, userId));
+        }
+
+        cachedMutes.add(new CachedMute(guildId, userId, duration));
+    }
+
+    private void removeCachedMute(CachedMute cachedMute) {
+        cachedMutes.remove(cachedMute);
+    }
+
+    private void cleanupCache() {
+        int beginSize = cachedMutes.size();
+        cachedMutes.removeIf(CachedMute::isExpired);
+
+        if (beginSize != cachedMutes.size()) {
+            System.out.println("Removed " + (beginSize - cachedMutes.size()) + " expired mutes");
+        }
     }
 
     public HashMap<Long, Long> getMutes(long guildId) {
@@ -67,7 +89,7 @@ public class MuteManager {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT duration FROM mutes WHERE (guild = ? AND user = ?) ORDER BY id DESC LIMIT 1;", guildId, userId);
             if (result.first()) {
                 // Add result to cached mutes to avoid querying db
-                cachedMutes.add(new CachedMute(guildId, userId, result.getLong("duration")));
+                addCachedMute(guildId, userId, result.getLong("duration"));
                 return result.getLong("duration");
             }
         } catch (SQLException e) {
@@ -75,7 +97,7 @@ public class MuteManager {
         }
 
         // Add result to cached mutes to avoid querying db
-        cachedMutes.add(new CachedMute(guildId, userId, 0));
+        addCachedMute(guildId, userId, 0);
         return 0;
     }
 
@@ -90,11 +112,7 @@ public class MuteManager {
     public void mute(long guildId, long userId, long invokerId, long duration) {
         Jarvis.getDatabase().execute("INSERT INTO mutes (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
 
-        // Update mute cache
-        if (getCachedMute(guildId, userId) != null) {
-            cachedMutes.remove(getCachedMute(guildId, userId));
-        }
-        cachedMutes.add(new CachedMute(guildId, userId, duration));
+        addCachedMute(guildId, userId, duration);
 
         setMuted(guildId, userId, true);
         startUnmuteThread(guildId, userId, duration);
@@ -115,11 +133,7 @@ public class MuteManager {
     public void unmute(long guildId, long userId) {
         Jarvis.getDatabase().execute("DELETE FROM mutes WHERE (guild = ? AND user = ? );", guildId, userId);
 
-        // Update mute cache
-        if (getCachedMute(guildId, userId) != null) {
-            cachedMutes.remove(getCachedMute(guildId, userId));
-        }
-        cachedMutes.add(new CachedMute(guildId, userId, 0));
+        addCachedMute(guildId, userId, 0);
 
         setMuted(guildId, userId, false);
 
@@ -127,18 +141,18 @@ public class MuteManager {
             return;
         }
 
-        Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> {
-            privateChannel.sendMessage(
-                    new EmbedBuilder()
-                            .setTitle("Unmuted", null)
-                            .setColor(Color.GREEN)
-                            .setDescription("You have been unmuted in " + Jarvis.getJda().getGuildById(guildId).getName())
-                            .build())
-                    .queue();
-        }));
+        Jarvis.getJda().getUserById(userId).openPrivateChannel().queue((privateChannel -> privateChannel.sendMessage(
+                new EmbedBuilder()
+                        .setTitle("Unmuted", null)
+                        .setColor(Color.GREEN)
+                        .setDescription("You have been unmuted in " + Jarvis.getJda().getGuildById(guildId).getName())
+                        .build())
+                .queue()));
     }
 
     public void setupAll() {
+        new JarvisThread(module, this::cleanupCache).name("MuteCacheCleanup").repeat(true, Jarvis.getInstance().config.cache.muteCacheCleanupInterval * 1000).silent(true).start();
+
         for (Guild guild : Jarvis.getJda().getGuilds()) {
             setup(guild);
         }
@@ -154,7 +168,7 @@ public class MuteManager {
     }
 
     // Delete roles that have not been added to the database
-    public void deleteOldRoles(Guild guild) {
+    private void deleteOldRoles(Guild guild) {
         List<Role> roles = new ArrayList<>();
         roles.addAll(guild.getRolesByName("Jarvis_Mute", true));
         roles.addAll(guild.getRolesByName("new role", true));
@@ -171,7 +185,7 @@ public class MuteManager {
         }
     }
 
-    public long getMuteRole(long guildId) {
+    private long getMuteRole(long guildId) {
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT role FROM mute_roles WHERE guild = ?;", guildId);
             if (result.first()) {
@@ -184,7 +198,7 @@ public class MuteManager {
         return 0;
     }
 
-    public void createMuteRole(Guild guild) {
+    private void createMuteRole(Guild guild) {
         long muteRole = getMuteRole(guild.getIdLong());
 
         // If role does not exist on the guild any more, remove it from the database
@@ -213,7 +227,7 @@ public class MuteManager {
         });
     }
 
-    public void addMuteRoleToChannels(Guild guild, Role role) {
+    private void addMuteRoleToChannels(Guild guild, Role role) {
         List<TextChannel> channels = guild.getTextChannels();
 
         for (TextChannel channel : channels) {
@@ -238,7 +252,7 @@ public class MuteManager {
         }
     }
 
-    public void processMutedMembers(Guild guild, Role role) {
+    private void processMutedMembers(Guild guild, Role role) {
         HashMap<Long, Long> mutes = getMutes(guild.getIdLong());
 
         System.out.println("Processing " + mutes.size() + " muted members for " + guild.getName());
@@ -254,13 +268,13 @@ public class MuteManager {
         }
     }
 
-    public void setMuted(long guildId, long userId, boolean applied) {
+    private void setMuted(long guildId, long userId, boolean applied) {
         Guild guild = Jarvis.getJda().getGuildById(guildId);
 
         setMuted(guild, guild.getMemberById(userId), guild.getRoleById(getMuteRole(guildId)), applied);
     }
 
-    public void setMuted(Guild guild, Member member, Role role, boolean applied) {
+    private void setMuted(Guild guild, Member member, Role role, boolean applied) {
         if (member == null) {
             return;
         }
@@ -272,7 +286,7 @@ public class MuteManager {
         }
     }
 
-    public void startUnmuteThread(final long guildId, final long userId, final long duration) {
+    private void startUnmuteThread(final long guildId, final long userId, final long duration) {
         new JarvisThread(module, () -> unmute(guildId, userId)).executeAt(duration).name("Mute").start();
     }
 }

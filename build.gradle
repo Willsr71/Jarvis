@@ -21,9 +21,6 @@ def projectUrl = "https://github.com/Willsr71/Jarvis"
 def projectAuthor = "Willsr71"
 def projectSite = "https://will.sr"
 
-def commonDep = "net.noxal:common:1.5-51"
-def jdaDep = "net.dv8tion:JDA:3.8.1_437"
-
 def jarName = "${projectId}-${project.version.toString()}.jar"
 
 repositories {
@@ -34,8 +31,8 @@ repositories {
 }
 
 dependencies {
-    compile commonDep
-    compile jdaDep
+    compile "net.noxal:common:1.5-51"
+    compile "net.dv8tion:JDA:3.8.1_437"
     compile "org.slf4j:slf4j-simple:1.7.25"
     compile "mysql:mysql-connector-java:5.1.45"
     compile "com.mashape.unirest:unirest-java:1.4.9"

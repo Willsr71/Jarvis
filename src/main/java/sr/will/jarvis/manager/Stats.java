@@ -34,11 +34,11 @@ public class Stats {
             e.printStackTrace();
         }
 
-        addGauge("threads", Thread::activeCount);
         addGauge("servers", () -> Jarvis.getJda().getGuilds().size());
         addGauge("players", () -> Jarvis.getJda().getUsers().size());
         addGauge("text_channels", () -> Jarvis.getJda().getTextChannels().size());
         addGauge("voice_channels", () -> Jarvis.getJda().getVoiceChannels().size());
+        addGauge("threads", Thread::activeCount);
 
         if (!Jarvis.getInstance().config.stats.enabled) {
             return;
@@ -82,12 +82,12 @@ public class Stats {
         client.flush();
     }
 
-    public static void incrementCounter(String name, int value) {
+    public static void incrementCounter(String name) {
         if (Stats.instance.client == null) {
             return;
         }
 
-        Stats.instance.client.increment(Jarvis.getInstance().config.stats.prefix + "." + name, value);
+        Stats.instance.client.increment(Jarvis.getInstance().config.stats.prefix + "." + name);
     }
 
     public static void addGauge(String name, Callable<Integer> value) {
@@ -105,14 +105,14 @@ public class Stats {
 
     public void processEvent(Event event) {
         new JarvisThread(null, () -> {
-            incrementCounter("events_counter", 1);
-            incrementCounter("events." + event.getClass().getSimpleName(), 1);
+            incrementCounter("events_counter");
+            incrementCounter("events." + event.getClass().getSimpleName());
 
             if (event instanceof MessageReceivedEvent) {
                 Message message = ((MessageReceivedEvent) event).getMessage();
 
-                incrementCounter("messages_counter", 1);
-                incrementCounter("messages." + message.getGuild().getName(), 1);
+                incrementCounter("messages_counter");
+                incrementCounter("messages." + message.getGuild().getName());
 
                 /*
                 Jarvis.getDatabase().execute(
@@ -132,8 +132,8 @@ public class Stats {
         new JarvisThread(null, () -> {
             String query = Database.getStatementString(statement);
 
-            incrementCounter("queries_counter", 1);
-            incrementCounter("queries." + query.split(" ")[0], 1);
+            incrementCounter("queries_counter");
+            incrementCounter("queries." + query.split(" ")[0]);
 
             // Log queries in console
             if (Jarvis.getInstance().config.debug) {
