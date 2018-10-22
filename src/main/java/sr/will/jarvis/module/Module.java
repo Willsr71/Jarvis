@@ -13,7 +13,7 @@ public abstract class Module {
     private ModuleDescription moduleDescription;
     private ArrayList<Permission> neededPermissions = new ArrayList<>();
     private ArrayList<Long> guildWhitelist = new ArrayList<>();
-    public HashMap<Long, Boolean> guildCache = new HashMap<>();
+    private HashMap<Long, Boolean> guildCache = new HashMap<>();
     private boolean defaultEnabled = false;
 
     public abstract void initialize();
@@ -66,8 +66,20 @@ public abstract class Module {
         }
 
         boolean enabled = Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, moduleDescription.getName().toLowerCase());
-        guildCache.put(guildId, enabled);
+        setEnabled(guildId, enabled);
         return enabled;
+    }
+
+    public void setEnabled(long guildId, boolean enabled) {
+        if (guildCache.get(guildId) != null) {
+            guildCache.remove(guildId);
+        }
+
+        guildCache.put(guildId, enabled);
+    }
+
+    public int cacheSize() {
+        return guildCache.size();
     }
 
     protected void registerEventHandler(EventHandler handler) {
