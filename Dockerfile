@@ -24,4 +24,4 @@ RUN mkdir config \
 
 VOLUME /config
 
-CMD "java -jar jarvis.jar"
+CMD ["/usr/bin/java", "-jar", "jarvis.jar"]
