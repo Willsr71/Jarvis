@@ -98,7 +98,9 @@ public class BanManager {
     public void processBannedMembers(Guild guild) {
         HashMap<Long, Long> bans = getBans(guild.getIdLong());
 
-        System.out.println("Processing " + bans.size() + " banned members for " + guild.getName());
+        if (bans.size() > 0) {
+            System.out.println("Processing " + bans.size() + " banned members for " + guild.getName());
+        }
 
         for (long userId : bans.keySet()) {
             if (!DateUtils.timestampApplies(bans.get(userId))) {

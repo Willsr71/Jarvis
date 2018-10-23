@@ -5,7 +5,7 @@ WORKDIR /usr/share/jarvis
 RUN mkdir config \
     && mkdir modules \
     && ln -s /usr/share/jarvis/config /config \
-    && apk add --update --no-cache curl \
+    && apk add --update --no-cache curl ttf-dejavu \
     && export BUILD_NUMBER=$(curl -sSLN https://ci.noxal.net/job/Jarvis/api/json?tree=lastSuccessfulBuild[number] | grep -Eo \"number\":\([0-9]+\) | grep -Eo [0-9]+) \
     && curl -sSLo jarvis.jar https://ci.noxal.net/job/Jarvis/$BUILD_NUMBER/artifact/build/libs/jarvis-1.0-$BUILD_NUMBER.jar \
     && cd modules \

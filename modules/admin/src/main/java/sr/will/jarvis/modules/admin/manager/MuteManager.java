@@ -56,12 +56,7 @@ public class MuteManager {
     }
 
     private void cleanupCache() {
-        int beginSize = cachedMutes.size();
         cachedMutes.removeIf(CachedMute::isExpired);
-
-        if (beginSize != cachedMutes.size()) {
-            System.out.println("Removed " + (beginSize - cachedMutes.size()) + " expired mutes");
-        }
     }
 
     public HashMap<Long, Long> getMutes(long guildId) {
@@ -255,7 +250,9 @@ public class MuteManager {
     private void processMutedMembers(Guild guild, Role role) {
         HashMap<Long, Long> mutes = getMutes(guild.getIdLong());
 
-        System.out.println("Processing " + mutes.size() + " muted members for " + guild.getName());
+        if (mutes.size() > 0) {
+            System.out.println("Processing " + mutes.size() + " muted members for " + guild.getName());
+        }
 
         for (long userId : mutes.keySet()) {
             if (!DateUtils.timestampApplies(mutes.get(userId))) {
