@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.noxal.common.config.JSONConfigManager;
 import net.noxal.common.sql.Database;
+import sr.will.jarvis.cache.Cache;
 import sr.will.jarvis.config.Config;
 import sr.will.jarvis.event.EventHandlerJarvis;
 import sr.will.jarvis.manager.*;
@@ -26,6 +27,7 @@ public class Jarvis {
     public InputReaderService inputReaderService;
     public CommandConsoleManager consoleManager;
     public Database database;
+    public Cache cache;
     public EventManager eventManager;
     public CommandManager commandManager;
     public ModuleManager moduleManager;
@@ -33,6 +35,8 @@ public class Jarvis {
     private JDA jda;
 
     public boolean running = true;
+
+    public static final String VERSION = "@version@";
 
     public Jarvis() {
         instance = this;
@@ -55,6 +59,8 @@ public class Jarvis {
 
         database = new Database();
         database.addHook(stats::processQuery);
+
+        cache = new Cache();
 
         reload();
 
@@ -93,7 +99,7 @@ public class Jarvis {
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).finishStart()));
 
-        System.out.println("Finished starting!");
+        System.out.println("Finished starting Jarvis v" + VERSION + "!");
     }
 
     public void stop() {
@@ -114,6 +120,7 @@ public class Jarvis {
         configManager.reloadConfig();
         config = (Config) configManager.getConfig();
 
+        cache.restart();
         stats.restart();
 
         if (config.serverUUID.equals("")) {

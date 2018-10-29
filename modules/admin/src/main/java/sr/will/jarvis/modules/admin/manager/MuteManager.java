@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.cache.Cache;
 import sr.will.jarvis.manager.Stats;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
 import sr.will.jarvis.thread.JarvisThread;
@@ -24,18 +25,15 @@ import java.util.List;
 public class MuteManager {
     private ModuleAdmin module;
 
-    private ArrayList<CachedMute> cachedMutes = new ArrayList<>();
-
     public MuteManager(ModuleAdmin module) {
         this.module = module;
 
-        Stats.addGauge("admin.cached_mutes", () -> cachedMutes.size());
+        Stats.addGauge("admin.cached_mutes", () -> Cache.getByType(CachedMute.class).size());
     }
 
     private CachedMute getCachedMute(long guildId, long userId) {
-        for (CachedMute cachedMute : cachedMutes) {
+        for (CachedMute cachedMute : Cache.getByType(CachedMute.class)) {
             if (cachedMute.guildId == guildId && cachedMute.userId == userId) {
-                cachedMute.updateLastUsed();
                 return cachedMute;
             }
         }
@@ -45,18 +43,10 @@ public class MuteManager {
     private void addCachedMute(long guildId, long userId, long duration) {
         // If the mute already exists, remove the old one
         if (getCachedMute(guildId, userId) == null) {
-            removeCachedMute(getCachedMute(guildId, userId));
+            Cache.removeEntry(getCachedMute(guildId, userId));
         }
 
-        cachedMutes.add(new CachedMute(guildId, userId, duration));
-    }
-
-    private void removeCachedMute(CachedMute cachedMute) {
-        cachedMutes.remove(cachedMute);
-    }
-
-    private void cleanupCache() {
-        cachedMutes.removeIf(CachedMute::isExpired);
+        new CachedMute(guildId, userId, duration);
     }
 
     public HashMap<Long, Long> getMutes(long guildId) {
@@ -77,7 +67,7 @@ public class MuteManager {
         // If mute is cached, return cached version instead of querying the db
         CachedMute cachedMute = getCachedMute(guildId, userId);
         if (cachedMute != null) {
-            return cachedMute.duration;
+            return cachedMute.getDuration();
         }
 
         try {
@@ -146,8 +136,6 @@ public class MuteManager {
     }
 
     public void setupAll() {
-        new JarvisThread(module, this::cleanupCache).name("MuteCacheCleanup").repeat(true, Jarvis.getInstance().config.cache.muteCacheCleanupInterval * 1000).silent(true).start();
-
         for (Guild guild : Jarvis.getJda().getGuilds()) {
             setup(guild);
         }

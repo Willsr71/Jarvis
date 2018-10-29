@@ -1,32 +1,22 @@
 package sr.will.jarvis.modules.admin.manager;
 
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.manager.Stats;
+import sr.will.jarvis.cache.CacheEntry;
 
-class CachedMute {
+class CachedMute extends CacheEntry {
     long guildId;
     long userId;
-    long duration;
-    private long lastUsed;
+    private long duration;
 
     CachedMute(long guildId, long userId, long duration) {
+        super(Jarvis.getInstance().config.cache.muteCacheTimeout, "admin.cached_mutes_usage");
         this.guildId = guildId;
         this.userId = userId;
         this.duration = duration;
+    }
+
+    long getDuration() {
         updateLastUsed();
-    }
-
-    boolean isExpired() {
-        // If it has been longer than the cacheTimeout, remove from cache list
-        if ((System.currentTimeMillis() - lastUsed) / 1000 >= Jarvis.getInstance().config.cache.muteCacheTimeout) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public void updateLastUsed() {
-        lastUsed = System.currentTimeMillis();
-        Stats.incrementCounter("admin.cached_mutes_usage");
+        return duration;
     }
 }

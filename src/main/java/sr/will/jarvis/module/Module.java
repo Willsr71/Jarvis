@@ -2,18 +2,17 @@ package sr.will.jarvis.module;
 
 import net.dv8tion.jda.core.Permission;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.cache.Cache;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public abstract class Module {
     private ModuleDescription moduleDescription;
     private ArrayList<Permission> neededPermissions = new ArrayList<>();
     private ArrayList<Long> guildWhitelist = new ArrayList<>();
-    private HashMap<Long, Boolean> guildCache = new HashMap<>();
     private boolean defaultEnabled = false;
 
     public abstract void initialize();
@@ -61,8 +60,9 @@ public abstract class Module {
     }
 
     public boolean isEnabled(long guildId) {
-        if (guildCache.get(guildId) != null) {
-            return guildCache.get(guildId);
+        CachedModule m = CachedModule.getEntry(guildId, moduleDescription.getName().toLowerCase());
+        if (m != null) {
+            return m.moduleEnabled();
         }
 
         boolean enabled = Jarvis.getInstance().moduleManager.isModuleEnabled(guildId, moduleDescription.getName().toLowerCase());
@@ -71,15 +71,12 @@ public abstract class Module {
     }
 
     public void setEnabled(long guildId, boolean enabled) {
-        if (guildCache.get(guildId) != null) {
-            guildCache.remove(guildId);
+        CachedModule m = CachedModule.getEntry(guildId, moduleDescription.getName().toLowerCase());
+        if (m != null) {
+            Cache.removeEntry(m);
         }
 
-        guildCache.put(guildId, enabled);
-    }
-
-    public int cacheSize() {
-        return guildCache.size();
+        new CachedModule(guildId, moduleDescription.getName().toLowerCase(), enabled);
     }
 
     protected void registerEventHandler(EventHandler handler) {

@@ -34,9 +34,8 @@ public class Config {
     }
 
     public class Cache {
+        public int cleanupInterval = 2;
         public int muteCacheTimeout = 300;
-        public int muteCacheCleanupInterval = 10;
         public int moduleCacheTimeout = 600;
-        public int moduleCacheCleanupInterval = 60;
     }
 }

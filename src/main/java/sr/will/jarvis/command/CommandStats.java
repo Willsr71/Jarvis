@@ -23,13 +23,9 @@ public class CommandStats extends Command {
 
         embed.addField("Uptime", DateUtils.formatDateDiff(Stats.startTime), true);
         embed.addField("Ping", message.getJDA().getPing() + "ms", true);
-        embed.addField("Guilds", message.getJDA().getGuilds().size() + "", true);
-        embed.addField("Text channels", message.getJDA().getTextChannels().size() + "", true);
-        embed.addField("Voice channels", message.getJDA().getVoiceChannels().size() + "", true);
-        embed.addField("Users", message.getJDA().getUsers().size() + "", true);
-        embed.addField("Threads", Thread.activeCount() + "", true);
-        embed.addField("Memory", ((runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)) + "MB / " + (runtime.maxMemory() / (1024 * 1024)) + "MB", true);
-        embed.addField("", "", true);
+        embed.addField("Version", Jarvis.VERSION, true);
+
+        embed.setDescription("Stats: https://enterprise.will.sr/grafana");
 
         message.getChannel().sendMessage(embed.build()).queue();
     }
