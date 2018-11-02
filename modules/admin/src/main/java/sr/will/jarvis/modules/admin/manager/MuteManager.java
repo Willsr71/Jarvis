@@ -9,7 +9,6 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.cache.Cache;
 import sr.will.jarvis.modules.admin.CachedMute;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
 import sr.will.jarvis.thread.JarvisThread;
@@ -29,25 +28,6 @@ public class MuteManager {
         this.module = module;
     }
 
-    private CachedMute getCachedMute(long guildId, long userId) {
-        for (CachedMute cachedMute : Cache.getByType(CachedMute.class)) {
-            if (cachedMute.guildId == guildId && cachedMute.userId == userId) {
-                return cachedMute;
-            }
-        }
-        return null;
-    }
-
-    private void addCachedMute(long guildId, long userId, long duration) {
-        // If the mute already exists, remove the old one
-        CachedMute c = getCachedMute(guildId, userId);
-        if (c != null) {
-            Cache.removeEntry(c);
-        }
-
-        new CachedMute(guildId, userId, duration);
-    }
-
     public HashMap<Long, Long> getMutes(long guildId) {
         HashMap<Long, Long> mutes = new HashMap<>();
         try {
@@ -64,7 +44,7 @@ public class MuteManager {
 
     public long getMuteDuration(long guildId, long userId) {
         // If mute is cached, return cached version instead of querying the db
-        CachedMute cachedMute = getCachedMute(guildId, userId);
+        CachedMute cachedMute = CachedMute.getEntry(guildId, userId);
         if (cachedMute != null) {
             return cachedMute.getDuration();
         }
@@ -73,15 +53,15 @@ public class MuteManager {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT duration FROM mutes WHERE (guild = ? AND user = ?) ORDER BY id DESC LIMIT 1;", guildId, userId);
             if (result.first()) {
                 // Add result to cached mutes to avoid querying db
-                addCachedMute(guildId, userId, result.getLong("duration"));
+                new CachedMute(guildId, userId, result.getLong("duration"));
                 return result.getLong("duration");
+            } else {
+                new CachedMute(guildId, userId, 0);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        // Add result to cached mutes to avoid querying db
-        addCachedMute(guildId, userId, 0);
         return 0;
     }
 
@@ -96,7 +76,7 @@ public class MuteManager {
     public void mute(long guildId, long userId, long invokerId, long duration) {
         Jarvis.getDatabase().execute("INSERT INTO mutes (guild, user, invoker, duration) VALUES (?, ?, ?, ?)", guildId, userId, invokerId, duration);
 
-        addCachedMute(guildId, userId, duration);
+        new CachedMute(guildId, userId, duration);
 
         setMuted(guildId, userId, true);
         startUnmuteThread(guildId, userId, duration);
@@ -117,7 +97,7 @@ public class MuteManager {
     public void unmute(long guildId, long userId) {
         Jarvis.getDatabase().execute("DELETE FROM mutes WHERE (guild = ? AND user = ? );", guildId, userId);
 
-        addCachedMute(guildId, userId, 0);
+        new CachedMute(guildId, userId, 0);
 
         setMuted(guildId, userId, false);
 

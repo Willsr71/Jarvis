@@ -36,7 +36,7 @@ Administrative commands such as ban and mute
 
 |Command|Permission|Description|
 |---|---|---|
-|clear \[amount\]|Manage Messages|Deletes the specified number of messages from the current channelId. Default is 10|
+|clear \[amount\]|Manage Messages|Deletes the specified number of messages from the current channel. Default is 10|
 |ban \<user mention&#124;user id\> \[duration\]|Ban Members|Bans the specified member for the specified amount of time. Default time is infinite|
 |banlist|None|Displays the currently banned users and remaining durations|
 |bantime \<user mention&#124;user id\>|None|Displays the remaining duration of the mentioned user's ban|
@@ -64,8 +64,8 @@ An interactive chatbot and commands
 
 |Command|Permission|Description|
 |---|---|---|
-|botadd|Manage Messages|Adds a chat bot to the current channelId|
-|botremove|Manage Messages|Removes a chat bot from the current channelId|
+|botadd|Manage Messages|Adds a chat bot to the current channel|
+|botremove|Manage Messages|Removes a chat bot from the current channel|
 
 CustomCommands Module ![default](https://img.shields.io/badge/default-yes-green.svg)
 ---------------------
@@ -84,7 +84,7 @@ Adds the ability to have monthly mod/admin elections in discord
 |Command|Permission|Description|
 |---|---|---|
 |election|None|Lists elections on the guild|
-|electionadd \<name\> \<day of month\> \<voting period\> \<winner count\> \<winner role\> \<announcement channelId\>|Administrator|Create an election|
+|electionadd \<name\> \<day of month\> \<voting period\> \<winner count\> \<winner role\> \<announcement channel\>|Administrator|Create an election|
 |electionregister \<name\>|None|Register or unregister for the specified election|
 |electionremove \<name\>|None|Delete the specified elecion|
 |electionstart \<name\>|Administrator|Manually start the specified election|
@@ -122,10 +122,10 @@ Levels plugin and commands
 |---|---|---|
 |levels|None|Displays the xp leaderboard for the current server|
 |rank \[user mention&#124;user id\]|None|Displays xp, rank, and leaderboard position for the specified user|
-|levelsignorechannel \[channelId mention\]|Manage Channels|Ignores a channelId for the purposes of gaining experience|
+|levelsignorechannel \[channel mention\]|Manage Channels|Ignores a channel for the purposes of gaining experience|
 |levelsoptin|None|Opt into the leveling system|
 |levelsoptout|None|Opt out of the leveling system|
-|levelssilencechannel \[channelId mention\]|Manage Channels|Silences or unsilences channels. Silencing prevents level up messages from appearing in specified channels|
+|levelssilencechannel \[channel mention\]|Manage Channels|Silences or unsilences channels. Silencing prevents level up messages from appearing in specified channels|
 |importmee6|Administrator|Imports level data from Mee6|
 
 OhNo Module ![not default](https://img.shields.io/badge/default-no-red.svg)

@@ -1,6 +1,7 @@
 package sr.will.jarvis.modules.admin;
 
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.cache.Cache;
 import sr.will.jarvis.cache.CacheEntry;
 
 public class CachedMute extends CacheEntry {
@@ -18,6 +19,16 @@ public class CachedMute extends CacheEntry {
     public long getDuration() {
         updateLastUsed();
         return duration;
+    }
+
+    public static CachedMute getEntry(long guildId, long userId) {
+        for (CachedMute cachedMute : Cache.getByType(CachedMute.class)) {
+            if (cachedMute.guildId == guildId && cachedMute.userId == userId) {
+                return cachedMute;
+            }
+        }
+
+        return null;
     }
 
     public boolean fieldsMatch(CacheEntry entry) {
