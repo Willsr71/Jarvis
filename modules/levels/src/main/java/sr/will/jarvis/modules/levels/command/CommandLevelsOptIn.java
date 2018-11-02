@@ -20,7 +20,7 @@ public class CommandLevelsOptIn extends Command {
         long userId = message.getAuthor().getIdLong();
 
         if (!module.userExists(guildId, userId)) {
-            module.addUser(guildId, userId);
+            module.addUser(guildId, userId, 0);
         }
 
         if (module.getUserXp(guildId, userId) >= 0) {

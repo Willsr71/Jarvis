@@ -40,6 +40,7 @@ public class Config {
         public class Timeouts {
             public int mute = 300;
             public int module = 600;
+            public int userXp = 300;
             public int levelsIgnoredChannels = 300;
             public int chatterbotChannels = 300;
         }

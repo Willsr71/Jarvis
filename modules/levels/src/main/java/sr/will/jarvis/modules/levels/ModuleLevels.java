@@ -6,6 +6,7 @@ import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.modules.levels.cache.CachedLevelsIgnoredChannels;
+import sr.will.jarvis.modules.levels.cache.CachedUserXp;
 import sr.will.jarvis.modules.levels.command.*;
 import sr.will.jarvis.modules.levels.event.EventHandlerLevels;
 
@@ -63,20 +64,14 @@ public class ModuleLevels extends Module {
 
     }
 
-    public void addUser(long guildId, long userId) {
-        Jarvis.getDatabase().execute("INSERT INTO levels (guild, user) VALUES (?, ?);", guildId, userId);
-    }
-
     public void addUser(long guildId, long userId, long xp) {
         Jarvis.getDatabase().execute("INSERT INTO levels (guild, user, xp) VALUES (?, ?, ?);", guildId, userId, xp);
+        new CachedUserXp(guildId, userId, xp);
     }
 
     public void setUserXp(long guildId, long userId, long xp) {
         Jarvis.getDatabase().execute("UPDATE levels SET xp = ? WHERE (guild = ? AND user = ?);", xp, guildId, userId);
-    }
-
-    public void resetUser(long guildId, long userId) {
-        Jarvis.getDatabase().execute("UPDATE levels SET xp = 0 WHERE (guild = ? AND user = ?);", guildId, userId);
+        new CachedUserXp(guildId, userId, xp);
     }
 
     public XPUser getXPUser(long guildId, long userId) {
@@ -94,10 +89,18 @@ public class ModuleLevels extends Module {
     }
 
     public long getUserXp(long guildId, long userId) {
+        CachedUserXp c = CachedUserXp.getEntry(guildId, userId);
+        if (c != null) {
+            return c.getXp();
+        }
+
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT xp FROM levels WHERE (guild = ? AND user = ?);", guildId, userId);
             if (result.first()) {
+                new CachedUserXp(guildId, userId, result.getLong("xp"));
                 return result.getLong("xp");
+            } else {
+                new CachedUserXp(guildId, userId, 0);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,6 +110,11 @@ public class ModuleLevels extends Module {
     }
 
     public boolean userExists(long guildId, long userId) {
+        CachedUserXp c = CachedUserXp.getEntry(guildId, userId);
+        if (c != null) {
+            return true;
+        }
+
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels WHERE (guild = ? AND user = ?);", guildId, userId);
             return result.first();
@@ -196,7 +204,7 @@ public class ModuleLevels extends Module {
         }
 
         if (!userExists(guildId, userId)) {
-            addUser(guildId, userId);
+            addUser(guildId, userId, 0);
         }
 
         long xp = getUserXp(guildId, userId);

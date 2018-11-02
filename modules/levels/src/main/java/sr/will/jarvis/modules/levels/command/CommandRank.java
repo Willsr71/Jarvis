@@ -26,7 +26,7 @@ public class CommandRank extends Command {
         }
 
         if (!module.userExists(message.getGuild().getIdLong(), user.getIdLong())) {
-            module.addUser(message.getGuild().getIdLong(), user.getIdLong());
+            module.addUser(message.getGuild().getIdLong(), user.getIdLong(), 0);
         }
 
         EmbedBuilder embed = new EmbedBuilder().setColor(Color.GREEN);
