@@ -10,7 +10,7 @@ public class CommandLevelsIgnoreChannel extends Command {
     private ModuleLevels module;
 
     public CommandLevelsIgnoreChannel(ModuleLevels module) {
-        super("levelsignorechannel", "levelsignorechannel [channel]", "Ignore or stop ignoring a channel for xp gain", module);
+        super("levelsignorechannel", "levelsignorechannel [channelId]", "Ignore or stop ignoring a channelId for xp gain", module);
         this.module = module;
     }
 

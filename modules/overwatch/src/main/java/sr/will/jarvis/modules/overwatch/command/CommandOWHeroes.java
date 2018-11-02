@@ -32,14 +32,14 @@ public class CommandOWHeroes extends Command {
         if (userInfo.rating != 0) {
             embed
                     .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl, userInfo.ratingIcon)
-                    .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes), true)
-                    .addField("Top heroes (Comp)", module.getTopHeroesAsString(userInfo.competitiveStats.topHeroes), true)
+                    .addField("Top heroes (QP)", !userInfo.private_ ? module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes) : "Profile is Private", true)
+                    .addField("Top heroes (Comp)", !userInfo.private_ ? module.getTopHeroesAsString(userInfo.competitiveStats.topHeroes) : "Profile is Private", true)
                     .setThumbnail(userInfo.icon)
                     .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
         } else {
             embed
                     .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl)
-                    .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes), true)
+                    .addField("Top heroes (QP)", !userInfo.private_ ? module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes) : "Profile is Private", true)
                     .setThumbnail(userInfo.icon)
                     .setFooter("Returned in " + (new Date().getTime() - startTime) + "ms", null);
         }

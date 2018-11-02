@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import net.dv8tion.jda.core.Permission;
 import net.noxal.common.util.Logger;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.cache.Cache;
-import sr.will.jarvis.module.CachedModule;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.ModuleDescription;
 import sr.will.jarvis.module.PluginClassloader;
@@ -30,8 +28,6 @@ public class ModuleManager {
 
     public ModuleManager(Jarvis jarvis) {
         this.jarvis = jarvis;
-
-        Stats.addGauge("modules", () -> modules.size());
     }
 
     public void registerModule(String name, Module module) {
@@ -169,7 +165,7 @@ public class ModuleManager {
             moduleClass.setDescription(description);
             moduleClass.initialize();
             registerModule(description.getName(), moduleClass);
-            Stats.addGauge("module_cache." + description.getName(), () -> Math.toIntExact(Cache.getByType(CachedModule.class).stream().filter(cachedModule -> cachedModule.module.equals(description.getName().toLowerCase())).count()));
+            //Stats.addGauge("module_cache." + description.getName(), () -> Math.toIntExact(Cache.getByType(CachedModule.class).stream().filter(cachedModule -> cachedModule.module.equals(description.getName().toLowerCase())).count()));
 
             System.out.println("Loaded plugin " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
         } catch (Exception e) {

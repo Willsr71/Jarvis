@@ -61,7 +61,7 @@ build {
 
 blossom {
     def location = "src/main/java/sr/will/jarvis/Jarvis.java"
-    
+
     replaceToken "@version@", project.version, location
 }
 

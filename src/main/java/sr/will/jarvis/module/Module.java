@@ -2,7 +2,6 @@ package sr.will.jarvis.module;
 
 import net.dv8tion.jda.core.Permission;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.cache.Cache;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.event.EventHandler;
 
@@ -71,11 +70,6 @@ public abstract class Module {
     }
 
     public void setEnabled(long guildId, boolean enabled) {
-        CachedModule m = CachedModule.getEntry(guildId, moduleDescription.getName().toLowerCase());
-        if (m != null) {
-            Cache.removeEntry(m);
-        }
-
         new CachedModule(guildId, moduleDescription.getName().toLowerCase(), enabled);
     }
 

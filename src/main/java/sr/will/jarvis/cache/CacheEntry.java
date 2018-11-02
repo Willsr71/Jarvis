@@ -4,13 +4,11 @@ import sr.will.jarvis.manager.Stats;
 
 public abstract class CacheEntry {
     private long cacheTimeout;
-    private String statsCounter;
 
     private long lastUsed;
 
-    public CacheEntry(long cacheTimeout, String statsCounter) {
+    public void initialize(long cacheTimeout) {
         this.cacheTimeout = cacheTimeout;
-        this.statsCounter = statsCounter;
         updateLastUsed();
         Cache.addEntry(this);
     }
@@ -21,6 +19,13 @@ public abstract class CacheEntry {
 
     protected void updateLastUsed() {
         lastUsed = System.currentTimeMillis();
-        Stats.incrementCounter(statsCounter);
+        Stats.incrementCounter("cache.usage." + this.getClass().getSimpleName());
     }
+
+    public boolean matches(CacheEntry entry) {
+        if (!this.getClass().isInstance(entry)) return false;
+        return fieldsMatch(entry);
+    }
+
+    public abstract boolean fieldsMatch(CacheEntry entry);
 }

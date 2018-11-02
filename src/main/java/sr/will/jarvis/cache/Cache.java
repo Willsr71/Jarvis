@@ -1,6 +1,7 @@
 package sr.will.jarvis.cache;
 
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.manager.Stats;
 import sr.will.jarvis.thread.JarvisThread;
 
 import java.util.ArrayList;
@@ -53,6 +54,23 @@ public class Cache {
     }
 
     public static void addEntry(CacheEntry entry) {
+        // Remove duplicate entries
+        int before = cacheEntries.size();
+        cacheEntries.removeIf(entry1 -> (entry.matches(entry1)));
+        if (cacheEntries.size() < before) {
+            if (before - cacheEntries.size() == 1) {
+                Jarvis.debug("Removed duplicate cache entry of type " + entry.getClass().getSimpleName());
+            } else {
+                System.out.println("Removed multiple duplicate cache entries (" + (before - cacheEntries.size()) + ") of type " + entry.getClass().getSimpleName());
+            }
+        }
+
+        // Stats for entry type
+        if (getByType(entry.getClass()).size() == 0) {
+            Stats.addGauge("cache." + entry.getClass().getSimpleName(), () -> getByType(entry.getClass()).size());
+        }
+
+        // Add entry
         cacheEntries.add(entry);
     }
 

@@ -10,10 +10,10 @@ public class CachedModule extends CacheEntry {
     private boolean enabled;
 
     public CachedModule(long guildId, String module, boolean enabled) {
-        super(Jarvis.getInstance().config.cache.moduleCacheTimeout, "cached_module_usage");
         this.guildId = guildId;
         this.module = module;
         this.enabled = enabled;
+        initialize(Jarvis.getInstance().config.cache.timeouts.module);
     }
 
     public boolean moduleEnabled() {
@@ -29,5 +29,10 @@ public class CachedModule extends CacheEntry {
         }
 
         return null;
+    }
+
+    public boolean fieldsMatch(CacheEntry entry) {
+        CachedModule c = (CachedModule) entry;
+        return guildId == c.guildId && module.equals(c.module);
     }
 }

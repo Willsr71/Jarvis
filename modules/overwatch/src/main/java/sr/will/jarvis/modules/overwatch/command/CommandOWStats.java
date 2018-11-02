@@ -33,10 +33,10 @@ public class CommandOWStats extends Command {
                     .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl, userInfo.ratingIcon)
                     .addField("Level", ((userInfo.prestige * 100) + userInfo.level) + "", true)
                     .addField("SR", userInfo.rating + "", true)
-                    .addField("Games (QP)", userInfo.quickPlayStats.careerStats.get("allHeroes").game.gamesWon + " (" + userInfo.quickPlayStats.careerStats.get("allHeroes").game.timePlayed + ")", true)
-                    .addField("W/D/L (Comp)", userInfo.competitiveStats.careerStats.get("allHeroes").game.gamesWon + "/" + userInfo.competitiveStats.careerStats.get("allHeroes").game.gamesTied + "/" + userInfo.competitiveStats.careerStats.get("allHeroes").game.gamesLost + " (" + userInfo.competitiveStats.careerStats.get("allHeroes").game.timePlayed + ")", true)
-                    .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes, 3), true)
-                    .addField("Top heroes (Comp)", module.getTopHeroesAsString(userInfo.competitiveStats.topHeroes, 3), true)
+                    .addField("Games (QP)", !userInfo.private_ ? userInfo.quickPlayStats.careerStats.get("allHeroes").game.gamesWon + " (" + userInfo.quickPlayStats.careerStats.get("allHeroes").game.timePlayed + ")" : "Profile is Private", true)
+                    .addField("W/D/L (Comp)", !userInfo.private_ ? userInfo.competitiveStats.careerStats.get("allHeroes").game.gamesWon + "/" + userInfo.competitiveStats.careerStats.get("allHeroes").game.gamesTied + "/" + userInfo.competitiveStats.careerStats.get("allHeroes").game.gamesLost + " (" + userInfo.competitiveStats.careerStats.get("allHeroes").game.timePlayed + ")" : "Profile is Private", true)
+                    .addField("Top heroes (QP)", !userInfo.private_ ? module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes, 3) : "Profile is Private", true)
+                    .addField("Top heroes (Comp)", !userInfo.private_ ? module.getTopHeroesAsString(userInfo.competitiveStats.topHeroes, 3) : "Profile is Private", true)
                     .setThumbnail(userInfo.icon)
                     .setFooter("Returned in " + (System.currentTimeMillis() - startTime) + "ms", null);
         } else {
@@ -44,8 +44,8 @@ public class CommandOWStats extends Command {
                     .setAuthor(userInfo.battletag, userInfo.playOverwatchUrl)
                     .addField("Level", ((userInfo.prestige * 100) + userInfo.level) + "", true)
                     .addField("SR", "Not Placed", true)
-                    .addField("Games (QP)", userInfo.quickPlayStats.careerStats.get("allHeroes").game.gamesWon + " (" + userInfo.quickPlayStats.careerStats.get("allHeroes").game.timePlayed + ")", true)
-                    .addField("Top heroes (QP)", module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes, 3), true)
+                    .addField("Games (QP)", !userInfo.private_ ? userInfo.quickPlayStats.careerStats.get("allHeroes").game.gamesWon + " (" + userInfo.quickPlayStats.careerStats.get("allHeroes").game.timePlayed + ")" : "Profile is Private", true)
+                    .addField("Top heroes (QP)", !userInfo.private_ ? module.getTopHeroesAsString(userInfo.quickPlayStats.topHeroes, 3) : "Profile is Private", true)
                     .setThumbnail(userInfo.icon)
                     .setFooter("Returned in " + (System.currentTimeMillis() - startTime) + "ms", null);
         }

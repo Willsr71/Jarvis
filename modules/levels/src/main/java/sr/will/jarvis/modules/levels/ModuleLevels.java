@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
+import sr.will.jarvis.modules.levels.cache.CachedLevelsIgnoredChannels;
 import sr.will.jarvis.modules.levels.command.*;
 import sr.will.jarvis.modules.levels.event.EventHandlerLevels;
 
@@ -137,15 +138,23 @@ public class ModuleLevels extends Module {
 
     public void ignoreChannel(long channelId) {
         Jarvis.getDatabase().execute("INSERT INTO levels_ignored_channels (channel) VALUES (?);", channelId);
+        new CachedLevelsIgnoredChannels(channelId, true);
     }
 
     public void unignoreChannel(long channelId) {
         Jarvis.getDatabase().execute("DELETE FROM levels_ignored_channels WHERE (channel = ?);", channelId);
+        new CachedLevelsIgnoredChannels(channelId, false);
     }
 
     public boolean channelIgnored(long channelId) {
+        CachedLevelsIgnoredChannels c = CachedLevelsIgnoredChannels.getEntry(channelId);
+        if (c != null) {
+            return c.isIgnored();
+        }
+
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM levels_ignored_channels WHERE (channel = ?);", channelId);
+            new CachedLevelsIgnoredChannels(channelId, result.first());
             return result.first();
         } catch (SQLException e) {
             e.printStackTrace();

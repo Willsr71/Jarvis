@@ -10,7 +10,7 @@ public class CommandLevelsSilenceChannel extends Command {
     private ModuleLevels module;
 
     public CommandLevelsSilenceChannel(ModuleLevels module) {
-        super("levelssilencechannel", "levelssilencechannel [channel]", "Silences or unsilences channels. Silencing prevents level up messages from appearing in specified channels", module);
+        super("levelssilencechannel", "levelssilencechannel [channelId]", "Silences or unsilences channels. Silencing prevents level up messages from appearing in specified channels", module);
         this.module = module;
     }
 

@@ -68,10 +68,10 @@ public class ModuleOverwatch extends Module {
         userInfo.playOverwatchUrl = "https://playoverwatch.com/en-us/career/pc/us/" + userInfo.battletag;
 
         // Add hero name to hero object
-        if (userInfo.quickPlayStats != null) {
+        if (userInfo.quickPlayStats.topHeroes != null) {
             userInfo.quickPlayStats.topHeroes.forEach((name, hero) -> hero.name = name);
         }
-        if (userInfo.competitiveStats != null) {
+        if (userInfo.competitiveStats.topHeroes != null) {
             userInfo.competitiveStats.topHeroes.forEach((name, hero) -> hero.name = name);
         }
 

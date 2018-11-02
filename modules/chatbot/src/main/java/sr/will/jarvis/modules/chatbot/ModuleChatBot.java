@@ -49,12 +49,14 @@ public class ModuleChatBot extends Module {
 
     public void addBot(long channelId) {
         Jarvis.getDatabase().execute("INSERT INTO chatterbot_channels (channel) VALUES (?);", channelId);
+        new CachedChatterbotChannel(channelId, true);
 
         createBot(channelId);
     }
 
     public void removeBot(long channelId) {
         Jarvis.getDatabase().execute("DELETE FROM chatterbot_channels WHERE (channel = ?);", channelId);
+        new CachedChatterbotChannel(channelId, false);
 
         chatterBots.remove(channelId);
     }
@@ -72,8 +74,14 @@ public class ModuleChatBot extends Module {
             return true;
         }
 
+        CachedChatterbotChannel c = CachedChatterbotChannel.getEntry(channelId);
+        if (c != null) {
+            return c.isChatterbotChannel();
+        }
+
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT 1 FROM chatterbot_channels WHERE (channel = ?) LIMIT 1;", channelId);
+            new CachedChatterbotChannel(channelId, result.first());
             if (result.first()) {
                 return true;
             }

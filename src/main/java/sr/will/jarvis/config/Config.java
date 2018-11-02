@@ -35,7 +35,13 @@ public class Config {
 
     public class Cache {
         public int cleanupInterval = 2;
-        public int muteCacheTimeout = 300;
-        public int moduleCacheTimeout = 600;
+        public Timeouts timeouts = new Timeouts();
+
+        public class Timeouts {
+            public int mute = 300;
+            public int module = 600;
+            public int levelsIgnoredChannels = 300;
+            public int chatterbotChannels = 300;
+        }
     }
 }

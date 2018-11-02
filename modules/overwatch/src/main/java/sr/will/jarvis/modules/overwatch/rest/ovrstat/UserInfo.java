@@ -1,5 +1,7 @@
 package sr.will.jarvis.modules.overwatch.rest.ovrstat;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 
 public class UserInfo {
@@ -7,6 +9,8 @@ public class UserInfo {
     public String name;
     public int level;
     public String levelIcon;
+    public int endorsement;
+    public String endorsementIcon;
     public int prestige;
     public String prestigeIcon;
     public int rating;
@@ -14,6 +18,8 @@ public class UserInfo {
     public int gamesWon;
     public Stats quickPlayStats;
     public Stats competitiveStats;
+    @SerializedName("private")
+    public boolean private_;
 
     public String message;
 

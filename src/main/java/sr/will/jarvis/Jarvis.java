@@ -69,7 +69,7 @@ public class Jarvis {
                     .setToken(config.discord.token)
                     .setAutoReconnect(true)
                     .addEventListener(eventManager)
-                    .buildAsync();
+                    .build();
         } catch (LoginException e) {
             e.printStackTrace();
         }
