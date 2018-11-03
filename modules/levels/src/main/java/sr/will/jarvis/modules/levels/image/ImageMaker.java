@@ -43,7 +43,7 @@ public class ImageMaker {
             int yStart = rowHeight * p;
 
             // Position text
-            ImageTextGenerator posText = new ImageTextGenerator(g, "#" + (page * (p + 1)));
+            ImageTextGenerator posText = new ImageTextGenerator(g, "#" + ((page * 10) + (p + 1)));
             posText.setFontSize(64).setColor(primaryColor)
                     .setPos(16 + largestNumberWidth - posText.width(),
                             yStart + rowHeight - ((rowHeight - posText.height()) / 2))
@@ -86,20 +86,6 @@ public class ImageMaker {
             g.setColor(background);
             g.fill(levelBarClip);
 
-            // User name
-            ImageTextGenerator username = new ImageTextGenerator(g, user.getUser().getName());
-            username.setFontSize(32).setColor(primaryColor)
-                    .setPos(levelBar.x + 8,
-                            levelBar.y - 8)
-                    .draw();
-
-            // User discriminator
-            ImageTextGenerator userDiscrim = new ImageTextGenerator(g, " #" + user.getUser().getDiscriminator());
-            userDiscrim.setFontSize(20).setColor(secondaryColor)
-                    .setPos(username.X() + username.width(),
-                            username.Y())
-                    .draw();
-
             // Level number
             ImageTextGenerator levelNum = new ImageTextGenerator(g, user.getLevel() + "");
             levelNum.setFontSize(32).setColor(highlightColor)
@@ -112,6 +98,20 @@ public class ImageMaker {
             levelText.setFontSize(20).setColor(highlightColor)
                     .setPos(levelNum.X() - levelText.width(),
                             levelNum.Y())
+                    .draw();
+
+            // User name
+            ImageTextGenerator username = new ImageTextGenerator(g, user.getUser().getName());
+            username.setFontSize(32).setColor(primaryColor)
+                    .setPos(levelBar.x + 8,
+                            levelBar.y - 8)
+                    .draw();
+
+            // User discriminator
+            ImageTextGenerator userDiscrim = new ImageTextGenerator(g, " #" + user.getUser().getDiscriminator());
+            userDiscrim.setFontSize(20).setColor(secondaryColor)
+                    .setPos(username.X() + username.width(),
+                            username.Y())
                     .draw();
         }
 
