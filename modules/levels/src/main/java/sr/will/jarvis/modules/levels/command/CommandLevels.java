@@ -31,12 +31,11 @@ public class CommandLevels extends Command {
                 return;
             }
         }
-        page = page - 1;
 
-        ArrayList<XPUser> displayedBoard = new ArrayList<>(leaderboard.subList(page * 10, Math.min(leaderboard.size(), (page * 10) + 10)));
+        ArrayList<XPUser> displayedBoard = new ArrayList<>(leaderboard.subList((page - 1) * 10, Math.min(leaderboard.size(), page * 10)));
 
         try {
-            ImageUtilities.sendImage(message.getChannel(), ImageMaker.createLeaderboardImage(displayedBoard, 1, leaderboard.get(0).xp), "leaderboard.png");
+            ImageUtilities.sendImage(message.getChannel(), ImageMaker.createLeaderboardImage(displayedBoard, page, leaderboard.get(0).xp), "leaderboard.png");
         } catch (IOException e) {
             e.printStackTrace();
         }
