@@ -35,7 +35,7 @@ public class Cache {
         start();
     }
 
-    private void cleanupCache() {
+    private synchronized void cleanupCache() {
         cacheEntries.removeIf(CacheEntry::isExpired);
     }
 

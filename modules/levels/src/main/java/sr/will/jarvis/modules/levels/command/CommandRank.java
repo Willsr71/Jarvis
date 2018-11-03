@@ -4,11 +4,13 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import sr.will.jarvis.command.Command;
+import sr.will.jarvis.image.ImageUtilities;
 import sr.will.jarvis.modules.levels.ModuleLevels;
 import sr.will.jarvis.modules.levels.XPUser;
 import sr.will.jarvis.modules.levels.image.ImageMaker;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class CommandRank extends Command {
     private ModuleLevels module;
@@ -42,6 +44,10 @@ public class CommandRank extends Command {
 
         XPUser xpUser = module.getXPUser(message.getGuild().getIdLong(), user.getIdLong());
 
-        ImageMaker.createLevelImage(user, xpUser, message.getChannel().getIdLong());
+        try {
+            ImageUtilities.sendImage(message.getChannel(), ImageMaker.createRankImage(xpUser), "rank.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

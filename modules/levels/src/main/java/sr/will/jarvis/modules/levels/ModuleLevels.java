@@ -133,8 +133,28 @@ public class ModuleLevels extends Module {
 
             int pos = 1;
             while (result.next()) {
+                if (Jarvis.getJda().getUserById(result.getLong("user")) == null) continue;
                 leaderboard.put(pos, new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), pos, result.getInt("pos_total")));
                 pos += 1;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return leaderboard;
+    }
+
+    public ArrayList<XPUser> getLeaderboardArray(long guildId) {
+        ArrayList<XPUser> leaderboard = new ArrayList<>();
+
+        try {
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp, (SELECT COUNT(id) FROM levels WHERE (guild = ? AND xp >= 0)) AS pos_total FROM levels WHERE (guild = ? AND xp >= 0) ORDER BY xp DESC;", guildId, guildId);
+
+            while (result.next()) {
+                if (Jarvis.getJda().getUserById(result.getLong("user")) == null) continue;
+                leaderboard.add(new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), leaderboard.size(), result.getInt("pos_total")));
+                //leaderboard.put(pos, new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), pos, result.getInt("pos_total")));
             }
 
         } catch (SQLException e) {

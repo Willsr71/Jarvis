@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.noxal.common.util.StringUtils;
 import sr.will.jarvis.Jarvis;
+import sr.will.jarvis.image.ImageUtilities;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.modules.ohno.event.EventHandlerOhNo;
 
@@ -13,8 +14,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,23 +42,13 @@ public class ModuleOhNo extends Module {
     }
 
     public void addImageToImage(String imageURL, BufferedImage image, int x, int y) throws IOException {
-        URL url = new URL(imageURL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setConnectTimeout(500);
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2891.0 Safari/537.36");
-        connection.connect();
-
-        BufferedImage authorImage = ImageIO.read(connection.getInputStream());
+        BufferedImage authorImage = ImageUtilities.getUserAvatar(imageURL, 128);
 
         Shape circle = new Ellipse2D.Double(x, y, 128, 128);
 
         Graphics2D graphics = image.createGraphics();
         graphics.setClip(circle);
         graphics.drawImage(authorImage, x, y, null);
-        //graphics.setStroke(new BasicStroke(4F));
-        //graphics.setColor(Color.BLACK);
-        //graphics.draw(circle);
         graphics.dispose();
     }
 
