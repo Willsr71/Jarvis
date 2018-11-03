@@ -20,10 +20,10 @@ public class ImageMaker {
     private static final Color primaryColor = Color.WHITE;
     private static final Color secondaryColor = Color.GRAY;
 
-    public static BufferedImage createLeaderboardImage(ArrayList<XPUser> leaderboard, int page, long maxXp) throws IOException {
+    public static BufferedImage createLeaderboardImage(ArrayList<XPUser> leaderboard, int page, long maxXp, int totalUsers) throws IOException {
         int width = 800;
         int rowHeight = 100;
-        int height = rowHeight * leaderboard.size();
+        int height = (rowHeight * leaderboard.size()) + 32;
 
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
@@ -34,7 +34,7 @@ public class ImageMaker {
         g.fillRoundRect(0, 0, width, height, 20, 20);
 
         // Determine number width
-        int largestNumberWidth = new ImageTextGenerator(g, "#" + page * (leaderboard.size() + 1))
+        int largestNumberWidth = new ImageTextGenerator(g, "#" + ((page * 10) + (leaderboard.size() + 1)))
                 .setFontSize(64)
                 .width();
 
@@ -86,6 +86,23 @@ public class ImageMaker {
             g.setColor(background);
             g.fill(levelBarClip);
 
+            // User name
+            ImageTextGenerator username = new ImageTextGenerator(g, user.getUser().getName());
+            username.setFontSize(32).setColor(primaryColor)
+                    .setPos(levelBar.x + 8,
+                            levelBar.y - 8)
+                    .draw();
+
+            // User discriminator
+            ImageTextGenerator userDiscrim = new ImageTextGenerator(g, " #" + user.getUser().getDiscriminator());
+            userDiscrim.setFontSize(20).setColor(secondaryColor)
+                    .setPos(username.X() + username.width(),
+                            username.Y())
+                    .draw();
+
+            // Prevent overlapping of username and level
+            g.setClip(userDiscrim.X() + userDiscrim.width(), yStart, width - userDiscrim.X() + userDiscrim.width(), rowHeight);
+
             // Level number
             ImageTextGenerator levelNum = new ImageTextGenerator(g, user.getLevel() + "");
             levelNum.setFontSize(32).setColor(highlightColor)
@@ -100,20 +117,14 @@ public class ImageMaker {
                             levelNum.Y())
                     .draw();
 
-            // User name
-            ImageTextGenerator username = new ImageTextGenerator(g, user.getUser().getName());
-            username.setFontSize(32).setColor(primaryColor)
-                    .setPos(levelBar.x + 8,
-                            levelBar.y - 8)
-                    .draw();
-
-            // User discriminator
-            ImageTextGenerator userDiscrim = new ImageTextGenerator(g, " #" + user.getUser().getDiscriminator());
-            userDiscrim.setFontSize(20).setColor(secondaryColor)
-                    .setPos(username.X() + username.width(),
-                            username.Y())
-                    .draw();
+            g.setClip(null);
         }
+
+        ImageTextGenerator pageText = new ImageTextGenerator(g, "Page " + (page + 1) + " of " + (int) Math.ceil(totalUsers / 10D));
+        pageText.setFontSize(26).setColor(primaryColor)
+                .setPos(width - 16 - pageText.width(),
+                        height - 16)
+                .draw();
 
         g.dispose();
 
@@ -185,6 +196,9 @@ public class ImageMaker {
                         username.Y())
                 .draw();
 
+        // Prevent overlapping of username and xp
+        g.setClip(userDiscrim.X() + userDiscrim.width(), 0, width, height);
+
         // XP to next level
         ImageTextGenerator toNextLevel = new ImageTextGenerator(g, " / " + user.getNeededXp() + " XP");
         toNextLevel.setFontSize(20).setColor(secondaryColor)
@@ -198,6 +212,8 @@ public class ImageMaker {
                 .setPos(toNextLevel.X() - inLevel.width(),
                         toNextLevel.Y())
                 .draw();
+
+        g.setClip(null);
 
         // Level number
         ImageTextGenerator levelNum = new ImageTextGenerator(g, user.getLevel() + "");
