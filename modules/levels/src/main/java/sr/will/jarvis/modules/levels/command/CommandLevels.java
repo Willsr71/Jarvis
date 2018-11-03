@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Message;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.modules.levels.ModuleLevels;
+import sr.will.jarvis.modules.levels.XPUser;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -22,11 +23,11 @@ public class CommandLevels extends Command {
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
 
-        HashMap<Integer, ModuleLevels.XPUser> leaderboard = module.getLeaderboard(message.getGuild().getIdLong());
+        HashMap<Integer, XPUser> leaderboard = module.getLeaderboard(message.getGuild().getIdLong());
 
         int maxLen = 0;
 
-        for (ModuleLevels.XPUser xpUser : leaderboard.values()) {
+        for (XPUser xpUser : leaderboard.values()) {
             Member member = Jarvis.getJda().getGuildById(xpUser.guildId).getMemberById(xpUser.userId);
 
             if (member == null) {
@@ -39,7 +40,7 @@ public class CommandLevels extends Command {
         StringBuilder stringBuilder = new StringBuilder();
         int realpos = 0;
         for (int pos : leaderboard.keySet()) {
-            ModuleLevels.XPUser xpUser = leaderboard.get(pos);
+            XPUser xpUser = leaderboard.get(pos);
             Member member = Jarvis.getJda().getGuildById(xpUser.guildId).getMemberById(xpUser.userId);
 
             if (member != null) {

@@ -133,7 +133,7 @@ public class ModuleLevels extends Module {
 
             int pos = 1;
             while (result.next()) {
-                leaderboard.put(pos, new XPUser(guildId, result.getLong("user"), result.getLong("xp"), pos, result.getInt("pos_total")));
+                leaderboard.put(pos, new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), pos, result.getInt("pos_total")));
                 pos += 1;
             }
 
@@ -320,40 +320,5 @@ public class ModuleLevels extends Module {
         }
 
         return level;
-    }
-
-    public class XPUser {
-        public long guildId;
-        public long userId;
-        public long xp;
-        public int level;
-        public int pos;
-        public int pos_total;
-
-        public XPUser(long guildId, long userId, long xp, int pos, int pos_total) {
-            this.guildId = guildId;
-            this.userId = userId;
-            this.xp = xp;
-            this.pos = pos;
-            this.pos_total = pos_total;
-
-            this.level = getLevelFromXp(xp);
-        }
-    }
-
-    public class RecentMessage {
-        public long guildId;
-        public long channelid;
-        public long userId;
-        public long timestamp;
-        public int messageLength;
-
-        public RecentMessage(long guildId, long channelId, long userId, long timestamp, int messageLength) {
-            this.guildId = guildId;
-            this.channelid = channelId;
-            this.userId = userId;
-            this.timestamp = timestamp;
-            this.messageLength = messageLength;
-        }
     }
 }

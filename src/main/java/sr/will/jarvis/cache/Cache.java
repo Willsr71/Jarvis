@@ -36,13 +36,7 @@ public class Cache {
     }
 
     private void cleanupCache() {
-        int before = cacheEntries.size();
-
         cacheEntries.removeIf(CacheEntry::isExpired);
-
-        if (cacheEntries.size() < before) {
-            Jarvis.debug("Removed " + (before - cacheEntries.size()) + " cached items");
-        }
     }
 
 
