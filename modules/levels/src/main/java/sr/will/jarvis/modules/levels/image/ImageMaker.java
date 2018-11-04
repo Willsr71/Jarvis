@@ -25,6 +25,8 @@ public class ImageMaker {
         int rowHeight = 100;
         int height = (rowHeight * leaderboard.size()) + 32;
 
+        long startTime = System.currentTimeMillis();
+
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -128,6 +130,7 @@ public class ImageMaker {
 
         g.dispose();
 
+        System.out.println("Leaderboard image created in " + (System.currentTimeMillis() - startTime) + "ms");
         return image;
     }
 

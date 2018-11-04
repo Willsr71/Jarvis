@@ -9,15 +9,13 @@ public class XPUser {
     public long userId;
     public long xp;
     public int pos;
-    public int pos_total;
 
-    public XPUser(ModuleLevels module, long guildId, long userId, long xp, int pos, int pos_total) {
+    public XPUser(ModuleLevels module, long guildId, long userId, long xp, int pos) {
         this.module = module;
         this.guildId = guildId;
         this.userId = userId;
         this.xp = xp;
         this.pos = pos;
-        this.pos_total = pos_total;
     }
 
     public User getUser() {

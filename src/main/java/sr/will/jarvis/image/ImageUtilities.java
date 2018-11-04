@@ -24,7 +24,6 @@ public class ImageUtilities {
     }
 
     public static BufferedImage getImageFromURL(String imageURL) throws IOException {
-        System.out.println(imageURL);
         URL url = new URL(imageURL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");

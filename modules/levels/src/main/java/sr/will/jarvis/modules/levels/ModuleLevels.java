@@ -75,11 +75,9 @@ public class ModuleLevels extends Module {
     }
 
     public XPUser getXPUser(long guildId, long userId) {
-        HashMap<Integer, XPUser> leaderboard = getLeaderboard(guildId);
+        ArrayList<XPUser> leaderboard = getLeaderboard(guildId);
 
-        for (int pos : leaderboard.keySet()) {
-            XPUser user = leaderboard.get(pos);
-
+        for (XPUser user : leaderboard) {
             if (user.userId == userId) {
                 return user;
             }
@@ -125,36 +123,15 @@ public class ModuleLevels extends Module {
         return false;
     }
 
-    public HashMap<Integer, XPUser> getLeaderboard(long guildId) {
-        HashMap<Integer, XPUser> leaderboard = new HashMap<>();
-
-        try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp, (SELECT COUNT(id) FROM levels WHERE (guild = ? AND xp >= 0)) AS pos_total FROM levels WHERE (guild = ? AND xp >= 0) ORDER BY xp DESC;", guildId, guildId);
-
-            int pos = 1;
-            while (result.next()) {
-                if (Jarvis.getJda().getUserById(result.getLong("user")) == null) continue;
-                leaderboard.put(pos, new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), pos, result.getInt("pos_total")));
-                pos += 1;
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return leaderboard;
-    }
-
-    public ArrayList<XPUser> getLeaderboardArray(long guildId) {
+    public ArrayList<XPUser> getLeaderboard(long guildId) {
         ArrayList<XPUser> leaderboard = new ArrayList<>();
 
         try {
-            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp, (SELECT COUNT(id) FROM levels WHERE (guild = ? AND xp >= 0)) AS pos_total FROM levels WHERE (guild = ? AND xp >= 0) ORDER BY xp DESC;", guildId, guildId);
+            ResultSet result = Jarvis.getDatabase().executeQuery("SELECT user, xp FROM levels WHERE (guild = ? AND xp >= 0) ORDER BY xp DESC;", guildId);
 
             while (result.next()) {
                 if (Jarvis.getJda().getUserById(result.getLong("user")) == null) continue;
-                leaderboard.add(new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), leaderboard.size(), result.getInt("pos_total")));
-                //leaderboard.put(pos, new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), pos, result.getInt("pos_total")));
+                leaderboard.add(new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), leaderboard.size()));
             }
 
         } catch (SQLException e) {

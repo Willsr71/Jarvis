@@ -122,21 +122,21 @@ public class MuteManager {
 
     public void setup(Guild guild) {
         try {
-            deleteOldRoles(guild);
-            createMuteRole(guild);
+            long muteRole = getMuteRole(guild.getIdLong());
+            deleteOldRoles(guild, muteRole);
+            createMuteRole(guild, muteRole);
         } catch (PermissionException e) {
             e.printStackTrace();
         }
     }
 
     // Delete roles that have not been added to the database
-    private void deleteOldRoles(Guild guild) {
+    private void deleteOldRoles(Guild guild, long muteRole) {
         List<Role> roles = new ArrayList<>();
         roles.addAll(guild.getRolesByName("Jarvis_Mute", true));
         roles.addAll(guild.getRolesByName("new role", true));
 
         // Do not delete role that is in the db
-        long muteRole = getMuteRole(guild.getIdLong());
         if (muteRole != 0) {
             // Role to be deleted exists in db, ignoring
             roles.remove(guild.getRoleById(muteRole));
@@ -160,9 +160,7 @@ public class MuteManager {
         return 0;
     }
 
-    private void createMuteRole(Guild guild) {
-        long muteRole = getMuteRole(guild.getIdLong());
-
+    private void createMuteRole(Guild guild, long muteRole) {
         // If role does not exist on the guild any more, remove it from the database
         if (muteRole != 0 && guild.getRoleById(muteRole) == null) {
             Jarvis.getDatabase().execute("DELETE FROM mute_roles WHERE (guild = ? AND role = ?);", guild.getIdLong(), muteRole);

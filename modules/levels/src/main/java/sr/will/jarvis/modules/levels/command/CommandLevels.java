@@ -21,7 +21,7 @@ public class CommandLevels extends Command {
     @Override
     public void execute(Message message, String... args) {
         checkModuleEnabled(message, module);
-        ArrayList<XPUser> leaderboard = module.getLeaderboardArray(message.getGuild().getIdLong());
+        ArrayList<XPUser> leaderboard = module.getLeaderboard(message.getGuild().getIdLong());
 
         int page = 1;
         if (args.length != 0) {
