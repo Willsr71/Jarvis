@@ -21,6 +21,10 @@ public class CachedUserXp extends CacheEntry {
         return xp;
     }
 
+    public void addXp(long toAdd) {
+        this.xp = xp + toAdd;
+    }
+
     public static CachedUserXp getEntry(long guildId, long userId) {
         for (CachedUserXp cachedUserXp : Cache.getByType(CachedUserXp.class)) {
             if (cachedUserXp.guildId == guildId && cachedUserXp.userId == userId) {

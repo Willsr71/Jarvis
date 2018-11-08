@@ -231,7 +231,15 @@ public class ModuleLevels extends Module {
 
         //System.out.println("gained: " + xpGained);
 
+        if (xpGained == 0) {
+            return;
+        }
+
         Jarvis.getDatabase().execute("UPDATE levels SET xp = xp + ? WHERE (guild = ? AND user = ?);", xpGained, guildId, userId);
+        CachedUserXp c = CachedUserXp.getEntry(guildId, userId);
+        if (c != null) {
+            c.addXp(xpGained);
+        }
 
         if (getLevelFromXp(xp + xpGained) > getLevelFromXp(xp) && !channelSilenced(message.getChannel().getIdLong())) {
             message.getChannel().sendMessage("Congratulations! " + message.getJDA().getUserById(userId).getAsMention() + " has reached level " + getLevelFromXp(xp + xpGained)).queue();
