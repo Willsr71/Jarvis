@@ -50,7 +50,7 @@ public class JarvisThread extends Thread {
             return;
         }
 
-        Jarvis.debug(getName() + " " + message);
+        Jarvis.getLogger().debug("{} {}", getName(), message);
     }
 
     private void waitForDelay(long delay) throws InterruptedException {

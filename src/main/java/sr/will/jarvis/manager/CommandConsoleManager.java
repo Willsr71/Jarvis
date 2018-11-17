@@ -1,6 +1,5 @@
 package sr.will.jarvis.manager;
 
-import net.noxal.common.util.Logger;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.commandconsole.CommandConsole;
 import sr.will.jarvis.commandconsole.CommandConsoleDebug;
@@ -32,7 +31,6 @@ public class CommandConsoleManager {
 
     public void executeCommand(String string) {
         if (string.equals("")) {
-            Logger.nothing();
             return;
         }
 
@@ -51,6 +49,6 @@ public class CommandConsoleManager {
             return;
         }
 
-        Logger.info("Command does not exist.");
+        System.out.println("Command does not exist.");
     }
 }

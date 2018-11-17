@@ -1,6 +1,8 @@
 package sr.will.jarvis.module;
 
 import net.dv8tion.jda.core.Permission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.command.Command;
 import sr.will.jarvis.event.EventHandler;
@@ -13,6 +15,7 @@ public abstract class Module {
     private ArrayList<Permission> neededPermissions = new ArrayList<>();
     private ArrayList<Long> guildWhitelist = new ArrayList<>();
     private boolean defaultEnabled = false;
+    private Logger logger;
 
     public abstract void initialize();
 
@@ -24,6 +27,10 @@ public abstract class Module {
 
     public void setDescription(ModuleDescription moduleDescription) {
         this.moduleDescription = moduleDescription;
+
+        if (moduleDescription != null) {
+            this.logger = LoggerFactory.getLogger(moduleDescription.getName());
+        }
     }
 
     public ModuleDescription getDescription() {
@@ -79,5 +86,9 @@ public abstract class Module {
 
     protected void registerCommand(String commandName, Command command) {
         Jarvis.getInstance().commandManager.registerCommand(commandName, command);
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 }

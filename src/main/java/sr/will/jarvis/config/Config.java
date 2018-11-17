@@ -11,7 +11,7 @@ public class Config {
     public boolean debug = false;
 
     public class Discord {
-        public String token = "";
+        public String token = "TOKEN";
         public ArrayList<String> owners = new ArrayList<>();
         public long statusMessageInterval = 60;
         public ArrayList<String> statusMessages = new ArrayList<>();
@@ -19,6 +19,7 @@ public class Config {
     }
 
     public class Sql {
+        public String type = "MYSQL";
         public String host = "localhost";
         public String database = "jarvis";
         public String user = "jarvis";

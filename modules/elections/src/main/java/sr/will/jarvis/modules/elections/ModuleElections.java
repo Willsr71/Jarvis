@@ -141,7 +141,7 @@ public class ModuleElections extends Module {
     public FormCreate createPoll(String name, ArrayList<Registrant> registrants) {
         String requestString = formManagerUrl + "?action=create&name=" + URLEncode(name) + getRegistrantsAsChoiceString(registrants);
 
-        Jarvis.debug(requestString);
+        Jarvis.getLogger().debug(requestString);
         try {
             String string = Unirest.get(requestString).asString().getBody();
             return gson.fromJson(string, FormCreate.class);
@@ -154,7 +154,7 @@ public class ModuleElections extends Module {
 
     public FormClose closePoll(String formId) {
         String requestString = formManagerUrl + "?action=close&formId=" + formId;
-        Jarvis.debug(requestString);
+        Jarvis.getLogger().debug(requestString);
         try {
             String string = Unirest.get(requestString).asString().getBody();
             return gson.fromJson(string, FormClose.class);
@@ -166,7 +166,7 @@ public class ModuleElections extends Module {
 
     public FormGet getResponses(String formId) {
         String requestString = formManagerUrl + "?formId=" + formId;
-        Jarvis.debug(requestString);
+        Jarvis.getLogger().debug(requestString);
         try {
             String string = Unirest.get(requestString).asString().getBody();
             return gson.fromJson(string, FormGet.class);

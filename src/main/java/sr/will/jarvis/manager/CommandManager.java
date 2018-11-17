@@ -87,16 +87,16 @@ public class CommandManager {
 
     private void executeCommand(String command, Message message, String... args) {
         if (commands.containsKey(command)) {
-            Jarvis.debug(String.format("%s | %s | %s | %s", message.getGuild().getId(), message.getAuthor().getId(), command, Arrays.toString(args)));
+            Jarvis.getLogger().debug("{} | {} | {} | {}", message.getGuild().getId(), message.getAuthor().getId(), command, Arrays.toString(args));
             Stats.incrementCounter("commands_counter");
             Stats.incrementCounter("commands." + command);
 
             try {
                 commands.get(command).execute(message, args);
             } catch (BotPermissionException | UserPermissionException | ModuleNotEnabledException e) {
-                System.out.println(e.getMessage());
+                Jarvis.getLogger().info(e.getMessage());
             } catch (InsufficientPermissionException e) {
-                System.out.println("Insufficient permission " + e.getPermission().getName() + " in guild " + message.getGuild().getName());
+                Jarvis.getLogger().info("Insufficient permission {} in guild {}", e.getPermission().getName(), message.getGuild().getName());
                 e.printStackTrace();
             } catch (Exception e) {
                 message.getChannel().sendMessage(new EmbedBuilder().setTitle("Error!", null).setColor(Color.RED).setDescription(e.toString()).build()).queue();

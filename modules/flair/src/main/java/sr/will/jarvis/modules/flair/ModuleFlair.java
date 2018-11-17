@@ -69,7 +69,7 @@ public class ModuleFlair extends Module {
                     guildController.addRolesToMember(member, role).queue();
                     setFlairRole(member, role.getIdLong());
                 }, role -> {
-                    System.out.println("Failed to create role");
+                    getLogger().error("Failed to create role");
                 });
     }
 

@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compile "net.noxal:common:1.5-51"
+    compile "net.noxal:common:1.5-56"
     compile "net.dv8tion:JDA:3.8.1_437"
     compile "org.slf4j:slf4j-simple:1.7.25"
     compile "mysql:mysql-connector-java:5.1.45"

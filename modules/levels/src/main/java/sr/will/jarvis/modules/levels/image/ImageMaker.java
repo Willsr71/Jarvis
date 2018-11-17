@@ -1,5 +1,6 @@
 package sr.will.jarvis.modules.levels.image;
 
+import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.image.ImageTextGenerator;
 import sr.will.jarvis.image.ImageUtilities;
 import sr.will.jarvis.modules.levels.XPUser;
@@ -130,7 +131,7 @@ public class ImageMaker {
 
         g.dispose();
 
-        System.out.println("Leaderboard image created in " + (System.currentTimeMillis() - startTime) + "ms");
+        Jarvis.getLogger().info("Leaderboard image created in {}ms", System.currentTimeMillis() - startTime);
         return image;
     }
 
@@ -248,7 +249,7 @@ public class ImageMaker {
 
         g.dispose();
 
-        System.out.println("Rank image created in " + (System.currentTimeMillis() - startTime) + "ms");
+        Jarvis.getLogger().info("Rank image created in {}ms", System.currentTimeMillis() - startTime);
         return image;
     }
 }

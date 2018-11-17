@@ -6,6 +6,5 @@ import sr.will.jarvis.module.Module;
 public class ModuleNotEnabledException extends RuntimeException {
     public ModuleNotEnabledException(Module module, Guild guild) {
         super("Module " + module.getDescription().getName() + " is not enabled on guild " + guild.getId());
-        //System.out.println("Module " + module.getName() + " is not enabled on guild " + guild.getId());
     }
 }

@@ -36,7 +36,7 @@ public class EventHandlerAdmin extends EventHandler {
 
         if (module.muteManager.isMuted(event.getGuild().getIdLong(), event.getAuthor().getIdLong())) {
             event.getMessage().delete().queue();
-            System.out.println("deleting message");
+            module.getLogger().info("Member is muted but still sent a message, deleting");
 
             if (event.getGuild().getMember(event.getAuthor()).hasPermission(Permission.ADMINISTRATOR)) {
                 return;

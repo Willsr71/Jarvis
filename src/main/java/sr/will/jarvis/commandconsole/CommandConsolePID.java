@@ -12,6 +12,6 @@ public class CommandConsolePID extends CommandConsole {
     }
 
     public void execute(String... args) {
-        System.out.println(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
+        Jarvis.getLogger().info(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
     }
 }

@@ -2,7 +2,6 @@ package sr.will.jarvis.manager;
 
 import com.google.gson.Gson;
 import net.dv8tion.jda.core.Permission;
-import net.noxal.common.util.Logger;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.ModuleDescription;
@@ -119,7 +118,7 @@ public class ModuleManager {
     }
 
     public void registerModules() {
-        System.out.println("Registering modules...");
+        Jarvis.getLogger().info("Registering modules...");
 
         ArrayList<File> moduleFiles = getModuleFiles("modules");
         ArrayList<ModuleDescription> moduleDescriptions = new ArrayList<>();
@@ -140,7 +139,7 @@ public class ModuleManager {
         for (ModuleDescription description : moduleDescriptions) {
             try {
                 if (isModuleLoaded(description.getName())) {
-                    System.out.println("Module " + description.getName() + " is already loaded");
+                    Jarvis.getLogger().info("Module {} is already loaded", description.getName());
                     continue;
                 }
 
@@ -150,7 +149,7 @@ public class ModuleManager {
             }
         }
 
-        System.out.println("Done.");
+        Jarvis.getLogger().info("Done");
     }
 
     public void loadModule(ModuleDescription description) throws Exception {
@@ -167,9 +166,9 @@ public class ModuleManager {
             registerModule(description.getName(), moduleClass);
             //Stats.addGauge("module_cache." + description.getName(), () -> Math.toIntExact(Cache.getByType(CachedModule.class).stream().filter(cachedModule -> cachedModule.module.equals(description.getName().toLowerCase())).count()));
 
-            System.out.println("Loaded plugin " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
+            Jarvis.getLogger().info("Loaded plugin {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor());
         } catch (Exception e) {
-            System.out.println("Failed to load plugin " + description.getName());
+            Jarvis.getLogger().error("Failed to load plugin {}", description.getName());
             e.printStackTrace();
             throw e;
         }
@@ -195,9 +194,9 @@ public class ModuleManager {
 
             System.gc();
 
-            System.out.println("Unloaded plugin " + name);
+            Jarvis.getLogger().info("Unloaded plugin {}", name);
         } catch (Exception e) {
-            System.out.println("Failed to load plugin " + name);
+            Jarvis.getLogger().info("Failed to load plugin {}", name);
             e.printStackTrace();
             throw e;
         }
@@ -212,7 +211,7 @@ public class ModuleManager {
         }
 
         if (!moduleFolder.isDirectory()) {
-            Logger.severe("/modules must be a directory");
+            Jarvis.getLogger().error("/modules must be a directory");
             return moduleFiles;
         }
 
@@ -231,7 +230,7 @@ public class ModuleManager {
         try (JarFile jar = new JarFile(file)) {
             JarEntry moduleDescription = jar.getJarEntry("plugin.json");
             if (moduleDescription == null) {
-                System.out.println("Module must have a module.json");
+                Jarvis.getLogger().error("Module must have a module.json");
                 return null;
             }
 
@@ -239,19 +238,19 @@ public class ModuleManager {
             ModuleDescription description = gson.fromJson(reader, ModuleDescription.class);
 
             if (description.getName() == null) {
-                System.out.println("Plugin " + file.getName() + " has no name");
+                Jarvis.getLogger().error("Plugin {} has no name", file.getName());
                 return null;
             }
 
             if (description.getMain() == null) {
-                System.out.println("Plugin " + file.getName() + " has no main");
+                Jarvis.getLogger().error("Plugin {} has no main class", file.getName());
                 return null;
             }
 
             description.setFile(file);
             return description;
         } catch (IOException e) {
-            Logger.severe("Error loading plugin from " + file.getName());
+            Jarvis.getLogger().error("Error loading plugin from {}", file.getName());
             e.printStackTrace();
             throw e;
         }

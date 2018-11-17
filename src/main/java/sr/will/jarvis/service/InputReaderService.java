@@ -1,6 +1,6 @@
 package sr.will.jarvis.service;
 
-import net.noxal.common.util.Logger;
+import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.manager.CommandConsoleManager;
 
 public class InputReaderService extends Thread {
@@ -11,7 +11,8 @@ public class InputReaderService extends Thread {
     }
 
     public void run() {
-        Logger.info("Input reader thread started");
+        setName("InputReader");
+        Jarvis.getLogger().info("Input reader thread started");
         while (true) {
             String string;
             string = System.console().readLine();

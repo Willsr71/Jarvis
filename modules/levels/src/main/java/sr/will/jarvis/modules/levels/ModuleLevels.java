@@ -223,13 +223,13 @@ public class ModuleLevels extends Module {
         double timeMultiplier = ((double) timeFromLast / 1000.0) / 60.0;
         double correctedTimeMultiplier = Math.min(1.0, timeMultiplier);
 
-        //System.out.println("length: " + lengthMultiplier);
-        //System.out.println("time:   " + timeMultiplier);
-        //System.out.println("timeco: " + correctedTimeMultiplier);
+        //getLogger().debug("length: {}", lengthMultiplier);
+        //getLogger().debug("time:   {}", timeMultiplier);
+        //getLogger().debug("timeco: {}", correctedTimeMultiplier);
 
         long xpGained = Math.round(baseAmount * lengthMultiplier * correctedTimeMultiplier);
 
-        //System.out.println("gained: " + xpGained);
+        //getLogger().debug("gained: {}", xpGained);
 
         if (xpGained == 0) {
             return;
@@ -306,7 +306,7 @@ public class ModuleLevels extends Module {
             //double level = (double) x;
             //long xp = Math.round((5.0 / 6.0) * level * (2.0 * level * level + (27.0 * level) + 91.0));
             levels.put(x, xp);
-            //System.out.println(x + " = " + levels.get(x));
+            //getLogger().debug("{} = {}", x, levels.get(x));
         }
     }
 

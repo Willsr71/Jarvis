@@ -6,6 +6,10 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.noxal.common.config.JSONConfigManager;
 import net.noxal.common.sql.Database;
+import net.noxal.common.sql.DatabaseType;
+import net.noxal.common.util.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sr.will.jarvis.cache.Cache;
 import sr.will.jarvis.config.Config;
 import sr.will.jarvis.event.EventHandlerJarvis;
@@ -33,6 +37,7 @@ public class Jarvis {
     public ModuleManager moduleManager;
     public Stats stats;
     private JDA jda;
+    private static final Logger logger = LoggerFactory.getLogger("Jarvis");
 
     public boolean running = true;
 
@@ -41,8 +46,8 @@ public class Jarvis {
     public Jarvis() {
         instance = this;
 
-        configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
         stats = new Stats();
+        configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
 
         threadManager = new ThreadManager(this);
         consoleManager = new CommandConsoleManager(this);
@@ -99,11 +104,11 @@ public class Jarvis {
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).finishStart()));
 
-        System.out.println("Finished starting Jarvis v" + VERSION + "!");
+        logger.info("Finished starting Jarvis v{} in {}!", VERSION, DateUtils.formatDateDiff(Stats.startTime));
     }
 
     public void stop() {
-        System.out.println("Stopping!");
+        logger.info("Stopping!");
 
         running = false;
 
@@ -129,7 +134,8 @@ public class Jarvis {
         }
 
         database.setDebug(false);
-        database.setCredentials(config.sql.host, config.sql.database, config.sql.user, config.sql.password);
+        logger.debug(DatabaseType.valueOf(config.sql.type).toString());
+        database.setCredentials(DatabaseType.valueOf(config.sql.type), config.sql.host, config.sql.database, config.sql.user, config.sql.password);
         database.reconnect();
 
         database.execute("CREATE TABLE IF NOT EXISTS modules(" +
@@ -149,9 +155,7 @@ public class Jarvis {
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).reload()));
     }
 
-    public static void debug(String message) {
-        if (Jarvis.getInstance().config.debug) {
-            System.out.println("[DEBUG] " + message);
-        }
+    public static Logger getLogger() {
+        return logger;
     }
 }

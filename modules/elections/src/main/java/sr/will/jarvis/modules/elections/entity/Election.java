@@ -66,7 +66,7 @@ public class Election {
 
     public void startElection() {
         if (electionState == ElectionState.VOTING) {
-            System.out.println("already voting");
+            module.getLogger().info("Already voting");
             return;
         }
 
@@ -151,19 +151,19 @@ public class Election {
         HashMap<String, ArrayList<String>> finalVotes = new HashMap<>();
 
         for (FormGet.Response response : responses.responses) {
-            System.out.println(response.discriminator);
+            module.getLogger().info(response.discriminator);
             if (!memberTags.containsKey(response.discriminator)) {
-                System.out.println("User " + response.discriminator + " thrown out, does not exist on guild");
+                module.getLogger().info("User {} thrown out, does not exist on guild", response.discriminator);
                 continue;
             }
 
             if (!response.auth_token.equals(module.getAuthToken(guildId, memberTags.get(response.discriminator).getUser().getIdLong(), name))) {
-                System.out.println("Tokens for user " + response.discriminator + " do not match");
+                module.getLogger().info("Tokens for user {} do not match", response.discriminator);
                 continue;
             }
 
             if (finalVotes.containsKey(response.discriminator)) {
-                System.out.println("Overriding vote from user " + response.discriminator);
+                module.getLogger().info("Overriding vote from user {}", response.discriminator);
                 finalVotes.remove(response.discriminator);
             }
             finalVotes.put(response.discriminator, response.votes);
@@ -215,7 +215,7 @@ public class Election {
     public void addVoteByDiscriminator(String discriminator) {
         Registrant registrant = getRegistrantByDiscriminator(discriminator);
         if (registrant == null) {
-            System.out.println("registrant is null!?");
+            module.getLogger().info("Registrant is null!?");
             return;
         }
 

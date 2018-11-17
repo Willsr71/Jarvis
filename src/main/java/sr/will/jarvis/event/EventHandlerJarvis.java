@@ -50,13 +50,13 @@ public class EventHandlerJarvis extends EventHandler {
     }
 
     private void onGuildJoin(GuildJoinEvent event) {
-        System.out.println(String.format("Joined guild %s (%s)", event.getGuild().getName(), event.getGuild().getId()));
+        Jarvis.getLogger().info("Joined guild {} ({})", event.getGuild().getName(), event.getGuild().getId());
 
         jarvis.moduleManager.enableDefaultModules(event.getGuild().getIdLong());
     }
 
     private void onGuildLeave(GuildLeaveEvent event) {
-        System.out.println(String.format("Left guild %s (%s)", event.getGuild().getName(), event.getGuild().getId()));
+        Jarvis.getLogger().info("Left guild {} ({})", event.getGuild().getName(), event.getGuild().getId());
 
         jarvis.moduleManager.disableAllModules(event.getGuild().getIdLong());
     }

@@ -99,7 +99,7 @@ public class BanManager {
         HashMap<Long, Long> bans = getBans(guild.getIdLong());
 
         if (bans.size() > 0) {
-            System.out.println("Processing " + bans.size() + " banned members for " + guild.getName());
+            module.getLogger().info("Processing {} banned members for {}", bans.size(), guild.getName());
         }
 
         for (long userId : bans.keySet()) {

@@ -175,7 +175,7 @@ public class MuteManager {
         }
 
         if (!guild.getMember(Jarvis.getJda().getSelfUser()).hasPermission(Permission.MANAGE_ROLES)) {
-            System.out.println("No permission " + Permission.MANAGE_ROLES.getName() + " in guild " + guild.getName() + ", cannot create mute role.");
+            module.getLogger().error("No permission {} in guild {}, cannot create mute role.", Permission.MANAGE_ROLES.getName(), guild.getName());
             return;
         }
 
@@ -192,7 +192,7 @@ public class MuteManager {
 
         for (TextChannel channel : channels) {
             if (!guild.getMember(Jarvis.getJda().getSelfUser()).hasPermission(channel, Permission.MANAGE_ROLES)) {
-                System.out.println("No permission " + Permission.MANAGE_PERMISSIONS.getName() + " in guild " + guild.getName() + ", channel " + channel.getName() + ", cannot add role to channel.");
+                module.getLogger().error("No permission {} in guild {}, channel {}, cannot add role to channel.", Permission.MANAGE_PERMISSIONS.getName(), guild.getName(), channel.getName());
                 continue;
             }
 
@@ -216,7 +216,7 @@ public class MuteManager {
         HashMap<Long, Long> mutes = getMutes(guild.getIdLong());
 
         if (mutes.size() > 0) {
-            System.out.println("Processing " + mutes.size() + " muted members for " + guild.getName());
+            module.getLogger().info("Processing {} muted members for {}", mutes.size(), guild.getName());
         }
 
         for (long userId : mutes.keySet()) {

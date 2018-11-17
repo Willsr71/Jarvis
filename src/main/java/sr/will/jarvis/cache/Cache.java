@@ -53,9 +53,9 @@ public class Cache {
         cacheEntries.removeIf(entry1 -> (entry.matches(entry1)));
         if (cacheEntries.size() < before) {
             if (before - cacheEntries.size() == 1) {
-                Jarvis.debug("Removed duplicate cache entry of type " + entry.getClass().getSimpleName());
+                Jarvis.getLogger().debug("Removed duplicate cache entry of type {}", entry.getClass().getSimpleName());
             } else {
-                System.out.println("Removed multiple duplicate cache entries (" + (before - cacheEntries.size()) + ") of type " + entry.getClass().getSimpleName());
+                Jarvis.getLogger().info("Removed multiple duplicate cache entries ({}) of type {}", before - cacheEntries.size(), entry.getClass().getSimpleName());
             }
         }
 

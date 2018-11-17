@@ -28,7 +28,7 @@ public class Stats {
 
     public void start() {
         try {
-            System.out.println("Starting metrics!");
+            Jarvis.getLogger().info("Starting metrics!");
             client = new StatsdClient(Jarvis.getInstance().config.stats.host, Jarvis.getInstance().config.stats.port);
         } catch (IOException e) {
             e.printStackTrace();
@@ -135,10 +135,7 @@ public class Stats {
             incrementCounter("queries_counter");
             incrementCounter("queries." + query.split(" ")[0]);
 
-            // Log queries in console
-            if (Jarvis.getInstance().config.debug) {
-                System.out.println(query);
-            }
+            Jarvis.getLogger().debug(query);
         }).silent(true).start();
     }
 }
