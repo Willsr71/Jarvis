@@ -131,7 +131,7 @@ public class ModuleLevels extends Module {
 
             while (result.next()) {
                 if (Jarvis.getJda().getUserById(result.getLong("user")) == null) continue;
-                leaderboard.add(new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), leaderboard.size()));
+                leaderboard.add(new XPUser(this, guildId, result.getLong("user"), result.getLong("xp"), leaderboard.size() + 1));
             }
 
         } catch (SQLException e) {

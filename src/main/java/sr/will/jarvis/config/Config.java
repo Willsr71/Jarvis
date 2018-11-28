@@ -1,25 +1,43 @@
 package sr.will.jarvis.config;
 
+import net.noxal.common.sql.DatabaseType;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Config {
     public Discord discord = new Discord();
     public Sql sql = new Sql();
     public Stats stats = new Stats();
     public Cache cache = new Cache();
-    public String serverUUID = "";
     public boolean debug = false;
 
     public class Discord {
         public String token = "TOKEN";
-        public ArrayList<String> owners = new ArrayList<>();
+        public ArrayList<String> owners = new ArrayList<>(Collections.singletonList("112587845968912384"));
         public long statusMessageInterval = 60;
-        public ArrayList<String> statusMessages = new ArrayList<>();
-        public ArrayList<String> pinEmotes = new ArrayList<>();
+        public ArrayList<String> statusMessages = new ArrayList<>(Arrays.asList(
+                "SyntaxError",
+                "NullPointerException",
+                "InterruptedException",
+                "401 Unauthorized",
+                "403 Forbidden",
+                "404 Not Found",
+                "406 Unacceptable",
+                "410 Gone",
+                "418 I'm a teapot",
+                "503 Servers on Fire"
+        ));
+        public ArrayList<String> pinEmotes = new ArrayList<>(Arrays.asList(
+                "\uD83D\uDC4C",
+                "\uD83D\uDCCC",
+                "\uD83D\uDCCD"
+        ));
     }
 
     public class Sql {
-        public String type = "MYSQL";
+        public DatabaseType type = DatabaseType.MYSQL;
         public String host = "localhost";
         public String database = "jarvis";
         public String user = "jarvis";

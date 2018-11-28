@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.noxal.common.config.JSONConfigManager;
 import net.noxal.common.sql.Database;
-import net.noxal.common.sql.DatabaseType;
 import net.noxal.common.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ import sr.will.jarvis.service.InputReaderService;
 import sr.will.jarvis.thread.JarvisThread;
 
 import javax.security.auth.login.LoginException;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Jarvis {
@@ -128,14 +126,9 @@ public class Jarvis {
         cache.restart();
         stats.restart();
 
-        if (config.serverUUID.equals("")) {
-            config.serverUUID = UUID.randomUUID().toString();
-            configManager.saveConfig();
-        }
-
         database.setDebug(false);
-        logger.debug(DatabaseType.valueOf(config.sql.type).toString());
-        database.setCredentials(DatabaseType.valueOf(config.sql.type), config.sql.host, config.sql.database, config.sql.user, config.sql.password);
+        logger.debug(config.sql.type.toString());
+        database.setCredentials(config.sql.type, config.sql.host, config.sql.database, config.sql.user, config.sql.password);
         database.reconnect();
 
         database.execute("CREATE TABLE IF NOT EXISTS modules(" +

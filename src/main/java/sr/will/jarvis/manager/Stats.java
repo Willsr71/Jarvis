@@ -4,9 +4,8 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.noxal.common.sql.Database;
+import net.noxal.common.stats.StatsdClient;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.stats.Stat;
-import sr.will.jarvis.stats.StatsdClient;
 import sr.will.jarvis.thread.JarvisThread;
 
 import java.io.IOException;
@@ -137,5 +136,17 @@ public class Stats {
 
             Jarvis.getLogger().debug(query);
         }).silent(true).start();
+    }
+
+    public static class Stat {
+        public String type;
+        public String name;
+        public Callable<Integer> value;
+
+        public Stat(String type, String name, Callable<Integer> value) {
+            this.type = type;
+            this.name = name;
+            this.value = value;
+        }
     }
 }

@@ -37,7 +37,7 @@ public class ImageMaker {
         g.fillRoundRect(0, 0, width, height, 20, 20);
 
         // Determine number width
-        int largestNumberWidth = new ImageTextGenerator(g, "#" + ((page * 10) + (leaderboard.size() + 1)))
+        int largestNumberWidth = new ImageTextGenerator(g, "#" + ((page * 10) + leaderboard.size()))
                 .setFontSize(64)
                 .width();
 
