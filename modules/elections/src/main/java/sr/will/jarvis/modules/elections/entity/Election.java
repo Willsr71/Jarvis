@@ -118,7 +118,7 @@ public class Election {
         Guild guild = Jarvis.getJda().getGuildById(guildId);
 
         for (Member member : guild.getMembers()) {
-            if (member.getUser().getIdLong() == Jarvis.getJda().getSelfUser().getIdLong()) {
+            if (member.getUser().getIdLong() == Jarvis.getJda().getSelfUser().getIdLong() || member.getUser().isBot()) {
                 continue;
             }
 

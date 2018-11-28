@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
@@ -143,7 +144,11 @@ public class MuteManager {
         }
 
         for (Role role : roles) {
-            role.delete().reason("Jarvis Mute Role - Deleting old Role").queue();
+            try {
+                role.delete().reason("Jarvis Mute Role - Deleting old Role").queue();
+            } catch (HierarchyException e) {
+                module.getLogger().error("Cannot delete old mute role {} in guild {}, role is above any Jarvis groups.", role, role.getGuild());
+            }
         }
     }
 
@@ -175,7 +180,7 @@ public class MuteManager {
         }
 
         if (!guild.getMember(Jarvis.getJda().getSelfUser()).hasPermission(Permission.MANAGE_ROLES)) {
-            module.getLogger().error("No permission {} in guild {}, cannot create mute role.", Permission.MANAGE_ROLES.getName(), guild.getName());
+            module.getLogger().error("No permission {} in guild {}, cannot create mute role.", Permission.MANAGE_ROLES.getName(), guild);
             return;
         }
 
@@ -192,7 +197,7 @@ public class MuteManager {
 
         for (TextChannel channel : channels) {
             if (!guild.getMember(Jarvis.getJda().getSelfUser()).hasPermission(channel, Permission.MANAGE_ROLES)) {
-                module.getLogger().error("No permission {} in guild {}, channel {}, cannot add role to channel.", Permission.MANAGE_PERMISSIONS.getName(), guild.getName(), channel.getName());
+                module.getLogger().error("No permission {} in guild {}, channel {}, cannot add role to channel.", Permission.MANAGE_PERMISSIONS.getName(), guild, channel);
                 continue;
             }
 
@@ -216,7 +221,7 @@ public class MuteManager {
         HashMap<Long, Long> mutes = getMutes(guild.getIdLong());
 
         if (mutes.size() > 0) {
-            module.getLogger().info("Processing {} muted members for {}", mutes.size(), guild.getName());
+            module.getLogger().info("Processing {} muted members for {}", mutes.size(), guild);
         }
 
         for (long userId : mutes.keySet()) {

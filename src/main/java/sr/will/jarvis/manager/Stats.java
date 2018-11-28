@@ -19,7 +19,7 @@ public class Stats {
 
     private StatsdClient client;
     private JarvisThread thread;
-    public ArrayList<Stat> stats = new ArrayList<>();
+    public final ArrayList<Stat> stats = new ArrayList<>();
 
     public Stats() {
         instance = this;
@@ -67,14 +67,16 @@ public class Stats {
             return;
         }
 
-        for (Stat stat : stats) {
-            String key = Jarvis.getInstance().config.stats.prefix + "." + stat.name;
-            try {
-                client.gauge(key, stat.value.call());
-            } catch (NullPointerException e) {
-                // Nothing
-            } catch (Exception e) {
-                e.printStackTrace();
+        synchronized (stats) {
+            for (Stat stat : stats) {
+                String key = Jarvis.getInstance().config.stats.prefix + "." + stat.name;
+                try {
+                    client.gauge(key, stat.value.call());
+                } catch (NullPointerException e) {
+                    // Nothing
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -90,15 +92,23 @@ public class Stats {
     }
 
     public static void addGauge(String name, Callable<Integer> value) {
-        Stats.instance.stats.add(new Stat("gauge", name, value));
+        synchronized (Stats.instance.stats) {
+            Stats.instance.stats.add(new Stat("gauge", name, value));
+        }
     }
 
     public static void remove(String name, String type) {
-        for (Stat stat : Stats.instance.stats) {
-            if (stat.type.equals(type) && stat.name.equals(name)) {
-                Stats.instance.stats.remove(stat);
-                return;
+        synchronized (Stats.instance.stats) {
+            Stats.instance.stats.removeIf(stat -> stat.type.equals(type) && stat.name.equals(name));
+
+            /*
+            for (Stat stat : Stats.instance.stats) {
+                if (stat.type.equals(type) && stat.name.equals(name)) {
+                    Stats.instance.stats.remove(stat);
+                    return;
+                }
             }
+            */
         }
     }
 

@@ -71,6 +71,11 @@ public class ModuleElections extends Module {
         try {
             ResultSet result = Jarvis.getDatabase().executeQuery("SELECT guild, name, channel, role, winner_count, day_of_month, voting_period, election_state, form_id, form_prefill, registrants from elections;");
             while (result.next()) {
+                // Ignore guilds that jarvis is not in
+                if (Jarvis.getJda().getGuildById(result.getLong("guild")) == null) {
+                    continue;
+                }
+
                 elections.add(new Election(
                         this,
                         result.getLong("guild"),
