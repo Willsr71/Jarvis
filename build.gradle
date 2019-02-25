@@ -7,7 +7,7 @@ buildscript {
 plugins {
     id "java"
     id "idea"
-    id "com.github.johnrengelman.shadow" version "2.0.2"
+    id "com.github.johnrengelman.shadow" version "2.0.4"
     id "ninja.miserable.blossom" version "1.0.1"
 }
 
@@ -26,15 +26,14 @@ def jarName = "${projectId}-${project.version.toString()}.jar"
 repositories {
     jcenter()
 
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "https://repo.noxal.net/" }
 }
 
 dependencies {
-    compile "net.noxal:common:1.5-57"
-    compile "net.dv8tion:JDA:3.8.1_437"
+    compile "net.noxal:common:1.5-65"
+    compile "net.dv8tion:JDA:3.8.3_460"
     compile "org.slf4j:slf4j-simple:1.7.25"
-    compile "mysql:mysql-connector-java:5.1.45"
+    compile "org.mariadb.jdbc:mariadb-java-client:2.4.0"
     compile "com.mashape.unirest:unirest-java:1.4.9"
 }
 

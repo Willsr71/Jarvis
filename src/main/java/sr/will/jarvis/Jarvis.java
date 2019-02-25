@@ -127,8 +127,7 @@ public class Jarvis {
         stats.restart();
 
         database.setDebug(false);
-        logger.debug(config.sql.type.toString());
-        database.setCredentials(config.sql.type, config.sql.host, config.sql.database, config.sql.user, config.sql.password);
+        database.setCredentials(config.sql.host, config.sql.database, config.sql.user, config.sql.password);
         database.reconnect();
 
         database.execute("CREATE TABLE IF NOT EXISTS modules(" +

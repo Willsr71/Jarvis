@@ -1,7 +1,5 @@
 package sr.will.jarvis.config;
 
-import net.noxal.common.sql.DatabaseType;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,7 +35,6 @@ public class Config {
     }
 
     public class Sql {
-        public DatabaseType type = DatabaseType.MYSQL;
         public String host = "localhost";
         public String database = "jarvis";
         public String user = "jarvis";
