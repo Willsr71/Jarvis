@@ -1,5 +1,6 @@
 package sr.will.jarvis.manager;
 
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -121,7 +122,9 @@ public class Stats {
                 Message message = ((MessageReceivedEvent) event).getMessage();
 
                 incrementCounter("messages_counter");
-                incrementCounter("messages." + message.getGuild().getName());
+                if (message.getChannelType() == ChannelType.TEXT) {
+                    incrementCounter("messages." + message.getGuild().getIdLong());
+                }
 
                 /*
                 Jarvis.getDatabase().execute(
