@@ -39,6 +39,7 @@ public class ModuleAdmin extends Module {
         registerCommand("mutetime", new CommandMuteTime(this));
         registerCommand("unban", new CommandUnban(this));
         registerCommand("unmute", new CommandUnmute(this));
+        registerCommand("voicekick", new CommandVoiceKick(this));
     }
 
     public void finishStart() {

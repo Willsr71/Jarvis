@@ -25,5 +25,6 @@ RUN mkdir config \
     && apk del curl
 
 VOLUME /config
+VOLUME /modules
 
 CMD ["/usr/bin/java", "-jar", "jarvis.jar"]
