@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Jarvis {
     private static Jarvis instance;
 
-    private JSONConfigManager configManager;
+    private JSONConfigManager<Config> configManager;
     public Config config;
 
     public ThreadManager threadManager;
@@ -45,7 +45,7 @@ public class Jarvis {
         instance = this;
 
         stats = new Stats();
-        configManager = new JSONConfigManager(this, "jarvis.json", "config", Config.class);
+        configManager = new JSONConfigManager<>(this, "jarvis.json", "config", new Config());
 
         threadManager = new ThreadManager(this);
         consoleManager = new CommandConsoleManager(this);
@@ -121,7 +121,7 @@ public class Jarvis {
 
     public void reload() {
         configManager.reloadConfig();
-        config = (Config) configManager.getConfig();
+        config = configManager.getConfig();
 
         cache.restart();
         stats.restart();
