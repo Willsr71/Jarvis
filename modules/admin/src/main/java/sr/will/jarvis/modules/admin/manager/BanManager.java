@@ -2,15 +2,16 @@ package sr.will.jarvis.modules.admin.manager;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
+import net.noxal.common.Task;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
-import sr.will.jarvis.thread.JarvisThread;
 
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class BanManager {
     private ModuleAdmin module;
@@ -125,6 +126,10 @@ public class BanManager {
     }
 
     public void startUnbanThread(final long guildId, final long userId, final long duration) {
-        new JarvisThread(module, () -> unban(guildId, userId)).executeAt(duration).name("Ban").start();
+        Task.builder(module)
+                .execute(() -> unban(guildId, userId))
+                .delay(System.currentTimeMillis() - duration, TimeUnit.NANOSECONDS)
+                .name("Unban thread")
+                .submit();
     }
 }

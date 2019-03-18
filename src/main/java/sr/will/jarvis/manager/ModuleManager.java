@@ -2,6 +2,7 @@ package sr.will.jarvis.manager;
 
 import com.google.gson.Gson;
 import net.dv8tion.jda.core.Permission;
+import net.noxal.common.Task;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.module.ModuleDescription;
@@ -179,7 +180,7 @@ public class ModuleManager {
 
         Jarvis.getInstance().commandManager.unregisterCommands(module);
         Jarvis.getInstance().eventManager.unregisterHandlers(module);
-        Jarvis.getInstance().threadManager.stopThreadsByModule(module);
+        Task.stopTasksByOwner(module);
 
         String name = module.getDescription().getName();
 

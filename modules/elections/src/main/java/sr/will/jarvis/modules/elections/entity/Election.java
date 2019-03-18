@@ -5,12 +5,12 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.Role;
+import net.noxal.common.Task;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.modules.elections.ModuleElections;
 import sr.will.jarvis.modules.elections.rest.formManager.FormClose;
 import sr.will.jarvis.modules.elections.rest.formManager.FormCreate;
 import sr.will.jarvis.modules.elections.rest.formManager.FormGet;
-import sr.will.jarvis.thread.JarvisThread;
 
 import java.awt.*;
 import java.time.ZonedDateTime;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class Election {
     private ModuleElections module;
@@ -48,7 +49,12 @@ public class Election {
         this.formPrefill = formPrefill;
         this.registrants = registrants;
 
-        new JarvisThread(module, this::checkShouldStart).executeAt(module.getTomorrow()).repeat(true, 24 * 60 * 60 * 1000).name("Election-" + name).start();
+        Task.builder(module)
+                .execute(this::checkShouldStart)
+                .delay(System.currentTimeMillis() - module.getTomorrow(), TimeUnit.NANOSECONDS)
+                .repeat(1, TimeUnit.DAYS)
+                .name("Election-" + getElectionName())
+                .submit();
         checkShouldStart();
     }
 
@@ -72,7 +78,11 @@ public class Election {
 
         electionState = ElectionState.VOTING;
         module.updateElectionState(guildId, name, electionState);
-        new JarvisThread(module, this::endElection).delay(votingPeriod).name("Election" + name + "-election").start();
+        Task.builder(module)
+                .execute(this::endElection)
+                .delay(votingPeriod, TimeUnit.NANOSECONDS)
+                .name("Election" + name + "-election")
+                .submit();
 
         String electionName = getElectionName();
 

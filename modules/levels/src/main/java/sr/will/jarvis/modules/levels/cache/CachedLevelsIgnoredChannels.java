@@ -1,8 +1,8 @@
 package sr.will.jarvis.modules.levels.cache;
 
+import net.noxal.common.cache.Cache;
+import net.noxal.common.cache.CacheEntry;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.cache.Cache;
-import sr.will.jarvis.cache.CacheEntry;
 
 public class CachedLevelsIgnoredChannels extends CacheEntry {
     public long channelId;

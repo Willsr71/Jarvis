@@ -8,11 +8,11 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.PermissionException;
+import net.noxal.common.Task;
 import net.noxal.common.util.DateUtils;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.modules.admin.CachedMute;
 import sr.will.jarvis.modules.admin.ModuleAdmin;
-import sr.will.jarvis.thread.JarvisThread;
 
 import java.awt.*;
 import java.sql.ResultSet;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MuteManager {
     private ModuleAdmin module;
@@ -254,6 +255,10 @@ public class MuteManager {
     }
 
     private void startUnmuteThread(final long guildId, final long userId, final long duration) {
-        new JarvisThread(module, () -> unmute(guildId, userId)).executeAt(duration).name("Mute").start();
+        Task.builder(module)
+                .execute(() -> unmute(guildId, userId))
+                .delay(System.currentTimeMillis() - duration, TimeUnit.NANOSECONDS)
+                .name("Unmute thread")
+                .submit();
     }
 }

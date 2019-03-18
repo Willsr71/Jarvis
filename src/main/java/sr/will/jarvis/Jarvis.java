@@ -4,20 +4,22 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
+import net.noxal.common.Task;
+import net.noxal.common.cache.Cache;
 import net.noxal.common.config.JSONConfigManager;
 import net.noxal.common.sql.Database;
+import net.noxal.common.sql.Query;
 import net.noxal.common.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sr.will.jarvis.cache.Cache;
 import sr.will.jarvis.config.Config;
 import sr.will.jarvis.event.EventHandlerJarvis;
 import sr.will.jarvis.manager.*;
 import sr.will.jarvis.service.InputReaderService;
-import sr.will.jarvis.thread.JarvisThread;
 
 import javax.security.auth.login.LoginException;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class Jarvis {
     private static Jarvis instance;
@@ -25,7 +27,6 @@ public class Jarvis {
     private JSONConfigManager<Config> configManager;
     public Config config;
 
-    public ThreadManager threadManager;
     public InputReaderService inputReaderService;
     public CommandConsoleManager consoleManager;
     public Database database;
@@ -47,7 +48,6 @@ public class Jarvis {
         stats = new Stats();
         configManager = new JSONConfigManager<>(this, "jarvis.json", "config", new Config());
 
-        threadManager = new ThreadManager(this);
         consoleManager = new CommandConsoleManager(this);
         consoleManager.registerCommands();
         inputReaderService = new InputReaderService(consoleManager);
@@ -62,8 +62,9 @@ public class Jarvis {
 
         database = new Database();
         database.addHook(stats::processQuery);
+        Query.setDatabase(database);
 
-        cache = new Cache();
+        cache = new Cache(this);
 
         reload();
 
@@ -91,14 +92,12 @@ public class Jarvis {
     }
 
     public void finishStartup() {
-        new JarvisThread(null, () -> {
+        Task.builder(this).execute(() -> {
             int rand = ThreadLocalRandom.current().nextInt(0, config.discord.statusMessages.size());
             Jarvis.getJda().getPresence().setGame(Game.playing(config.discord.statusMessages.get(rand)));
         })
-                .name("StatusChanger")
-                .repeat(true, config.discord.statusMessageInterval * 1000)
-                .silent(true)
-                .start();
+                .repeat(config.discord.statusMessageInterval, TimeUnit.SECONDS)
+                .submit();
 
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).finishStart()));
 
@@ -110,7 +109,7 @@ public class Jarvis {
 
         running = false;
 
-        threadManager.stop();
+
         moduleManager.getModules().forEach((s -> moduleManager.getModule(s).stop()));
 
         jda.shutdown();
@@ -123,6 +122,7 @@ public class Jarvis {
         configManager.reloadConfig();
         config = configManager.getConfig();
 
+        cache.setCleanupInterval(config.cache.cleanupInterval, TimeUnit.SECONDS);
         cache.restart();
         stats.restart();
 

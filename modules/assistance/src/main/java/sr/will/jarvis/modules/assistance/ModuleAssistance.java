@@ -3,14 +3,15 @@ package sr.will.jarvis.modules.assistance;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.noxal.common.Task;
 import sr.will.jarvis.Jarvis;
 import sr.will.jarvis.module.Module;
 import sr.will.jarvis.modules.assistance.command.*;
-import sr.will.jarvis.thread.JarvisThread;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class ModuleAssistance extends Module {
     private ArrayList<Thread> reminderThreads = new ArrayList<>();
@@ -76,10 +77,14 @@ public class ModuleAssistance extends Module {
         User user = Jarvis.getJda().getUserById(userId);
         TextChannel channel = Jarvis.getJda().getTextChannelById(channelId);
 
-        channel.sendMessage(user.getAsMention() + ", " + message).queue();
+        if (channel != null) channel.sendMessage(user.getAsMention() + ", " + message).queue();
     }
 
     public void startReminderThread(final long userId, final long channelId, final long time, final String message) {
-        new JarvisThread(this, () -> remind(userId, channelId, message)).executeAt(time).name("Reminder").start();
+        Task.builder(this)
+                .execute(() -> remind(userId, channelId, message))
+                .delay(System.currentTimeMillis() - time, TimeUnit.NANOSECONDS)
+                .name("Reminder thread")
+                .submit();
     }
 }

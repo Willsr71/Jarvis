@@ -1,8 +1,8 @@
 package sr.will.jarvis.modules.chatbot;
 
+import net.noxal.common.cache.Cache;
+import net.noxal.common.cache.CacheEntry;
 import sr.will.jarvis.Jarvis;
-import sr.will.jarvis.cache.Cache;
-import sr.will.jarvis.cache.CacheEntry;
 
 public class CachedChatterbotChannel extends CacheEntry {
     public long channelId;
