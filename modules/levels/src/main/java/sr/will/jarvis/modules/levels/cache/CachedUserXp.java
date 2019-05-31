@@ -10,10 +10,10 @@ public class CachedUserXp extends CacheEntry {
     private long xp;
 
     public CachedUserXp(long guildId, long userId, long xp) {
+        super(Jarvis.getInstance().config.cache.timeouts.userXp);
         this.guildId = guildId;
         this.userId = userId;
         this.xp = xp;
-        initialize(Jarvis.getInstance().config.cache.timeouts.userXp);
     }
 
     public long getXp() {

@@ -10,10 +10,10 @@ public class CachedModule extends CacheEntry {
     private boolean enabled;
 
     public CachedModule(long guildId, String module, boolean enabled) {
+        super(Jarvis.getInstance().config.cache.timeouts.module);
         this.guildId = guildId;
         this.module = module;
         this.enabled = enabled;
-        initialize(Jarvis.getInstance().config.cache.timeouts.module);
     }
 
     public boolean moduleEnabled() {

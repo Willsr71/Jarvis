@@ -9,9 +9,9 @@ public class CachedLevelsIgnoredChannels extends CacheEntry {
     private boolean ignored;
 
     public CachedLevelsIgnoredChannels(long channelId, boolean ignored) {
+        super(Jarvis.getInstance().config.cache.timeouts.levelsIgnoredChannels);
         this.channelId = channelId;
         this.ignored = ignored;
-        initialize(Jarvis.getInstance().config.cache.timeouts.levelsIgnoredChannels);
     }
 
     public boolean isIgnored() {

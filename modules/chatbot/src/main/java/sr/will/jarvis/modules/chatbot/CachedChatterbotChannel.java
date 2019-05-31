@@ -9,9 +9,9 @@ public class CachedChatterbotChannel extends CacheEntry {
     private boolean chatterbotChannel;
 
     public CachedChatterbotChannel(long channelId, boolean chatterbotChannel) {
+        super(Jarvis.getInstance().config.cache.timeouts.chatterbotChannels);
         this.channelId = channelId;
         this.chatterbotChannel = chatterbotChannel;
-        initialize(Jarvis.getInstance().config.cache.timeouts.chatterbotChannels);
     }
 
     public boolean isChatterbotChannel() {

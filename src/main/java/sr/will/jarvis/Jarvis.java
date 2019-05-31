@@ -30,7 +30,6 @@ public class Jarvis {
     public InputReaderService inputReaderService;
     public CommandConsoleManager consoleManager;
     public Database database;
-    public Cache cache;
     public EventManager eventManager;
     public CommandManager commandManager;
     public ModuleManager moduleManager;
@@ -63,8 +62,6 @@ public class Jarvis {
         database = new Database();
         database.addHook(stats::processQuery);
         Query.setDatabase(database);
-
-        cache = new Cache(this);
 
         reload();
 
@@ -122,8 +119,8 @@ public class Jarvis {
         configManager.reloadConfig();
         config = configManager.getConfig();
 
-        cache.setCleanupInterval(config.cache.cleanupInterval, TimeUnit.SECONDS);
-        cache.restart();
+        Cache.setCleanupInterval(config.cache.cleanupInterval, TimeUnit.SECONDS);
+        Cache.restart();
         stats.restart();
 
         database.setDebug(false);

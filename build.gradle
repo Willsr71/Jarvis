@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    compile "net.noxal:common:1.5-93"
+    compile "net.noxal:common:1.5-108"
     compile "net.dv8tion:JDA:3.8.3_460"
     compile "org.slf4j:slf4j-simple:1.7.25"
     compile "org.mariadb.jdbc:mariadb-java-client:2.4.0"
@@ -48,6 +48,13 @@ shadowJar {
     }
 
     archiveName jarName
+}
+
+task versionTxt() {
+    doLast {
+        new File("$projectDir/version.txt").text = "project.path=${project.group.replace('.', '/')}/${projectId}/${project.version}" +
+                "\nproject.file=${projectId}-${project.version}"
+    }
 }
 
 build {

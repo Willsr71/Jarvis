@@ -10,10 +10,10 @@ public class CachedMute extends CacheEntry {
     private long duration;
 
     public CachedMute(long guildId, long userId, long duration) {
+        super(Jarvis.getInstance().config.cache.timeouts.mute);
         this.guildId = guildId;
         this.userId = userId;
         this.duration = duration;
-        initialize(Jarvis.getInstance().config.cache.timeouts.mute);
     }
 
     public long getDuration() {
