@@ -1,15 +1,15 @@
 package sr.will.jarvis.manager;
 
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.noxal.common.Task;
 import net.noxal.common.sql.Database;
-import net.noxal.common.stats.StatsdClient;
 import sr.will.jarvis.Jarvis;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -19,7 +19,7 @@ public class Stats {
     public static final long startTime = System.currentTimeMillis();
     private static Stats instance;
 
-    private StatsdClient client;
+    private StatsDClient client;
     Task task;
     public final ArrayList<Stat> stats = new ArrayList<>();
 
@@ -28,12 +28,8 @@ public class Stats {
     }
 
     public void start() {
-        try {
-            Jarvis.getLogger().info("Starting metrics!");
-            client = new StatsdClient(Jarvis.getInstance().config.stats.host, Jarvis.getInstance().config.stats.port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Jarvis.getLogger().info("Starting metrics!");
+        client = new NonBlockingStatsDClient(Jarvis.getInstance().config.stats.prefix, Jarvis.getInstance().config.stats.host, Jarvis.getInstance().config.stats.port);
 
         addGauge("servers", () -> Jarvis.getJda().getGuilds().size());
         addGauge("players", () -> Jarvis.getJda().getUsers().size());
@@ -54,7 +50,7 @@ public class Stats {
 
     public void stop() {
         if (task != null) task.cancel();
-        if (client != null) client.flush();
+        if (client != null) client.close();
     }
 
     public void restart() {
@@ -80,7 +76,7 @@ public class Stats {
             }
         }
 
-        client.flush();
+        client.close();
     }
 
     public static void incrementCounter(String name) {
